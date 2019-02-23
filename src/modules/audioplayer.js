@@ -194,7 +194,8 @@ AudioPlayer.prototype = {
 	play: function(){
 		_isPlaying = true;
 		audio.src = this.stream;
-		setTimeout(function(){audio.play()},10);
+		// Play Promice
+		setTimeout(function(){audio.play().then(function(){}).catch(function(){console.log('error promice')})},10);
 	},
 	stop: function(){
 		audio.pause();

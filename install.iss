@@ -1,7 +1,7 @@
-#define AppName 'Ваше Радио'
+#define AppName 'Р’Р°С€Рµ Р Р°РґРёРѕ'
 #define AppVersion '1.0'
-#define AppCopyright 'Copyright © 2010 all right reserved ProjectSoft && STUDIONIONS'
-#define InstallText 'Удалить'
+#define AppCopyright 'Copyright В© 2010 all right reserved ProjectSoft && STUDIONIONS'
+#define InstallText 'РЈРґР°Р»РёС‚СЊ'
 #define GitHub 'https://bitbucket.org/studionions/radioappnwjs'
 #define DirName 'YouRadio'
 #define AppNameDir 'radio'
@@ -28,7 +28,7 @@ VersionInfoProductName={#AppName}
 VersionInfoProductVersion={#AppVersion}
 VersionInfoProductTextVersion={#AppName} v{#AppVersion}
 
-DefaultDirName={autopf}\{#DirName}
+DefaultDirName={pf}\{#DirName}
 DefaultGroupName={#AppName}
 
 Compression=lzma/ultra
@@ -65,12 +65,12 @@ DisableProgramGroupPage=true
 DisableDirPage=true
 ShowLanguageDialog=no
 
-; ArchitecturesInstallIn64BitMode=x64 запрашивает, чтобы установка была выполнена
-; в 64-битном режиме. Это означает, что она должна использовать собственный
-; каталог 64-битных программных файлов и 64-битное представление реестра.
-; А во всех остальных архитектурах он будет установлен в 32-битном режиме.
-; Примечание: мы не устанавливаем ProcessorsAllowed, потому что мы хотим,
-; чтобы эта установка работала на всех архитектурах.
+; ArchitecturesInstallIn64BitMode=x64 Р·Р°РїСЂР°С€РёРІР°РµС‚, С‡С‚РѕР±С‹ СѓСЃС‚Р°РЅРѕРІРєР° Р±С‹Р»Р° РІС‹РїРѕР»РЅРµРЅР°
+; РІ 64-Р±РёС‚РЅРѕРј СЂРµР¶РёРјРµ. Р­С‚Рѕ РѕР·РЅР°С‡Р°РµС‚, С‡С‚Рѕ РѕРЅР° РґРѕР»Р¶РЅР° РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ СЃРѕР±СЃС‚РІРµРЅРЅС‹Р№
+; РєР°С‚Р°Р»РѕРі 64-Р±РёС‚РЅС‹С… РїСЂРѕРіСЂР°РјРјРЅС‹С… С„Р°Р№Р»РѕРІ Рё 64-Р±РёС‚РЅРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ СЂРµРµСЃС‚СЂР°.
+; Рђ РІРѕ РІСЃРµС… РѕСЃС‚Р°Р»СЊРЅС‹С… Р°СЂС…РёС‚РµРєС‚СѓСЂР°С… РѕРЅ Р±СѓРґРµС‚ СѓСЃС‚Р°РЅРѕРІР»РµРЅ РІ 32-Р±РёС‚РЅРѕРј СЂРµР¶РёРјРµ.
+; РџСЂРёРјРµС‡Р°РЅРёРµ: РјС‹ РЅРµ СѓСЃС‚Р°РЅР°РІР»РёРІР°РµРј ProcessorsAllowed, РїРѕС‚РѕРјСѓ С‡С‚Рѕ РјС‹ С…РѕС‚РёРј,
+; С‡С‚РѕР±С‹ СЌС‚Р° СѓСЃС‚Р°РЅРѕРІРєР° СЂР°Р±РѕС‚Р°Р»Р° РЅР° РІСЃРµС… Р°СЂС…РёС‚РµРєС‚СѓСЂР°С….
 ArchitecturesInstallIn64BitMode=x64
 PrivilegesRequired=admin
 
@@ -78,11 +78,11 @@ PrivilegesRequired=admin
 Name: russian; MessagesFile: compiler:Languages\Russian.isl
 
 [Messages]
-AboutSetupMenuItem=&© ProjectSoft 2018
+AboutSetupMenuItem=&В© ProjectSoft 2018
 
 [Icons]
 Name: {group}\{#AppName}; Filename: {app}\radio.exe; WorkingDir: {app}; IconFilename: {app}\radio.exe; IconIndex: 0
-Name: {group}\Удалить; Filename: {uninstallexe}
+Name: {group}\РЈРґР°Р»РёС‚СЊ; Filename: {uninstallexe}
 
 [Dirs]
 Name: {app}\locales

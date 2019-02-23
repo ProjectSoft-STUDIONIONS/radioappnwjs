@@ -407,19 +407,19 @@ module.exports = function(grunt){
 		exec: {
 			//rc_dll: "start \"ResHacker\" /wait ResourceHacker  -open src/dll/nw.rc -save src/dll/nw.res -action compile -log NUL",
 			//rc_exe: "start \"ResHacker\" /wait ResourceHacker  -open src/exe/nw.rc -save src/exe/nw.res -action compile -log NUL",
-			win32exe_normal: "start \"ResHacker\" /wait ResourceHacker -open .cache/" + gc.version + "-normal/win32/nw.exe, -save .cache/" + gc.version + "-normal/win32/nw.exe, -action modify, -resource src/exe/nw.res, ,,",
-			win64exe_normal: "start \"ResHacker\" /wait ResourceHacker -open .cache/" + gc.version + "-normal/win64/nw.exe, -save .cache/" + gc.version + "-normal/win64/nw.exe, -action modify, -resource src/exe/nw.res, ,,",
-			win32dll_normal: "start \"ResHacker\" /wait ResourceHacker -open .cache/" + gc.version + "-normal/win32/nw.dll, -save .cache/" + gc.version + "-normal/win32/nw.dll, -action modify, -resource src/dll/nw.res, ,,",
-			win64dll_normal: "start \"ResHacker\" /wait ResourceHacker -open .cache/" + gc.version + "-normal/win64/nw.dll, -save .cache/" + gc.version + "-normal/win64/nw.dll, -action modify, -resource src/dll/nw.res, ,,",
-			win32exe_sdk:    "start \"ResHacker\" /wait ResourceHacker -open .cache/" + gc.version +    "-sdk/win32/nw.exe, -save .cache/" + gc.version + "-sdk/win32/nw.exe, -action modify, -resource src/exe/nw.res, ,,",
-			win64exe_sdk:    "start \"ResHacker\" /wait ResourceHacker -open .cache/" + gc.version +    "-sdk/win64/nw.exe, -save .cache/" + gc.version + "-sdk/win64/nw.exe, -action modify, -resource src/exe/nw.res, ,,",
-			win32dll_sdk:    "start \"ResHacker\" /wait ResourceHacker -open .cache/" + gc.version +    "-sdk/win32/nw.dll, -save .cache/" + gc.version + "-sdk/win32/nw.dll, -action modify, -resource src/dll/nw.res, ,,",
-			win64dll_sdk:    "start \"ResHacker\" /wait ResourceHacker -open .cache/" + gc.version +    "-sdk/win64/nw.dll, -save .cache/" + gc.version + "-sdk/win64/nw.dll, -action modify, -resource src/dll/nw.res, ,,",
+			win32exe_normal: "ResourceHacker -open .cache/" + gc.version + "-normal/win32/nw.exe, -save .cache/" + gc.version + "-normal/win32/nw.exe, -action modify, -resource src/exe/nw.res, ,,",
+			win64exe_normal: "ResourceHacker -open .cache/" + gc.version + "-normal/win64/nw.exe, -save .cache/" + gc.version + "-normal/win64/nw.exe, -action modify, -resource src/exe/nw.res, ,,",
+			win32dll_normal: "ResourceHacker -open .cache/" + gc.version + "-normal/win32/nw.dll, -save .cache/" + gc.version + "-normal/win32/nw.dll, -action modify, -resource src/dll/nw.res, ,,",
+			win64dll_normal: "ResourceHacker -open .cache/" + gc.version + "-normal/win64/nw.dll, -save .cache/" + gc.version + "-normal/win64/nw.dll, -action modify, -resource src/dll/nw.res, ,,",
+			win32exe_sdk:    "ResourceHacker -open .cache/" + gc.version +    "-sdk/win32/nw.exe, -save .cache/" + gc.version + "-sdk/win32/nw.exe, -action modify, -resource src/exe/nw.res, ,,",
+			win64exe_sdk:    "ResourceHacker -open .cache/" + gc.version +    "-sdk/win64/nw.exe, -save .cache/" + gc.version + "-sdk/win64/nw.exe, -action modify, -resource src/exe/nw.res, ,,",
+			win32dll_sdk:    "ResourceHacker -open .cache/" + gc.version +    "-sdk/win32/nw.dll, -save .cache/" + gc.version + "-sdk/win32/nw.dll, -action modify, -resource src/dll/nw.res, ,,",
+			win64dll_sdk:    "ResourceHacker -open .cache/" + gc.version +    "-sdk/win64/nw.dll, -save .cache/" + gc.version + "-sdk/win64/nw.dll, -action modify, -resource src/dll/nw.res, ,,",
 			test: {
 				cmd: 'start "" /wait  .cache/' + gc.version + '-sdk/win64/nw.exe package/'
 			},
 			install: {
-				cmd: 'start \"Ваше Радио - Install Compile\" /wait iscc install.iss'
+				cmd: 'iscc ' + __dirname+'/install.iss'
 			}
 		},
 		// Изменения файлов

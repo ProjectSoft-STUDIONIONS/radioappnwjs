@@ -130,11 +130,23 @@ DirectoryApp.prototype = {
 			});
 		});
 	},
-	readOptions: function(){
+	readOptions: function(reload){
 		var self = this;
 		return new Promise(function(resolve, reject){
 			fs.mkdirSync(self.iconsDirextory, {recursive: true});
 			try {
+				if(reload){
+					try {
+						fs.accessSync(self.optionsFile, fs.constants.F_OK | fs.constants.R_OK | fs.constants.W_OK);
+					}catch(epr){
+						chrome.runtime.sendMessage(chrome.runtime.id, {
+							sender: 'errorimport',
+							reload: true,
+							options: false
+						});
+						reject('reloadlist');
+					}
+				}
 				fs.accessSync(self.optionsFile, fs.constants.F_OK | fs.constants.R_OK | fs.constants.W_OK);
 				// Читаем
 				var _opt = helper.unpack(fs.readFileSync(self.optionsFile, "utf8"));
@@ -153,7 +165,7 @@ DirectoryApp.prototype = {
 					setTimeout(
 						function() {
 							fs.mkdirSync(self.iconsDirextory, {recursive: true});
-							unzip.unzip('radio-export.pack', self.userPath, function(err){
+							unzip.unzip('radio-export.radiopack', self.userPath, function(err){
 								if(err){
 									reject('Ошибка распаковки дефолта. ' + err);
 									return;
@@ -174,7 +186,7 @@ DirectoryApp.prototype = {
 								});
 							});
 						}, 
-						1000
+						200
 					);
 				});
 			}
@@ -187,7 +199,7 @@ DirectoryApp.prototype = {
 		var _this = this;
 		return new Promise(function(resolve, reject){
 			_this.saveOptions().then(function(data){
-				dialog.saveFileDialog('radio-export.pack', ['.pack'], function(result) {
+				dialog.saveFileDialog('radio-export.radiopack', ['.radiopack'], function(result) {
 					if(!result){
 						reject(false);
 						return;
@@ -209,36 +221,40 @@ DirectoryApp.prototype = {
 		var _this = this;
 		return new Promise(function(resolve, reject){
 			fs.mkdirSync(_this.iconsDirextory, {recursive: true});
-			dialog.openFileDialog(['.pack'], function(result) {
+			dialog.openFileDialog(['.radiopack'], function(result) {
 				if(!result){
 					reject(false);
 					return;
 				}
 				result = result.split("\\").join("/");
 				var buffer = readChunk.sync(result, 0, fileType.minimumBytes);
-				if(fileType(buffer).mime === 'application/zip'){
-					try{
-						rimraf(_this.userPath, function(){
-							setTimeout(function(){
-								fs.mkdirSync(_this.iconsDirextory, {recursive: true});
-								unzip.unzip(result, _this.userPath, function(err){
-									if(err){
-										reject('Ошибка Импорта! Распаковка ' + err);
-										return;
-									}
-									_start = false;
-									_this.readOptions().then(function(options){
-										resolve(options);
-									}).catch(function(errz){
-										reject(errz)
+				try{
+					if(fileType(buffer).mime === 'application/zip'){
+						try{
+							rimraf(_this.userPath, function(){
+								setTimeout(function(){
+									fs.mkdirSync(_this.iconsDirextory, {recursive: true});
+									unzip.unzip(result, _this.userPath, function(err){
+										if(err){
+											reject('Ошибка Импорта! Распаковка ' + err);
+											return;
+										}
+										_start = false;
+										_this.readOptions(true).then(function(options){
+											resolve(options);
+										}).catch(function(errz){
+											reject(errz)
+										});
 									});
-								});
-							}, 200);
-						});
-					} catch(err){
-						reject('Ошибка Импорта! Создание директории');
+								}, 200);
+							});
+						} catch(err){
+							reject('Ошибка Импорта! Создание директории');
+						}
+					} else {
+						reject('Ошибка Импорта! Данный формат не поддерживается');
 					}
-				} else {
+				}catch(er){
 					reject('Ошибка Импорта! Данный формат не поддерживается');
 				}
 			});

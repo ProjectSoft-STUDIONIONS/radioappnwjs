@@ -15,7 +15,6 @@ function initializeApp(){
 		savedInterval = 0,
 		metaInterval = 0;
 		_isShow = true,
-		_isBuffering = false,
 		beforeTitl = "",
 		notifyInterval = 0;
 		
@@ -26,6 +25,7 @@ function initializeApp(){
 				label: '  Добавить станцию',
 				icon: 'assets/images/context_add.png',
 				click: function(){
+					console.log('show add station');
 					addStationHandle();
 					dataStation = null;
 				},
@@ -41,6 +41,7 @@ function initializeApp(){
 					if(!dataStation){
 						return;
 					}
+					console.log('show edit station');
 					stationEdit(dataStation);
 					dataStation = null;
 				}
@@ -54,6 +55,7 @@ function initializeApp(){
 					if(!dataStation){
 						return;
 					}
+					console.log('show delete station');
 					$.psmodal.open(
 						'confirm',
 						'Подтверлите удаление радиостанции - <h3>' + dataStation.name + '</h3>',
@@ -81,6 +83,7 @@ function initializeApp(){
 				label: '  Сохранить список радиостанций',
 				icon: 'assets/images/context_export.png',
 				click: function(){
+					console.log('show export station');
 					exportStationsHandle();
 					dataStation = null;
 				},
@@ -93,6 +96,7 @@ function initializeApp(){
 				label: '  Загрузить список радиостанций',
 				icon: 'assets/images/context_import.png',
 				click: function(){
+					console.log('show import station');
 					importStationsHandle();
 					dataStation = null;
 				},
@@ -130,9 +134,20 @@ function initializeApp(){
 				$("#volume").prop('value', vol).trigger('change');
 				audio.volume = vol;
 				show_notifycation.checked = !!(data.options.notify);
-			}else{
-				
 			}
+		}
+		if(data.sender == "errorimport"){
+			app.readOptions().then(function(options){
+				$("main.main").scrollTop(0);
+				buildListStations(true);
+				var vol = parseFloat(options.volume);
+				$("#volume").prop('value', vol).trigger('change');
+				audio.volume = vol;
+				show_notifycation.checked = !!(options.notify);
+			}).catch(function(){
+				$.psmodal.close();
+				// Фигня короче с импортом ))
+			});
 		}
 	});
 	
@@ -186,11 +201,9 @@ function initializeApp(){
 			if(e.bufering){
 				win.setProgressBar(2);
 				$("li#" + selectId).addClass('buffering');
-				_isBuffering = true;
 			}else{
 				$("li#" + selectId).removeClass('buffering');
 				win.setProgressBar(0);
-				_isBuffering = false;
 			}
 			$("li#" + selectId).addClass('play select');
 			var ttl = win.title;
@@ -198,7 +211,6 @@ function initializeApp(){
 		}else{
 			$("li#" + selectId).removeClass("play");
 			win.setProgressBar(0);
-			_isBuffering = false;
 			clearTimeout(metaInterval);
 			win.title = "Ваше Радио";
 			beforeTitl = "";
@@ -369,6 +381,7 @@ function initializeApp(){
 							blobToBuffer(blob).then(function(buffer){
 								app.saveIcon(stationId, buffer);
 								var _options = $.extend({}, app.options),
+									_playing = audio.isPlaying(),
 									dataSt = {
 										name: name,
 										stream: stream,
@@ -379,6 +392,13 @@ function initializeApp(){
 								$('img.image', $li).attr({src: 'file:///' + app.getIcon(stationId)+"?" + (new Date()).getTime()});
 								$('span.text', $li).text(dataSt.name);
 								app.options = _options;
+								if(_playing){
+									if(selectId == stationId){
+										audio.stop();
+										audio.stream = stream;
+										audio.play();
+									}
+								}
 							}).catch(function(err){
 								console.log(error);
 							});
@@ -617,6 +637,24 @@ function initializeApp(){
 		).addClass('dialog--edit-save');
 	}
 	
+	function dialogError(title, content, className){
+		$.psmodal.open(
+			'confirm',
+			content,
+			title,
+			{
+				yes: {
+					text: 'Ok',
+					class: "",
+					callback: function(){
+						return !0;
+					}
+				},
+				no: false
+			}
+		).addClass(className);
+	}
+	
 	function importStations(){
 		$("body").addClass('preload');
 		audio.stop();
@@ -639,45 +677,14 @@ function initializeApp(){
 			).addClass('dialog--import success');
 		}).catch(function(error){
 			$("body").removeClass('preload');
+			if(error == 'reloadlist'){
+				dialogError('Ошибка импорта','Импор проведён с ошибкой!<br>Востановлен список по-умолчанию!','dialog--import error');
+				return;
+			}
 			if(error){
-				$.psmodal.open(
-					'confirm',
-					'Импор проведён с ошибкой!',
-					'Ошибка импорта',
-					{
-						yes: {
-							text: 'ОК',
-							class: "",
-							callback: function(){
-								return !0;
-							}
-						},
-						no: {
-							text: 'Посмотреть',
-							class: "",
-							callback: function(){
-								nw.Shell.showItemInFolder(result.replace(/\//g, '\\'));
-								$.psmodal.close();
-							}
-						}
-					}
-				).addClass('dialog--import error');
+				dialogError('Ошибка импорта','Импор проведён с ошибкой!','dialog--import error');
 			} else {
-				$.psmodal.open(
-					'confirm',
-					'Импорт прерван пользователем!',
-					'Импорт',
-					{
-						yes: {
-							text: 'Ok',
-							class: "",
-							callback: function(){
-								return !0;
-							}
-						},
-						no: false
-					}
-				).addClass('dialog--import');
+				dialogError('Импорт','Импорт прерван пользователем!','dialog--import');
 			}
 		});
 	}
@@ -733,37 +740,9 @@ function initializeApp(){
 		}).catch(function(error){
 			$("body").removeClass('preload');
 			if(error){
-				$.psmodal.open(
-					'confirm',
-					'Экспорт проведён с ошибкой!',
-					'Ошибка Экспорта',
-					{
-						yes: {
-							text: 'Ok',
-							class: "",
-							callback: function(){
-								return !0;
-							}
-						},
-						no: false
-					}
-				).addClass('dialog--export error');
+				dialogError('Ошибка Экспорта', 'Экспорт проведён с ошибкой!', 'dialog--export error');
 			}else{
-				$.psmodal.open(
-					'confirm',
-					'Экспорт прерван пользователем!',
-					'Экспорт',
-					{
-						yes: {
-							text: 'Ok',
-							class: "",
-							callback: function(){
-								return !0;
-							}
-						},
-						no: false
-					}
-				).addClass('dialog--export');
+				dialogError('Экспорт', 'Экспорт прерван пользователем!', 'dialog--export');
 			}
 		});
 	}
@@ -961,7 +940,7 @@ function initializeApp(){
 			win.show(true);
 			win.focus();
 			_isShow = true;
-			(audio.isPlaying() && _isBuffering) ? win.setProgressBar(2) : win.setProgressBar(0);
+			(audio.isPlaying() && audio.isProgress()) ? win.setProgressBar(2) : win.setProgressBar(0);
 		}, 10);
 	}
 	
@@ -1078,7 +1057,7 @@ function initializeApp(){
 			icon: 'favicon.png',
 			click: function(){
 				_isShow = !_isShow;
-				(_isShow) ? (win.show(), win.focus(), ((audio.isPlaying() && _isBuffering) ? win.setProgressBar(2) : win.setProgressBar(0))) : win.hide();
+				(_isShow) ? (win.show(), win.focus(), ((audio.isPlaying() && audio.isProgress()) ? win.setProgressBar(2) : win.setProgressBar(0))) : win.hide();
 			}
 		});
 	trayMenu.append(restoreMenuItem);
@@ -1104,7 +1083,7 @@ function initializeApp(){
 		_isShow = true;
 		win.show(true);
 		win.focus();
-		(audio.isPlaying() && _isBuffering) ? win.setProgressBar(2) : win.setProgressBar(0);
+		(audio.isPlaying() && audio.isProgress()) ? win.setProgressBar(2) : win.setProgressBar(0);
 	});
 	win.on('minimize', function(e){
 		_isShow = false;
