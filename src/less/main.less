@@ -1,0 +1,37 @@
+@import "inc/scrollbar";
+@import "fonts/radioapp";
+@import "fonts/linea";
+@import "bender";
+@datauri: "bin/";
+
+* {
+	&,
+	&:before,
+	&:after {
+		box-sizing: border-box;
+	}
+}
+
+body {
+	margin: 0;
+	background-image: radial-gradient(circle, #FFA966, #FF7000);
+	color: #333333;
+	font-family: 'Bender', sans-serif;
+	font-weight: 300;
+	font-size: 16px;
+	overflow-x: hidden;
+}
+.body-bg {
+	display: block;
+	position: relative;
+	background-image: data-uri('@{datauri}lazy_bg.svg');
+	background-position: bottom center;
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+@import "toolbar/toolbar";
+@import "inc/wrapper";
+@import "dialog/main";
+@import "stations/stations";
+

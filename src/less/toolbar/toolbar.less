@@ -1,0 +1,66 @@
+toolbar {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	align-items: center;
+	user-select: none;
+	cursor: default;
+	padding-left: 2px;
+	padding-right: 2px;
+	box-shadow: 0px 0px 1px #afafaf;
+	.favicon {
+		display: block;
+		width: 16px;
+		height: 16px;
+	}
+	.title {
+		padding-top: 5px;
+		padding-bottom: 5px;
+		padding-left: 5px;
+		padding-right: 5px;
+		display: block;
+		flex: 1;
+		font-size: 14px;
+		font-family: "Bender";
+	}
+	.controls {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: nowrap;
+		span[class*="radioapp"] {
+			cursor: pointer;
+			font-size: 12px;
+			background-color: white;
+			padding-left: 16px;
+			padding-right: 16px;
+			padding-top: 7px;
+			padding-bottom: 7px;
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			justify-content: center;
+			text-align: center;
+			&:hover {
+				background-color: #ee0000;
+				color: white;
+			}
+		}
+		span.radioapp-minimum {
+			&:before {
+				display: inline-block;
+				content: "";
+				flex: 1;
+				border-bottom: 1px solid #333;
+				width: 14px;
+				height: 14px;
+			}
+			&:hover {
+				background-color: #eeeeee;
+				color: #333;
+				&:before {
+					border-color: #333;
+				}
+			}
+		}
+	}
+}

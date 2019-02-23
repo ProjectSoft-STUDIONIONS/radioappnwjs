@@ -1,0 +1,52 @@
+{
+    "app_name": "radio",
+    "name": "radio",
+    "main": "index.html",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://studionions@bitbucket.org/studionions/radioappnwjs.git"
+    },
+    "author": "ProjectSoft",
+    "license": "MIT",
+    "homepage": "https://bitbucket.org/studionions/radioappnwjs#readme",
+    "version": "1.0",
+    "nodejs": true,
+    "bg-script": "assets/js/background.js",
+    "winIco": "favicon.ico",
+    "chromium-args": "--child-clean-exit --ignore-certificate-errors --disk-cache-size=1 --media-cache-size=1 --disable-web-security",
+    "page-cache": false,
+    "webkit": {
+        "plugin": true
+    },
+    "window": {
+        "exe_icon": "favicon.png",
+        "frame": true,
+        "icon": "favicon.png",
+        "id": "nwjs-radioapp",
+        "kiosk_emulation": true,
+        "mac_icon": "favicon.png",
+        "position": "center",
+        "resizable": true,
+        "show_in_taskbar": true,
+        "title": "Ваше Радио",
+        "toolbar": true,
+        "visible": true,
+        "visible_on_all_workspaces": true,
+        "min_width": 400,
+        "min_height": 500,
+        "width": 400,
+        "height": 500
+    },
+    "devDependencies": {
+        "file-zip": "^1.0.1",
+        "icecast-parser": "git+https://github.com/ProjectSoft-STUDIONIONS/icecast-parser.git",
+        "mime": "^2.4.0",
+        "node-zip-dir": "^1.0.2",
+        "read-chunk": "^3.0.0",
+        "rimraf": "^2.6.3",
+        "underscore": "^1.9.1"
+    }
+}

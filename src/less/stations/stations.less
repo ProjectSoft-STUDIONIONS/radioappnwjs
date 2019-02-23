@@ -1,0 +1,234 @@
+#stations {
+	display: block;
+	padding: 0px;
+	margin: 0px;
+	list-style: none;
+	user-select: none;
+	cursor: default;
+	.item {
+		&-station {
+			display: flex;
+			flex-direction: row;
+			flex-wrap: nowrap;
+			align-items: center;
+			padding: 10px;
+			background-color: #fff;
+			box-shadow: 0 0 1px #cfcfcf;
+			position: relative;
+			&:after {
+				content: "";
+				display: block;
+				opacity: 0;
+				position: absolute;
+				bottom: 0px;
+				left: 0px;
+				right: 0px;
+				height:20px;
+				width: 100%;
+				background-repeat: repeat-x;
+				background-size:auto 100%;
+				background-image: data-uri('@{datauri}loading.svg');
+				pointer-events: none;
+				transition: opacity .3s ease;
+			}
+			span {
+				display: block;
+			}
+			&--image {
+				width: 48px;
+				height: 48px;
+				overflow: hidden;
+				border-radius: 50%;
+				cursor: pointer;
+				position: relative;
+				background-color: white;
+				img {
+					display: block;
+					width: 100%;
+					height: 100%;
+				}
+				.icon {
+					position: absolute;
+					font-family: "Radi App";
+					speak: none;
+					font-style: normal;
+					font-weight: normal;
+					font-variant: normal;
+					text-transform: none;
+					line-height: 1;
+					text-rendering: auto;
+					-webkit-font-smoothing: antialiased;
+					-moz-osx-font-smoothing: grayscale;
+					top: 0px;
+					left: 0px;
+					width: 100%;
+					height: 100%;
+					background-color: #000;
+					color: #fff;
+					opacity: 0;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					transition: opacity .4s ease;
+					&:after {
+						content: @radioapp-play;
+						transform-origin: 50% 50%;
+						transform: scale(0);
+						transition: transform .4s ease;
+					}
+				}
+				&:hover {
+					.icon {
+						opacity: 1;
+						&:after {
+							transform: scale(1);
+						}
+					}
+				}
+			}
+			&--text {
+				flex: 1;
+				padding-left: 10px;
+				padding-right: 10px;
+			}
+			&--favorite {
+				margin: 10px;
+				cursor: n-resize;
+				position: relative;
+				width: 16px;
+				height: 16px;
+				display: block;
+				background-color: #ff7000;
+				border-radius: 50%;
+				&:before,
+				&:after {
+					position: absolute;
+					pointer-events: none;
+					content: "";
+					display: block;
+					overflow: hidden;
+					pointer-events: none;
+					overflow: hidden;
+					//width: 8px;
+					//height: 8px;
+					transition: top .3s ease, bottom .3s ease;
+					z-index: 0;
+					border-style: solid;
+					border-width: 4px;
+					border-right-color: transparent;
+					border-left-color: transparent;
+					left: ~'calc(50% - 3.6px)';
+				}
+				&:before {
+					border-bottom-color: #ff7000;
+					border-top-color: transparent;
+					top: ~'calc(50% - 4px)';
+				}
+				&:after {
+					border-top-color: #ff7000;
+					border-bottom-color: transparent;
+					bottom: ~'calc(50% - 4px)';
+				}
+				&:hover {
+					&:before {
+						top: -16px;
+					}
+					&:after {
+						bottom: -16px;
+					}
+				}
+			}
+			&.ui-sortable-helper {
+				.item {
+					&-station {
+						&--favorite {
+							&:before {
+								top: -16px;
+							}
+							&:after {
+								bottom: -16px;
+							}
+						}
+					}
+				}
+			}
+			&.favorite {
+				.item {
+					&-station {
+						&--image {
+							
+						}
+						&--text {
+							
+						}
+						&--favorite {
+							
+						}
+					}
+				}
+			}
+			&.select {
+				background-color: #5f5f5f;
+				color: #fff;
+				.item {
+					&-station {
+						&--image {
+							
+						}
+						&--text {
+							text-shadow: -1px -1px 0px white;
+							color: black;
+						}
+						&--favorite {
+							
+						}
+					}
+				}
+			}
+			&.play {
+				.item {
+					&-station {
+						&--image {
+							.icon {
+								&:after {
+									content: @radioapp-pause;
+								}
+							}
+						}
+						&--text {
+							//text-shadow: -1px -1px 0px black;
+							color: white;
+						}
+						&--favorite {
+							background-color: #00ff00;
+							&:before {
+								border-bottom-color: #00ff00;
+							}
+							&:after {
+								border-top-color: #00ff00;
+							}
+						}
+					}
+				}
+				&.buffering {
+					&:after {
+						opacity: 1;
+					}
+					.item {
+						&-station {
+							&--favorite {
+								background-color: #0089ff;
+								&:before {
+									border-bottom-color: #0089ff;
+								}
+								&:after {
+									border-top-color: #0089ff;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

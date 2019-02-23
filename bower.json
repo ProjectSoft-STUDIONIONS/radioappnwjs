@@ -1,0 +1,29 @@
+{
+  "name": "nwjs-radio",
+  "description": "",
+  "main": "package.json",
+  "authors": [
+    "ProjectSoft <projectsoft2009@yandex.ru>"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/ProjectSoft-STUDIONIONS/radioappnwjs",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "^3.3.1",
+    "jquery-ui": "https://github.com/components/jqueryui.git#^1.12.1",
+    "jScrollPane": "https://github.com/vitch/jScrollPane.git#^2.2.1",
+    "jquery_lazyload": "https://github.com/spencermefford/jquery_lazyload.git#^1.9.1",
+    "jscolor": "https://github.com/EastDesire/jscolor.git#^2.0.4",
+    "jquery-modal": "https://studionions@bitbucket.org/studionions/jquery.dialog.git"
+  },
+  "devDependencies": {
+    "Croppie": "https://github.com/Foliotek/Croppie.git#^2.6.3",
+    "jquery.scrollTo": "https://github.com/flesler/jquery.scrollTo.git#^2.1.2"
+  }
+}
