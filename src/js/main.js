@@ -1048,6 +1048,15 @@ function initializeApp(){
 	docMenu.append(projectsoft_link);
 	
 	// Tray
+	function appShow(){
+		_isShow = !_isShow;
+		(_isShow) ? (
+			win.show(),
+			win.focus(),
+			((audio.isPlaying() && audio.isProgress()) ? win.setProgressBar(2) : win.setProgressBar(0)),
+			(selectId > -1 && $("main.main").scrollTo('li#' + selectId))) : win.hide();
+	}
+	
 	var tray = new GUI.Tray({
 			title: 'Ваше радио',
 			icon: 'favicon.png'
@@ -1055,10 +1064,7 @@ function initializeApp(){
 		restoreMenuItem = new nw.MenuItem({
 			label: '  Ваше радио',
 			icon: 'favicon.png',
-			click: function(){
-				_isShow = !_isShow;
-				(_isShow) ? (win.show(), win.focus(), ((audio.isPlaying() && audio.isProgress()) ? win.setProgressBar(2) : win.setProgressBar(0))) : win.hide();
-			}
+			click: appShow
 		});
 	trayMenu.append(restoreMenuItem);
 	trayMenu.append(show_notifycation);
@@ -1068,6 +1074,7 @@ function initializeApp(){
 	);
 	trayMenu.append(new nw.MenuItem({
 			label: '  Закрыть',
+			icon: 'assets/images/close.png',
 			click: function(){
 				win.close();
 			}
@@ -1079,12 +1086,7 @@ function initializeApp(){
 	);
 	trayMenu.append(projectsoft_link);
 	tray.menu = trayMenu;
-	tray.on('click', function(){
-		_isShow = true;
-		win.show(true);
-		win.focus();
-		(audio.isPlaying() && audio.isProgress()) ? win.setProgressBar(2) : win.setProgressBar(0);
-	});
+	tray.on('click', appShow);
 	win.on('minimize', function(e){
 		_isShow = false;
 		win.hide();

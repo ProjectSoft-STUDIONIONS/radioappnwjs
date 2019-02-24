@@ -1,5 +1,7 @@
 # Your radio / Ваше Радио (Node Webkit JavaScript)
 
+![](https://img.shields.io/github/release/ProjectSoft-STUDIONIONS/radioappnwjs.svg?style=for-the-badge) ![](https://img.shields.io/github/license/ProjectSoft-STUDIONIONS/radioappnwjs.svg?style=for-the-badge) ![](https://img.shields.io/github/downloads/ProjectSoft-STUDIONIONS/radioappnwjs/total.svg?label=%D0%A1%D0%9A%D0%90%D0%A7%D0%95%D0%9D%D0%9E&style=for-the-badge)
+
 ![Your radio / Ваше Радио](https://raw.githubusercontent.com/ProjectSoft-STUDIONIONS/radioappnwjs/master/src/screen.png)
 
 Когда-то давно мною было разработано расширение для браузеров - «Онлайн радио в твоём браузере»   

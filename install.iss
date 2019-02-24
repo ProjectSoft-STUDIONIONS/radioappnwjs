@@ -2,7 +2,7 @@
 #define AppVersion '1.0'
 #define AppCopyright 'Copyright © 2010 all right reserved ProjectSoft && STUDIONIONS'
 #define InstallText 'Удалить'
-#define DirName 'YouRadio'
+#define DirName 'YourRadio'
 #define AppNameDir 'radio'
 [Setup]
 AppId={{E71B86C4-BF18-420C-89E2-68F1546C59B7}
@@ -36,7 +36,7 @@ InternalCompressLevel=ultra
 CompressionThreads=5
 
 OutputDir=installer
-OutputBaseFilename=YouRadio
+OutputBaseFilename=YourRadio
 SetupIconFile=package/favicon.ico
 WizardImageFile=src/wizard.bmp
 WizardSmallImageFile=src/logo.bmp
