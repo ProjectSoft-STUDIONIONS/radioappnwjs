@@ -3,7 +3,7 @@ module.exports = function(grunt){
 	require('time-grunt')(grunt);
 	var gc = {
 		sdk: 'normal', // sdk, normal
-		version: '0.36.2',
+		version: '0.36.4',
 		app: 'radio'
 	};
 	
@@ -23,6 +23,7 @@ module.exports = function(grunt){
 			'requirejs',
 			'uglify',
 			'pug',
+			//'exec:app_main',
 			'exec:test',
 			'notify:cancel'
 		],
@@ -42,6 +43,7 @@ module.exports = function(grunt){
 			'requirejs',
 			'uglify',
 			'pug',
+			//'exec:app_main',
 			'nwjs',
 			'copy',
 			'exec:install',
@@ -63,6 +65,7 @@ module.exports = function(grunt){
 			'uglify',
 			'pug',
 			'copy',
+			//'exec:app_main',
 			'exec:test',
 			'notify:cancel'
 		],
@@ -71,7 +74,6 @@ module.exports = function(grunt){
 			'clean:nwjs',
 			'nwjs',
 			'copy',
-			/*
 			'exec:win32exe_normal',
 			'exec:win64exe_normal',
 			'exec:win32dll_normal',
@@ -80,7 +82,6 @@ module.exports = function(grunt){
 			'exec:win64exe_sdk',
 			'exec:win32dll_sdk',
 			'exec:win64dll_sdk',
-			*/
 			'notify:cancel'
 		]
 	};
@@ -257,7 +258,7 @@ module.exports = function(grunt){
 		},
 		autoprefixer:{
 			options: {
-				browsers: ['last 2 versions'],
+				browsers: ['Chrome > 70'],
 				cascade: true
 			},
 			css: {
@@ -355,6 +356,7 @@ module.exports = function(grunt){
 						'prejscss/app.js'
 					],*/
 					'package/assets/js/background.js': 'src/background/background.js',
+					//'package/assets/js/main.js''test/js/main.js'
 					'package/assets/js/main.js': [
 						'bower_components/jquery/dist/jquery.js',
 						'tests/js/jquery.ui.js',
@@ -415,6 +417,7 @@ module.exports = function(grunt){
 			win64exe_sdk:    "ResourceHacker -open .cache/" + gc.version +    "-sdk/win64/nw.exe, -save .cache/" + gc.version + "-sdk/win64/nw.exe, -action modify, -resource src/exe/nw.res, ,,",
 			win32dll_sdk:    "ResourceHacker -open .cache/" + gc.version +    "-sdk/win32/nw.dll, -save .cache/" + gc.version + "-sdk/win32/nw.dll, -action modify, -resource src/dll/nw.res, ,,",
 			win64dll_sdk:    "ResourceHacker -open .cache/" + gc.version +    "-sdk/win64/nw.dll, -save .cache/" + gc.version + "-sdk/win64/nw.dll, -action modify, -resource src/dll/nw.res, ,,",
+			// app_main: __dirname+'/.cache/' + gc.version + '-sdk/win32/nwjc.exe ' + __dirname+'/test/js/main.js ' + __dirname+'/package/main.bin',
 			test: {
 				cmd: 'start "" /wait  .cache/' + gc.version + '-sdk/win64/nw.exe package/'
 			},

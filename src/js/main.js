@@ -325,6 +325,10 @@ function initializeApp(){
 				type: 'text',
 				class: '.station_stream'
 			}).val(data.stream),
+			$inputSity = $("<input />",{
+				type: 'text',
+				class: '.station_sity'
+			}).val(data.sity),
 			$divFile = $('<div></div>', {
 				class: 'div--file linea-basic-picture'
 			}).data({result: false}),
@@ -366,7 +370,7 @@ function initializeApp(){
 			'modal',
 			$('<div></div>', {
 				class: 'station-dialog'
-			}).append([$('<div></div>', {class: 'div--inputs'}).append([$('<span>Название станции:</span>'), $inputName, $('<span>Стрим:</span>'), $inputStream]), $divFile, $crp]),
+			}).append([$('<div></div>', {class: 'div--inputs'}).append([$('<span>Название станции:</span>'), $inputName, $('<span>Стрим:</span>'), $inputStream, $('<span>Сайт:</span>'), $inputSity]), $divFile, $crp]),
 			'Редактировать станцию',
 			{
 				yes: {
@@ -374,9 +378,15 @@ function initializeApp(){
 					class: 'linea-arrows-circle-check',
 					callback: function(e){
 						var name = $.trim($inputName.val()),
-							stream = $.trim($inputStream.val());
-						name = name.length < 2 ? 'Новая станция' : name
+							stream = $.trim($inputStream.val()),
+							sity = $.trim($inputSity.val());
+						name = name.length < 2 ? 'Новая станция' : name;
 						stream = stream.length < 15 ? '' : stream;
+						sity = sity.length < 10 ? '' : sity;
+						const regex = /^https?:\/\//;
+						const str = sity;
+						let m;
+						sity = ((m = regex.exec(str)) !== null) ? str : "";
 						$crp.croppie('result', 'blob').then(function(blob) {
 							blobToBuffer(blob).then(function(buffer){
 								app.saveIcon(stationId, buffer);
@@ -385,12 +395,21 @@ function initializeApp(){
 									dataSt = {
 										name: name,
 										stream: stream,
-										id: stationId
+										id: stationId,
+										sity: sity
 									};
 								_options.stations[index] = dataSt;
 								$li.data(dataSt);
 								$('img.image', $li).attr({src: 'file:///' + app.getIcon(stationId)+"?" + (new Date()).getTime()});
 								$('span.text', $li).text(dataSt.name);
+								$('span.item-station--sity', $li).empty();
+								if(dataSt.sity != ""){
+									$('span.item-station--sity', $li).append($("<a></a>", {
+										class: "radioapp-external-link",
+										href: dataSt.sity,
+										title: "Сайт радиостанции:\n" + dataSt.sity
+									}));
+								}
 								app.options = _options;
 								if(_playing){
 									if(selectId == stationId){
@@ -429,7 +448,8 @@ function initializeApp(){
 				var opt = {
 					id: ds.id,
 					name: ds.name,
-					stream: ds.stream
+					stream: ds.stream,
+					sity: ds.sity
 				}
 				app.options.stations.push(opt);
 			}
@@ -455,6 +475,7 @@ function initializeApp(){
 	// Station Item
 	function buildItemListStation(station, favorite){
 		favorite = favorite ? " favorite" : "";
+		const regex = /^https?:\/\//;
 		var pathIcon = 'file:///' + app.getIcon(station.id)+"?" + (new Date()).getTime(),
 			stationName = station.name,
 			$img = $("<img />", {
@@ -473,10 +494,13 @@ function initializeApp(){
 			$favorite =  $("<span></span>", {
 				class: "item-station--favorite"
 			}),
+			$sity = $("<span></span>", {
+				class: "item-station--sity"
+			}),
 			$li = $("<li></li>", {
 				class: "item-station" + favorite,
 				id: station.id
-			}).data(station).append([$imgLogo, $spanText, $favorite])
+			}).data(station).append([$imgLogo, $spanText, $sity, $favorite])
 			.on('click', ".item-station--image", function(e){
 				var target = e.delegateTarget,
 					data = $(target).data();
@@ -506,7 +530,25 @@ function initializeApp(){
 				app.options = _opt;
 				clearTimeout(metaInterval);
 				getMetadata(data);
+			}).on('click', '.item-station--sity a', function(e){
+				e.preventDefault();
+				var target = e.delegateTarget,
+					data = $(target).data();
+				let m;
+				if ((m = regex.exec(data.sity)) !== null) {
+					nw.Shell.openExternal(data.sity);
+				}
+				return !1;
 			});
+		if ((m = regex.exec(station.sity)) !== null) {
+			if(station.sity.length > 10){
+				$sity.append($("<a></a>", {
+					class: "radioapp-external-link",
+					href: station.sity,
+					title: "Сайт радиостанции:\n" + station.sity
+				}));
+			}
+		}
 		return $li;
 	}
 
@@ -563,6 +605,10 @@ function initializeApp(){
 				type: 'text',
 				class: '.station_stream'
 			}),
+			$inputSity = $("<input />",{
+				type: 'text',
+				class: '.station_sity'
+			}).val(data.sity),
 			$divFile = $('<div></div>', {
 				class: 'div--file linea-basic-picture'
 			}).data({result: false}),
@@ -612,9 +658,15 @@ function initializeApp(){
 					callback: function(e){
 						var name = $.trim($inputName.val()),
 							stream = $.trim($inputStream.val()),
+							sity = $.trim($inputSity.val()),
 							id = (new Date()).getTime();
 						name = name.length < 2 ? 'Новая станция' : name
 						stream = stream.length < 15 ? '' : stream;
+						sity = sity.length < 10 ? '' : sity;
+						const regex = /^https?:\/\//;
+						const str = sity;
+						let m;
+						sity = ((m = regex.exec(str)) !== null) ? str : "";
 						$crp.croppie('result', 'blob').then(function(blob) {
 							blobToBuffer(blob).then(function(buffer){
 								app.saveIcon(id, buffer);
@@ -622,7 +674,8 @@ function initializeApp(){
 								_options.stations.push({
 									name: name,
 									stream: stream,
-									id: id
+									id: id,
+									sity: sity
 								});
 								app.options = _options;
 								buildListStations(true);
@@ -767,12 +820,22 @@ function initializeApp(){
 	// Close
 	nw.Window.get().on('close', function () {
 		win.setAlwaysOnTop(false);
-		nw.App.clearCache();
-		this.hide();
-		app.saveOptions().then(function(data){
-			nw.App.clearCache();
-			nw.App.quit();
-		});
+		var screenW =window.screen.availWidth,
+			screenH =window.screen.availHeight;
+		win.isFullscreen && win.leaveFullscreen();
+		win.isKioskMode && win.leaveKioskMode();
+		win.show(true);
+		win.width = 400;
+		win.height = 500;
+		setTimeout(function(){
+			win.x = (screenW - win.width) / 2;
+			win.y = (screenH - win.height) / 2;
+			app.saveOptions().then(function(data){
+				nw.App.clearCache();
+				nw.App.quit();
+			});
+		}, 50);
+		return false;
 	});
 	
 	// Show Context Menu in Station Item
@@ -847,7 +910,14 @@ function initializeApp(){
 		// we could configure the analyser: e.g. analyser.fftSize (for further infos read the spec)
 		analyser.fftSize = 256;
 		analyser.maxDecibels = 20;
-		analyser.smoothingTimeConstant = 0.6;
+		analyser.smoothingTimeConstant = 0.7;
+		
+		/*$('#thin').on('input', function(e){
+			var val = parseFloat($(this).val());
+			analyser.smoothingTimeConstant = parseFloat(val);
+			$("#thin-text").text(val);
+		});*/
+		
 		// frequencyBinCount tells you how many values you'll receive from the analyser
 		var frequencyData = new Uint8Array(analyser.frequencyBinCount);
 		//var parent = $()
@@ -907,7 +977,7 @@ function initializeApp(){
 					ctx.fillRect((i-s) * (meterWidth + 1) /*meterWidth+gap*/ , yx, meterWidth, cheight + 15); //the meter
 				}
 			}
-			requestAnimationFrame(renderFrame);
+			window.stepCanvas = requestAnimationFrame(renderFrame);
 		}
 		renderFrame();
 	};
@@ -1049,12 +1119,15 @@ function initializeApp(){
 	
 	// Tray
 	function appShow(){
+		win.isFullscreen && win.leaveFullscreen();
+		win.isKioskMode && win.leaveKioskMode();
 		_isShow = !_isShow;
 		(_isShow) ? (
-			win.show(),
+			win.show(true),
+			$("body").removeClass('kiosk'),
 			win.focus(),
 			((audio.isPlaying() && audio.isProgress()) ? win.setProgressBar(2) : win.setProgressBar(0)),
-			(selectId > -1 && $("main.main").scrollTo('li#' + selectId))) : win.hide();
+			(selectId > -1 && $("main.main").scrollTo('li#' + selectId))) : ($("body").removeClass('kiosk'), win.hide());
 	}
 	
 	var tray = new GUI.Tray({

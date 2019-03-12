@@ -101,6 +101,10 @@ Name: {app}\; Type: filesandordirs
 #emit ProcessScanDir('.nwjs\normal\' + AppNameDir + '\win32', '{app}', 'solidbreak ', 'not Is64BitInstallMode')
 ; swiftshader 32
 #emit ProcessScanDir('.nwjs\normal\' + AppNameDir + '\win32\swiftshader', '{app}\swiftshader\', 'solidbreak ', 'not Is64BitInstallMode')
+
+; #emit ProcessScanDir('.nwjs\normal\' + AppNameDir + '\win32', '{app}', 'solidbreak ', False)
+; swiftshader 32
+; #emit ProcessScanDir('.nwjs\normal\' + AppNameDir + '\win32\swiftshader', '{app}\swiftshader\', 'solidbreak ', False)
 ; pnacl
 #emit ProcessScanDir('.nwjs\normal\' + AppNameDir + '\win32\pnacl', '{app}\pnacl\', 'solidbreak ', False)
 ; locales

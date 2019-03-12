@@ -12,7 +12,7 @@
     "author": "ProjectSoft",
     "license": "MIT",
     "homepage": "https://bitbucket.org/studionions/radioappnwjs#readme",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "nodejs": true,
     "bg-script": "assets/js/background.js",
     "winIco": "favicon.ico",
