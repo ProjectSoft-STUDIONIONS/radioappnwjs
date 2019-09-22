@@ -16,7 +16,8 @@ function initializeApp(){
 		metaInterval = 0;
 		_isShow = true,
 		beforeTitl = "",
-		notifyInterval = 0;
+		notifyInterval = 0,
+		mouseInterval = 0;
 		
 	window.AudioContext = window.AudioContext || window.webkitAudioContext || window.mozAudioContext;
 	
@@ -311,6 +312,100 @@ function initializeApp(){
 		metaInterval = setTimeout(function(){win.title = "Ваше Радио - " + nm.name ; radioStation.queueRequest();}, 5000);
 		win.title = "Ваше Радио" + (nm ? " - " + nm.name : "");
 	}
+	
+	// Add station
+	function addStationHandle(){
+		var $inputName = $("<input />",{
+				type: 'text',
+				class: '.station_name'
+			}),
+			$inputStream = $("<input />",{
+				type: 'text',
+				class: '.station_stream'
+			}),
+			$inputSity = $("<input />",{
+				type: 'text',
+				class: '.station_sity'
+			}),
+			$divFile = $('<div></div>', {
+				class: 'div--file linea-basic-picture'
+			}).data({result: false}),
+			$crp = $('<div></div>', {
+				class: 'div--crop'
+			});
+		$crp.croppie({
+			viewport: {
+				width: 100,
+				height: 100,
+				type: 'circle'
+			},
+			boundary: {
+				width: 100,
+				height: 100
+			},
+			showZoomer: true,
+			enableOrientation: true,
+			mouseWheelZoom: 'ctrl',
+			enableExif: true
+		}).croppie('bind', {
+			url: 'assets/images/favicon.png'
+		});
+		$divFile.on('click', function(ev){
+			ev.preventDefault();
+			dialog.openFileDialog(['.jpeg', '.jpg', '.png'], function(result){
+				if(!result)
+					return;
+				result = "file:///" + result.split('\\').join('/');
+				$divFile.data({result: result});
+				$crp.croppie('bind', {
+					url: result
+				});
+			});
+			return !1;
+		});
+		$.psmodal.open(
+			'modal',
+			$('<div></div>', {
+				class: 'station-dialog'
+			}).append([$('<div></div>', {class: 'div--inputs'}).append([$('<span>Название станции:</span>'), $inputName, $('<span>Стрим:</span>'), $inputStream]), $divFile, $crp]),
+			'Добавить станцию',
+			{
+				yes: {
+					text: '',
+					class: 'linea-arrows-circle-check',
+					callback: function(e){
+						const regex = /^https?:\/\//;
+						var name = $.trim($inputName.val()),
+							stream = $.trim($inputStream.val()),
+							sity = $.trim($inputSity.val()),
+							id = (new Date()).getTime();
+						name = name.length < 2 ? 'Новая станция' : name
+						stream = stream.length < 15 ? '' : stream;
+						sity = sity.length < 10 ? '' : sity;
+						let m;
+						sity = ((m = regex.exec(sity)) !== null) ? sity : "";
+						$crp.croppie('result', 'blob').then(function(blob) {
+							blobToBuffer(blob).then(function(buffer){
+								app.saveIcon(id, buffer);
+								var _options = $.extend({}, app.options);
+								_options.stations.push({
+									name: name,
+									stream: stream,
+									id: id,
+									sity: sity
+								});
+								app.options = _options;
+								buildListStations(true);
+							}).catch(function(error){
+								console.log(error);
+							});
+						});
+						return !0;
+					}
+				}
+			}
+		).addClass('dialog--edit-save');
+	}
 
 	// Station Edit
 	function stationEdit(data){
@@ -377,16 +472,15 @@ function initializeApp(){
 					text: '',
 					class: 'linea-arrows-circle-check',
 					callback: function(e){
+						const regex = /^https?:\/\//;
+						let m;
 						var name = $.trim($inputName.val()),
 							stream = $.trim($inputStream.val()),
 							sity = $.trim($inputSity.val());
 						name = name.length < 2 ? 'Новая станция' : name;
 						stream = stream.length < 15 ? '' : stream;
 						sity = sity.length < 10 ? '' : sity;
-						const regex = /^https?:\/\//;
-						const str = sity;
-						let m;
-						sity = ((m = regex.exec(str)) !== null) ? str : "";
+						sity = ((m = regex.exec(sity)) !== null) ? sity : "";
 						$crp.croppie('result', 'blob').then(function(blob) {
 							blobToBuffer(blob).then(function(buffer){
 								app.saveIcon(stationId, buffer);
@@ -476,6 +570,7 @@ function initializeApp(){
 	function buildItemListStation(station, favorite){
 		favorite = favorite ? " favorite" : "";
 		const regex = /^https?:\/\//;
+		let m;
 		var pathIcon = 'file:///' + app.getIcon(station.id)+"?" + (new Date()).getTime(),
 			stationName = station.name,
 			$img = $("<img />", {
@@ -534,7 +629,6 @@ function initializeApp(){
 				e.preventDefault();
 				var target = e.delegateTarget,
 					data = $(target).data();
-				let m;
 				if ((m = regex.exec(data.sity)) !== null) {
 					nw.Shell.openExternal(data.sity);
 				}
@@ -594,100 +688,6 @@ function initializeApp(){
 			handle: '.item-station--favorite'
 		}).data({sortableinit: true});
 		$('body').removeClass('preload');
-	}
-	
-	function addStationHandle(){
-		var $inputName = $("<input />",{
-				type: 'text',
-				class: '.station_name'
-			}),
-			$inputStream = $("<input />",{
-				type: 'text',
-				class: '.station_stream'
-			}),
-			$inputSity = $("<input />",{
-				type: 'text',
-				class: '.station_sity'
-			}).val(data.sity),
-			$divFile = $('<div></div>', {
-				class: 'div--file linea-basic-picture'
-			}).data({result: false}),
-			$crp = $('<div></div>', {
-				class: 'div--crop'
-			});
-		$crp.croppie({
-			viewport: {
-				width: 100,
-				height: 100,
-				type: 'circle'
-			},
-			boundary: {
-				width: 100,
-				height: 100
-			},
-			showZoomer: true,
-			enableOrientation: true,
-			mouseWheelZoom: 'ctrl',
-			enableExif: true
-		}).croppie('bind', {
-			url: 'assets/images/favicon.png'
-		});
-		$divFile.on('click', function(ev){
-			ev.preventDefault();
-			dialog.openFileDialog(['.jpeg', '.jpg', '.png'], function(result){
-				if(!result)
-					return;
-				result = "file:///" + result.split('\\').join('/');
-				$divFile.data({result: result});
-				$crp.croppie('bind', {
-					url: result
-				});
-			});
-			return !1;
-		});
-		$.psmodal.open(
-			'modal',
-			$('<div></div>', {
-				class: 'station-dialog'
-			}).append([$('<div></div>', {class: 'div--inputs'}).append([$('<span>Название станции:</span>'), $inputName, $('<span>Стрим:</span>'), $inputStream]), $divFile, $crp]),
-			'Добавить станцию',
-			{
-				yes: {
-					text: '',
-					class: 'linea-arrows-circle-check',
-					callback: function(e){
-						var name = $.trim($inputName.val()),
-							stream = $.trim($inputStream.val()),
-							sity = $.trim($inputSity.val()),
-							id = (new Date()).getTime();
-						name = name.length < 2 ? 'Новая станция' : name
-						stream = stream.length < 15 ? '' : stream;
-						sity = sity.length < 10 ? '' : sity;
-						const regex = /^https?:\/\//;
-						const str = sity;
-						let m;
-						sity = ((m = regex.exec(str)) !== null) ? str : "";
-						$crp.croppie('result', 'blob').then(function(blob) {
-							blobToBuffer(blob).then(function(buffer){
-								app.saveIcon(id, buffer);
-								var _options = $.extend({}, app.options);
-								_options.stations.push({
-									name: name,
-									stream: stream,
-									id: id,
-									sity: sity
-								});
-								app.options = _options;
-								buildListStations(true);
-							}).catch(function(error){
-								console.log(error);
-							});
-						});
-						return !0;
-					}
-				}
-			}
-		).addClass('dialog--edit-save');
 	}
 	
 	function dialogError(title, content, className){
@@ -811,31 +811,31 @@ function initializeApp(){
 			'data-step': st
 		});
 		savedInterval = setTimeout(function(){
-			app.saveOptions().then(function(options){
-				
-			});
+			app.saveOptions().then(function(options){});
 		}, 500);
 	});
 
 	// Close
 	nw.Window.get().on('close', function () {
-		win.setAlwaysOnTop(false);
 		var screenW =window.screen.availWidth,
-			screenH =window.screen.availHeight;
-		win.isFullscreen && win.leaveFullscreen();
-		win.isKioskMode && win.leaveKioskMode();
-		win.show(true);
-		win.width = 400;
-		win.height = 500;
+			screenH =window.screen.availHeight,
+			$this = this;
+		this.setAlwaysOnTop(false);
+		this.isFullscreen && this.leaveFullscreen();
+		this.isKioskMode && this.leaveKioskMode();
+		this.show(true);
+		this.width = 400;
+		this.height = 500;
 		setTimeout(function(){
-			win.x = (screenW - win.width) / 2;
-			win.y = (screenH - win.height) / 2;
+			this.x = parseInt((screenW - this.width) / 2);
+			this.y = parseInt((screenH - this.height) / 2);
 			app.saveOptions().then(function(data){
+				$this.close(true);
 				nw.App.clearCache();
 				nw.App.quit();
 			});
 		}, 50);
-		return false;
+		return !1;
 	});
 	
 	// Show Context Menu in Station Item
@@ -862,6 +862,34 @@ function initializeApp(){
 			add_station_item.enabled = export_stations_item.enabled = import_stations_item.enabled = !win.isKioskMode;
 			docMenu.popup(e.pageX, e.pageY);
 		}
+		return !1;
+	}).on("mousemove click dblclick keydown mouseleave mouseenter", function(e){
+		if(win.isKioskMode || win.isFullscreen){
+			clearTimeout(mouseInterval);
+			$('body').css({
+				'cursor': ""
+			}).removeClass("hidden-cursor");
+			mouseInterval = setTimeout(
+				function(){
+					if(win.isKioskMode || win.isFullscreen){
+						$("body").css({
+							'cursor': "none"
+						}).addClass("hidden-cursor");
+					}
+				},
+				5000
+			);
+		}else{
+			if($("body").hasClass("hidden-cursor")){
+				clearTimeout(mouseInterval);
+				$('body').css({
+					'cursor': ""
+				}).removeClass("hidden-cursor");
+			}
+		}
+	}).on("dblclick", "input[type=text]", function(e){
+		e.preventDefault();
+		e.currentTarget.select();
 		return !1;
 	});
 	
@@ -1015,6 +1043,7 @@ function initializeApp(){
 	}
 	
 	// Shortcuts
+	/*
 	nw.App.registerGlobalHotKey(
 		new nw.Shortcut({
 			key : "Ctrl+Alt+Right",
@@ -1059,7 +1088,7 @@ function initializeApp(){
 		}
 	});
 	nw.App.registerGlobalHotKey(shortcut);
-	
+	*/
 	initializeSpectrum();
 	_isShow = true;
 	
@@ -1167,6 +1196,8 @@ function initializeApp(){
 	GUI.Screen.Init();
 	win.show(true);
 	win.restore();
+	$("canvas").on("dblclick", toggleKioskMode);
+	//win.showDevTools();
 	/*var itms = new StationItem();
 	$("#testStations").append(itms);*/
 };

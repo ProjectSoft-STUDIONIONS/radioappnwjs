@@ -2,8 +2,8 @@ module.exports = function(grunt){
 	require('load-grunt-tasks')(grunt);
 	require('time-grunt')(grunt);
 	var gc = {
-		sdk: 'normal', // sdk, normal
-		version: '0.36.4',
+		sdk: 'sdk', // sdk, normal
+		version: '0.39.2',
 		app: 'radio'
 	};
 	
@@ -51,16 +51,16 @@ module.exports = function(grunt){
 		],
 		test: [
 			'notify:start',
-			'clean:all',
-			'imagemin',
-			'tinyimg',
-			'webfont',
-			'ttf2woff2',
-			'less',
-			'autoprefixer',
-			'group_css_media_queries',
-			'replace',
-			'cssmin',
+			//'clean:all',
+			//'imagemin',
+			//'tinyimg',
+			//'webfont',
+			//'ttf2woff2',
+			//'less',
+			//'autoprefixer',
+			//'group_css_media_queries',
+			//'replace',
+			//'cssmin',
 			'requirejs',
 			'uglify',
 			'pug',
