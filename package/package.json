@@ -1,5 +1,5 @@
 {
-    "app_name": "radio",
+    "app_name": "Ваше Радио",
     "name": "radio",
     "main": "index.html",
     "scripts": {

@@ -3,7 +3,7 @@ module.exports = function(grunt){
 	require('time-grunt')(grunt);
 	var gc = {
 		sdk: 'sdk', // sdk, normal
-		version: '0.39.2',
+		version: '0.39.2', // '0.41.2',
 		app: 'radio'
 	};
 	

@@ -15,6 +15,7 @@ function initializeApp(){
 		savedInterval = 0,
 		metaInterval = 0;
 		_isShow = true,
+		_isSpectrum = true,
 		beforeTitl = "",
 		notifyInterval = 0,
 		mouseInterval = 0;
@@ -123,7 +124,54 @@ function initializeApp(){
 					nw.Shell.openExternal('https://demiart.ru/forum/index.php?showuser=1393929');
 				}
 			}
-		);
+		),
+		handlePlayStopMenu = function(){
+			if(!$("body").hasClass('preload') && !$("body").hasClass('open--modal')){
+				if(app.options.station > 0){
+					if(audio.isPlaying()){
+						// Stop audio
+						audio.stop();
+					}else{
+						// Play audio
+						//buildPlayStop('stop');
+						var data = app.options.stations[app.getStationIndex(selectId)];
+						audio.stream = data.stream;
+						audio.play();
+					}
+				}
+			}
+		},
+		play_menuitem = new nw.MenuItem(
+			{
+				label: '  Play',
+				icon: "assets/images/play.png",
+				click: handlePlayStopMenu
+			}
+		),
+		stop_menuitem = new nw.MenuItem(
+			{
+				label: '  Stop',
+				icon: "assets/images/stop.png",
+				click: handlePlayStopMenu
+			}
+		),
+		buildPlayStop = function(state){
+			if(state=='play'){
+				play_menuitem.label = '  Stop';
+				play_menuitem.icon = "assets/images/stop.png";
+			}else{
+				play_menuitem.label = '  Play';
+				play_menuitem.icon = "assets/images/play.png";
+			}
+			//try{
+				//trayMenu.removeAt(0);
+			//}catch(t){}
+			//if(state=='play'){
+				//trayMenu.insert(stop_menuitem, 0);
+			//}else{
+				//trayMenu.insert(play_menuitem, 0);
+			//}
+		};
 	
 	// Runtime Messagess
 	chrome.runtime.onMessage.addListener(function(data){
@@ -209,12 +257,14 @@ function initializeApp(){
 			$("li#" + selectId).addClass('play select');
 			var ttl = win.title;
 			win.title = (ttl == "Ваше Радио") ? "Ваше Радио - " + app.options.stations[app.getStationIndex(selectId)].name : ttl;
+			buildPlayStop('play');
 		}else{
 			$("li#" + selectId).removeClass("play");
 			win.setProgressBar(0);
 			clearTimeout(metaInterval);
 			win.title = "Ваше Радио";
 			beforeTitl = "";
+			buildPlayStop('stop');
 		}
 	});
 	audio.addEventListener('networkchange', function(e){
@@ -600,6 +650,7 @@ function initializeApp(){
 				var target = e.delegateTarget,
 					data = $(target).data();
 				if(audio.isPlaying()) {
+					buildPlayStop('play');
 					audio.stop();
 					win.title = "Ваше радио";
 					$("ul#stations li").removeClass('play');
@@ -610,6 +661,7 @@ function initializeApp(){
 						audio.stream = data.stream;
 						audio.play();
 						win.title = "Ваше радио - " + data.name;
+						buildPlayStop('stop');
 					}
 					selectId = data.id;
 				}else{
@@ -619,6 +671,7 @@ function initializeApp(){
 					audio.stream = data.stream;
 					audio.play();
 					win.title = "Ваше радио - " + data.name;
+					buildPlayStop('stop');
 				}
 				var _opt = $.extend({}, app.options);
 				_opt.station = selectId;
@@ -830,9 +883,8 @@ function initializeApp(){
 			this.x = parseInt((screenW - this.width) / 2);
 			this.y = parseInt((screenH - this.height) / 2);
 			app.saveOptions().then(function(data){
-				$this.close(true);
 				nw.App.clearCache();
-				nw.App.quit();
+				$this.close(true);
 			});
 		}, 50);
 		return !1;
@@ -977,7 +1029,7 @@ function initializeApp(){
 		function renderFrame() {
 			//canvas.width = parseInt($('.canvas').width());
 			//canvas.height = parseInt($('.canvas').height());
-			if(_isShow){
+			if(_isShow && _isSpectrum){
 				cwidth = canvas.width;
 				cheight = canvas.height - 2;
 				meterWidth = parseInt(cwidth / meterNum) + 1
@@ -1038,69 +1090,14 @@ function initializeApp(){
 			win.show(true);
 			win.focus();
 			_isShow = true;
+			restoreMenuItem.label = "  Свернуть";
 			(audio.isPlaying() && audio.isProgress()) ? win.setProgressBar(2) : win.setProgressBar(0);
 		}, 10);
 	}
 	
-	// Shortcuts
-	/*
-	nw.App.registerGlobalHotKey(
-		new nw.Shortcut({
-			key : "Ctrl+Alt+Right",
-			active : volumeUp,
-			failed : function(msg){
-				console.log("Not register ShortCut Ctrl+Alt+Right")
-			}
-		})
-	);
-	nw.App.registerGlobalHotKey(
-		new nw.Shortcut({
-			key : "Ctrl+Alt+Up",
-			active : volumeUp,
-			failed : function(msg){
-				console.log("Not register ShortCut Ctrl+Alt+Up")
-			}
-		})
-	);
-	nw.App.registerGlobalHotKey(
-		new nw.Shortcut({
-			key : "Ctrl+Alt+Left",
-			active : volumeDown,
-			failed : function(msg){
-				console.log("Not register ShortCut Ctrl+Alt+Left")
-			}
-		})
-	);
-	nw.App.registerGlobalHotKey(
-		new nw.Shortcut({
-			key : "Ctrl+Alt+Down",
-			active : volumeDown,
-			failed : function(msg){
-				console.log("Not register ShortCut Ctrl+Alt+Down")
-			}
-		})
-	);
-	var shortcut = new nw.Shortcut({
-		key : "Ctrl+Alt+F10",
-		active : toggleKioskMode,
-		failed : function(msg){
-			$("canvas").on("dblclick", toggleKioskMode);
-		}
-	});
-	nw.App.registerGlobalHotKey(shortcut);
-	*/
 	initializeSpectrum();
 	_isShow = true;
 	
-	/*GUI.Screen.Init();
-	win.show(true);
-	win.restore();*/
-	/*
-	win.height = screenHeight;
-	win.y = 0 + win.window.screen.availTop;
-	win.x = screenWidth - win.width + win.window.screen.availLeft;
-	win.setAlwaysOnTop(false);
-	*/
 	// Context menu
 	stationMenu.append(add_station_item);
 	stationMenu.append(new nw.MenuItem(
@@ -1156,7 +1153,12 @@ function initializeApp(){
 			$("body").removeClass('kiosk'),
 			win.focus(),
 			((audio.isPlaying() && audio.isProgress()) ? win.setProgressBar(2) : win.setProgressBar(0)),
-			(selectId > -1 && $("main.main").scrollTo('li#' + selectId))) : ($("body").removeClass('kiosk'), win.hide());
+			(selectId > -1 && $("main.main").scrollTo('li#' + selectId)),
+			restoreMenuItem.label = "  Свернуть"
+			) : ($("body").removeClass('kiosk'),
+			win.hide(),
+			restoreMenuItem.label = "  Востановить"
+			);
 	}
 	
 	var tray = new GUI.Tray({
@@ -1164,16 +1166,18 @@ function initializeApp(){
 			icon: 'favicon.png'
 		}),
 		restoreMenuItem = new nw.MenuItem({
-			label: '  Ваше радио',
+			label: '  Свернуть',
 			icon: 'favicon.png',
 			click: appShow
 		});
-	trayMenu.append(restoreMenuItem);
-	trayMenu.append(show_notifycation);
+	trayMenu.append(play_menuitem);
+	//buildPlayStop('play');
 	trayMenu.append(new nw.MenuItem({
 			type: 'separator'
 		})
 	);
+	trayMenu.append(restoreMenuItem);
+	trayMenu.append(show_notifycation);
 	trayMenu.append(new nw.MenuItem({
 			label: '  Закрыть',
 			icon: 'assets/images/close.png',
@@ -1188,15 +1192,20 @@ function initializeApp(){
 	);
 	trayMenu.append(projectsoft_link);
 	tray.menu = trayMenu;
-	tray.on('click', appShow);
+	tray.on('click', function(ev){
+		trayMenu.popup(ev.x, ev.y);
+		return !1;
+	});
 	win.on('minimize', function(e){
 		_isShow = false;
 		win.hide();
+		restoreMenuItem.label = "  Востановить";
 	});
 	GUI.Screen.Init();
 	win.show(true);
 	win.restore();
 	$("canvas").on("dblclick", toggleKioskMode);
+	audio.stop();
 	//win.showDevTools();
 	/*var itms = new StationItem();
 	$("#testStations").append(itms);*/
