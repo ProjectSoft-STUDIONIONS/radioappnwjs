@@ -1,6 +1,6 @@
-#define AppVersion '1.3'
+#define AppVersion '1.4'
 #define AppCopyright 'Copyright © 2010 all right reserved ProjectSoft && STUDIONIONS'
-#define DirName 'YouRadio'
+#define DirName 'YourRadio'
 
 [Setup]
 AppId={{E71B86C4-BF18-420C-89E2-68F1546C59B7}
