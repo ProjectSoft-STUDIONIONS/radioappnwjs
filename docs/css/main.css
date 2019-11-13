@@ -22,3 +22,19 @@ body {
   background-attachment: fixed, fixed;
   background-size: cover, auto;
 }
+
+.page--wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  align-items: center;
+}
+
+header,
+footer {
+  flex: 0 0 auto;
+}
+
+main {
+  flex: 1 1 100%;
+}
