@@ -1,3 +1,9 @@
+- var page = "https://projectsoft-studionions.github.io/radioappnwjs/";
+- var site_name = "GitHub Repositories @ProjectSoft (А. Чернышёв)";
+- var screen = "https://raw.githubusercontent.com/ProjectSoft-STUDIONIONS/radioappnwjs/master/src/screen.png";
+- var title = "Your radio / Ваше Радио (Node Webkit JavaScript)";
+- var keyw = "";
+- var desc = "";
 doctype html
 html(lang="ru" prefix="og: http://ogp.me/ns#" class="no-js")
 	head
@@ -7,8 +13,31 @@ html(lang="ru" prefix="og: http://ogp.me/ns#" class="no-js")
 		meta(name="SKYPE_TOOLBAR" content="SKYPE_TOOLBAR_PARSER_COMPATIBLE")
 		meta(name="cmsmagazine" content="d8e7426ec72ad3e4ea38b09ebf01284c")
 		meta(name='yandex-verification' content='')
+		base(href=page)
+		link(rel="shortcut icon" href=page+"favicon.ico" type="image/x-icon")
 		title
-			|Your radio / Ваше Радио (Node Webkit JavaScript)
+			|#{title}
+		meta(name="title" content=title)
+		meta(name="keywords" content=keyw)
+		meta(name="description" content=desc)
+		meta(name="site_name" content=site_name)
+		meta(name="short_link" content=page)
+		meta(property="og:title" content=title)
+		meta(property="og:description" content=desc)
+		meta(property="og:url" content=page)
+		meta(property="og:locale" content="ru_RU")
+		meta(property="og:type" content="website")
+		meta(property="og:site_name" content=site_name)
+		meta(property="og:image" content=screen)
+		meta(property="og:image:width" content="1366")
+		meta(property="og:image:height" content="739")
+		meta(property="og:image:type" content="image/jpeg")
+		meta(name="twitter:card" content="summary_large_image")
+		meta(name="twitter:site:id" content="summary_large_image")
+		meta(name="twitter:title" content=title)
+		meta(name="twitter:description" content=desc)
+		meta(itemprop="image" content=screen)
+		meta(property="twitter:image0" content=screen)
 		style
 			include ../../css/main.min.css
 	body
