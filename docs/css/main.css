@@ -47,7 +47,12 @@ main {
   background: inherit;
 }
 
-.main {
+.outer {
+  background: inherit;
+  padding: 15px;
+}
+
+.outer .main {
   max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
@@ -58,7 +63,7 @@ main {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.0025);
 }
 
-.main::before {
+.outer .main::before {
   position: absolute;
   top: 0px;
   left: 0px;
@@ -68,11 +73,14 @@ main {
   height: 100%;
   z-index: 1;
   content: "";
+  background: inherit;
+  filter: blur(6px);
 }
 
-.main--wrapper {
+.outer .main--wrapper {
   padding: 15px;
   position: relative;
   z-index: 10;
   min-height: 80vh;
+  background-color: rgba(255, 255, 255, 0.0012);
 }
