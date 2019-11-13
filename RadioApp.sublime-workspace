@@ -1,0 +1,346 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"tra",
+				"transition\tproperty"
+			],
+			[
+				"p",
+				"pre-line\twhite-space"
+			],
+			[
+				"con",
+				"container"
+			],
+			[
+				"tool",
+				"tooltip"
+			],
+			[
+				"text",
+				"text-align\tproperty"
+			],
+			[
+				"no",
+				"nowrap\twhite-space"
+			],
+			[
+				"marg",
+				"margin-bottom\tproperty"
+			],
+			[
+				"font",
+				"font-weight\tproperty"
+			],
+			[
+				"fon",
+				"font-size\tproperty"
+			],
+			[
+				"ro",
+				"row-reverse\tflex-direction"
+			],
+			[
+				"flex-",
+				"flex-direction\tproperty"
+			],
+			[
+				"s",
+				"space-between\tjustify-content"
+			],
+			[
+				"stat",
+				"static"
+			],
+			[
+				"o",
+				"out"
+			],
+			[
+				"min",
+				"min-width\tproperty"
+			],
+			[
+				"max",
+				"max-width\tproperty"
+			],
+			[
+				"tr",
+				"transition\tproperty"
+			],
+			[
+				"ba",
+				"background-color"
+			],
+			[
+				"padding",
+				"padding-right"
+			],
+			[
+				"fle",
+				"flex-nowrap"
+			],
+			[
+				"flex",
+				"flex-row-reverse"
+			],
+			[
+				"displ",
+				"display-flex"
+			],
+			[
+				"di",
+				"display-inline-block"
+			],
+			[
+				"b",
+				"block-center"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"P",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: ",
+				"Package Control: List Packages"
+			],
+			[
+				"p",
+				"Package Control: Install Package"
+			],
+			[
+				"pa",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 0.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/D/ProjectSoft/soft/RadioApp"
+	],
+	"file_history":
+	[
+		"/D/ProjectSoft/soft/RadioApp/RadioApp.sublime-project",
+		"/C/OSPanel/my_domains/logoped.my/src/less/inc/events.less",
+		"/C/OSPanel/my_domains/logoped.my/src/pug/tpl/breadcrumds.pug",
+		"/C/OSPanel/my_domains/logoped.my/src/js/main.js",
+		"/C/OSPanel/my_domains/logoped.my/src/pug/tpl/present.pug",
+		"/C/OSPanel/my_domains/logoped.my/assets/custom/modules/settings/config/01-homeslider.php",
+		"/C/OSPanel/my_domains/logoped.my/src/pug/lession.pug",
+		"/C/OSPanel/my_domains/logoped.my/src/pug/lessions.pug",
+		"/C/OSPanel/my_domains/logoped.my/assets/custom/snippets/DateRus/snippet.DateRus.php",
+		"/C/OSPanel/my_domains/logoped.my/src/pug/event.pug",
+		"/C/OSPanel/my_domains/logoped.my/src/pug/tpl/linkesouter.pug",
+		"/C/OSPanel/my_domains/logoped.my/assets/custom/snippets/trim/snippet.trim.php",
+		"/C/OSPanel/my_domains/logoped.my/assets/tvs/multitv/configs/homeslider.config.inc.php",
+		"/C/OSPanel/my_domains/logoped.my/.gitignore",
+		"/C/OSPanel/my_domains/logoped.my/src/js/tooltip.js",
+		"/C/OSPanel/my_domains/logoped.my/src/pug/tpl/footer.pug",
+		"/C/OSPanel/my_domains/logoped.my/src/pug/tpl/events.pug",
+		"/C/OSPanel/my_domains/logoped.my/assets/custom/modules/settings/settings.module.php",
+		"/C/OSPanel/my_domains/logoped.my/src/pug/advance.pug",
+		"/C/OSPanel/my_domains/logoped.my/index.php",
+		"/C/OSPanel/my_domains/logoped.my/src/pug/tpl/pageEventsOut.pug",
+		"/C/OSPanel/my_domains/logoped.my/src/less/util/mixin.less",
+		"/C/OSPanel/my_domains/logoped.my/src/pug/tpl/header.pug",
+		"/C/OSPanel/my_domains/logoped.my/src/less/inc/head_block.less",
+		"/C/OSPanel/my_domains/logoped.my/src/less/variables.less",
+		"/C/OSPanel/my_domains/logoped.my/src/less/util/tooltip.less",
+		"/C/OSPanel/my_domains/logoped.my/src/pug/tpl/pageEventsTpl.pug",
+		"/C/OSPanel/my_domains/logoped.my/src/less/util/reset.less",
+		"/C/OSPanel/my_domains/logoped.my/src/pug/tpl/eye_panel.pug",
+		"/C/OSPanel/my_domains/logoped.my/Gruntfile.js",
+		"/C/OSPanel/my_domains/logoped.my/src/less/main.less",
+		"/C/OSPanel/my_domains/logoped.my/src/less/util/btn.less",
+		"/C/OSPanel/my_domains/logoped.my/vendor/projectsoft/logoped/src/ProjectSoft/PrepareDL.php",
+		"/C/Users/projectsoft/AppData/Roaming/Sublime Merge/Packages/User/Preferences.sublime-settings",
+		"/C/OSPanel/my_domains/komsadmin.my/src/fonts/komsomolskiy.svg",
+		"/C/OSPanel/my_domains/logoped.my/vendor/projectsoft/logoped/src/ProjectSoft/PluginEvolution.php",
+		"/C/OSPanel/my_domains/logoped.my/comps/src/ProjectSoft/PrepareDL.php",
+		"/C/OSPanel/my_domains/logoped.my/comps/src/ProjectSoft/PluginEvolution.php",
+		"/C/OSPanel/my_domains/logoped.my/src/pug/events.pug",
+		"/C/OSPanel/my_domains/logoped.my/manager/includes/lang/override/example.english.inc.php",
+		"/C/Users/projectsoft/Desktop/windows7.vbs",
+		"/C/Users/projectsoft/Desktop/office.vbs",
+		"/C/Users/projectsoft/Desktop/WindowsKey.html",
+		"/C/OSPanel/my_domains/logoped.my/manager/includes/lang/override/russian-UTF8.inc.php",
+		"/C/OSPanel/my_domains/logoped.my/assets/custom/plugins/moviedseotv/plugin.moviedseotv.php",
+		"/C/OSPanel/my_domains/logoped.my/src/less/muller.less",
+		"/C/OSPanel/my_domains/logoped.my/src/pug/default.pug",
+		"/C/OSPanel/my_domains/logoped.my/src/less/inc/footer_block.less",
+		"/C/OSPanel/my_domains/logoped.my/src/less/util/font.less",
+		"/C/OSPanel/my_domains/logoped.my/src/less/inc/main_menu.less",
+		"/C/OSPanel/my_domains/logoped.my/src/less/inc/present_slider.less",
+		"/C/OSPanel/my_domains/logoped.my/src/pug/tpl/close_body.pug",
+		"/C/OSPanel/my_domains/logoped.my/src/less/util/animations.less",
+		"/C/OSPanel/my_domains/logoped.my/src/less/inc/main_block.less",
+		"/C/OSPanel/my_domains/logoped.my/src/less/util/block.less",
+		"/C/OSPanel/my_domains/logoped.my/assets/templates/studionions/css/main.css",
+		"/C/OSPanel/my_domains/logoped.my/src/pug/tpl/presentSliderOut.pug",
+		"/C/OSPanel/my_domains/logoped.my/src/pug/index.pug",
+		"/C/OSPanel/my_domains/logoped.my/src/less/util/container.less",
+		"/C/OSPanel/my_domains/logoped.my/src/less/util/text.less",
+		"/C/OSPanel/my_domains/logoped.my/src/less/slick-theme.less"
+	],
+	"find":
+	{
+		"height": 27.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"  ",
+			"    ",
+			"Анотация",
+			"FontWeight start"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"\t"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 27.0
+	},
+	"input":
+	{
+		"height": 40.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "RadioApp.sublime-project",
+	"replace":
+	{
+		"height": 50.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 268.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

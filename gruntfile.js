@@ -6,7 +6,9 @@ module.exports = function(grunt){
 		grunt.loadNpmTasks('grunt-autoprefixer');
 		grunt.loadNpmTasks('grunt-group-css-media-queries');
 		grunt.loadNpmTasks('grunt-contrib-cssmin');
+		grunt.loadNpmTasks('grunt-markdown');
 		grunt.loadNpmTasks('grunt-contrib-pug');
+		grunt.loadNpmTasks('grunt-contrib-watch');
 		grunt.initConfig({
 			globalConfig : gc,
 			pkg : grunt.file.readJSON('package.json'),
@@ -52,6 +54,13 @@ module.exports = function(grunt){
 					}
 				}
 			},
+			markdown: {
+				all: {
+					files: {
+						"test/docs/html/readme.html": ['README.md'],
+					}
+				}
+			},
 			pug: {
 				files: {
 					options: {
@@ -63,6 +72,22 @@ module.exports = function(grunt){
 					}
 				}
 			},
+			// Изменения файлов
+			watch: {
+				dev : {
+					files: [
+						'docs/src/**/*',
+					],
+					tasks: [
+						'less',
+						'autoprefixer',
+						'group_css_media_queries',
+						'cssmin',
+						'markdown',
+						'pug'
+					]
+				}
+			},
 		});
 		grunt.registerTask('default',
 			[
@@ -70,6 +95,7 @@ module.exports = function(grunt){
 				'autoprefixer',
 				'group_css_media_queries',
 				'cssmin',
+				'markdown',
 				'pug'
 			]
 		);

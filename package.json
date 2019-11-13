@@ -39,6 +39,7 @@
 		"grunt-contrib-watch": "^1.1.0",
 		"grunt-exec": "^3.0.0",
 		"grunt-group-css-media-queries": "^1.0.1",
+		"grunt-markdown": "^0.7.0",
 		"grunt-notify": "git+https://github.com/ProjectSoft-STUDIONIONS/grunt-notify.git",
 		"grunt-nw-builder": "^3.1.0",
 		"grunt-replace": "^1.0.1",
