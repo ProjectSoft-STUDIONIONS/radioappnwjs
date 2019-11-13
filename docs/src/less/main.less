@@ -25,6 +25,7 @@ body {
 		flex-direction: column;
 		min-height: 100vh;
 		align-items: center;
+		background: inherit;
 	}
 }
 header,
@@ -52,7 +53,7 @@ main {
 		position: relative;
 		overflow: hidden;
 		border-radius: 10px;
-		box-shadow: 0 0 10px fade(#000, .25);
+		box-shadow: 0 0 10px fade(#000, 33);
 		&::before {
 			position: absolute;
 			top: 0px;
@@ -71,7 +72,7 @@ main {
 			position: relative;
 			z-index: 10;
 			min-height: 80vh;
-			background-color: fade(#fff, .12);
+			background-color: fade(#fff, 50);
 		}
 	}
 }
