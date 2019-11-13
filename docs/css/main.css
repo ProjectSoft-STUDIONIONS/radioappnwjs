@@ -20,4 +20,5 @@ body {
   background-repeat: no-repeat;
   background-position: bottom center, center center;
   background-attachment: fixed, fixed;
+  background-size: cover, auto;
 }
