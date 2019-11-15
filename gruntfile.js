@@ -2,6 +2,7 @@ module.exports = function(grunt){
 	
 	var type_pro = grunt.option('type');
 	if (type_pro == "doc"){
+		grunt.loadNpmTasks('grunt-browser-sync');
 		grunt.loadNpmTasks('grunt-contrib-less');
 		grunt.loadNpmTasks('grunt-autoprefixer');
 		grunt.loadNpmTasks('grunt-group-css-media-queries');
@@ -72,12 +73,28 @@ module.exports = function(grunt){
 					}
 				}
 			},
+			browserSync: {
+				dev: {
+					bsFiles: {
+						src : [
+							'docs/*.html'
+						]
+					},
+					options: {
+						watchTask: true,
+						server: './docs'
+					}
+				}
+			},
 			// Изменения файлов
 			watch: {
 				dev : {
 					files: [
 						'docs/src/**/*',
 					],
+					options : {
+						reload: true
+					},
 					tasks: [
 						'less',
 						'autoprefixer',
@@ -97,6 +114,12 @@ module.exports = function(grunt){
 				'cssmin',
 				'markdown',
 				'pug'
+			]
+		);
+		grunt.registerTask('dev',
+			[
+				'browserSync',
+				'watch'
 			]
 		);
 	}else{

@@ -1,3 +1,131 @@
+@font-face {
+  font-family: "Muller";
+  font-weight: 100;
+  font-style: italic;
+  src: url("fonts/MullerThinItalic.eot");
+  src: url("fonts/MullerThinItalic.eot#iefix") format("embedded-opentype"), url("fonts/MullerThinItalic.woff2") format("woff2"), url("fonts/MullerThinItalic.woff") format("woff"), url("fonts/MullerThinItalic.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Muller";
+  font-weight: 100;
+  font-style: normal;
+  src: url("fonts/MullerThin.eot");
+  src: url("fonts/MullerThin.eot#iefix") format("embedded-opentype"), url("fonts/MullerThin.woff2") format("woff2"), url("fonts/MullerThin.woff") format("woff"), url("fonts/MullerThin.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Muller";
+  font-weight: 200;
+  font-style: italic;
+  src: url("fonts/MullerUltraLightItalic.eot");
+  src: url("fonts/MullerUltraLightItalic.eot#iefix") format("embedded-opentype"), url("fonts/MullerUltraLightItalic.woff2") format("woff2"), url("fonts/MullerUltraLightItalic.woff") format("woff"), url("fonts/MullerUltraLightItalic.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Muller";
+  font-weight: 200;
+  font-style: normal;
+  src: url("fonts/MullerUltraLight.eot");
+  src: url("fonts/MullerUltraLight.eot#iefix") format("embedded-opentype"), url("fonts/MullerUltraLight.woff2") format("woff2"), url("fonts/MullerUltraLight.woff") format("woff"), url("fonts/MullerUltraLight.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Muller";
+  font-weight: 300;
+  font-style: italic;
+  src: url("fonts/MullerLightItalic.eot");
+  src: url("fonts/MullerLightItalic.eot#iefix") format("embedded-opentype"), url("fonts/MullerLightItalic.woff2") format("woff2"), url("fonts/MullerLightItalic.woff") format("woff"), url("fonts/MullerLightItalic.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Muller";
+  font-weight: 300;
+  font-style: normal;
+  src: url("fonts/MullerLight.eot");
+  src: url("fonts/MullerLight.eot#iefix") format("embedded-opentype"), url("fonts/MullerLight.woff2") format("woff2"), url("fonts/MullerLight.woff") format("woff"), url("fonts/MullerLight.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Muller";
+  font-weight: 400;
+  font-style: italic;
+  src: url("fonts/MullerRegularItalic.eot");
+  src: url("fonts/MullerRegularItalic.eot#iefix") format("embedded-opentype"), url("fonts/MullerRegularItalic.woff2") format("woff2"), url("fonts/MullerRegularItalic.woff") format("woff"), url("fonts/MullerRegularItalic.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Muller";
+  font-weight: 400;
+  font-style: normal;
+  src: url("fonts/MullerRegular.eot");
+  src: url("fonts/MullerRegular.eot#iefix") format("embedded-opentype"), url("fonts/MullerRegular.woff2") format("woff2"), url("fonts/MullerRegular.woff") format("woff"), url("fonts/MullerRegular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Muller";
+  font-weight: 500;
+  font-style: italic;
+  src: url("fonts/MullerMediumItalic.eot");
+  src: url("fonts/MullerMediumItalic.eot#iefix") format("embedded-opentype"), url("fonts/MullerMediumItalic.woff2") format("woff2"), url("fonts/MullerMediumItalic.woff") format("woff"), url("fonts/MullerMediumItalic.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Muller";
+  font-weight: 500;
+  font-style: normal;
+  src: url("fonts/MullerMedium.eot");
+  src: url("fonts/MullerMedium.eot#iefix") format("embedded-opentype"), url("fonts/MullerMedium.woff2") format("woff2"), url("fonts/MullerMedium.woff") format("woff"), url("fonts/MullerMedium.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Muller";
+  font-weight: 700;
+  font-style: italic;
+  src: url("fonts/MullerBoldItalic.eot");
+  src: url("fonts/MullerBoldItalic.eot#iefix") format("embedded-opentype"), url("fonts/MullerBoldItalic.woff2") format("woff2"), url("fonts/MullerBoldItalic.woff") format("woff"), url("fonts/MullerBoldItalic.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Muller";
+  font-weight: 700;
+  font-style: normal;
+  src: url("fonts/MullerBold.eot");
+  src: url("fonts/MullerBold.eot#iefix") format("embedded-opentype"), url("fonts/MullerBold.woff2") format("woff2"), url("fonts/MullerBold.woff") format("woff"), url("fonts/MullerBold.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Muller";
+  font-weight: 800;
+  font-style: italic;
+  src: url("fonts/MullerExtraBoldItalic.eot");
+  src: url("fonts/MullerExtraBoldItalic.eot#iefix") format("embedded-opentype"), url("fonts/MullerExtraBoldItalic.woff2") format("woff2"), url("fonts/MullerExtraBoldItalic.woff") format("woff"), url("fonts/MullerExtraBoldItalic.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Muller";
+  font-weight: 800;
+  font-style: normal;
+  src: url("fonts/MullerExtraBold.eot");
+  src: url("fonts/MullerExtraBold.eot#iefix") format("embedded-opentype"), url("fonts/MullerExtraBold.woff2") format("woff2"), url("fonts/MullerExtraBold.woff") format("woff"), url("fonts/MullerExtraBold.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Muller";
+  font-weight: 900;
+  font-style: italic;
+  src: url("fonts/MullerBlackItalic.eot");
+  src: url("fonts/MullerBlackItalic.eot#iefix") format("embedded-opentype"), url("fonts/MullerBlackItalic.woff2") format("woff2"), url("fonts/MullerBlackItalic.woff") format("woff"), url("fonts/MullerBlackItalic.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Muller";
+  font-weight: 900;
+  font-style: normal;
+  src: url("fonts/MullerBlack.eot");
+  src: url("fonts/MullerBlack.eot#iefix") format("embedded-opentype"), url("fonts/MullerBlack.woff2") format("woff2"), url("fonts/MullerBlack.woff") format("woff"), url("fonts/MullerBlack.ttf") format("truetype");
+}
+
 *,
 *::before,
 *::after {
@@ -12,6 +140,27 @@ body {
 
 body {
   color: #333333;
+  font-family: Muller, sans-serif;
+  background-color: #fff;
+  font-weight: 300;
+  font-size: 1.3em;
+  line-height: 1.3;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-justify {
+  text-align: justify;
 }
 
 .page {
@@ -41,11 +190,26 @@ footer {
 header,
 footer {
   flex: 0 0 auto;
+  background-color: #000;
+  padding: 15px;
+}
+
+header,
+footer,
+header a,
+footer a {
+  color: #fff;
+}
+
+header a,
+footer a {
+  text-decoration: none;
 }
 
 main {
   flex: 1 1 100%;
   background: inherit;
+  font-weight: 400;
 }
 
 .outer {
@@ -82,6 +246,82 @@ main {
   padding: 15px;
   position: relative;
   z-index: 10;
-  min-height: 80vh;
   background-color: rgba(255, 255, 255, 0.5);
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+
+.header--row {
+  flex-basis: 50%;
+}
+
+.header--row a.github {
+  white-space: nowrap;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: nowrap;
+  font-size: 0.7em;
+}
+
+.header--row a.github::before {
+  content: "";
+  display: inline-block;
+  margin-right: 10px;
+  width: 32px;
+  height: 32px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-image: url("data:image/svg+xml,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22UTF-8%22%3F%3E%0A%3Csvg%20enable-background%3D%22new%200%200%2034%2034%22%20version%3D%221.1%22%20viewBox%3D%220%200%2034%2034%22%20xml%3Aspace%3D%22preserve%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Cpath%20style%3D%22fill-rule%3Aevenodd%3Bclip-rule%3Aevenodd%3Bfill%3A%23FFFFFF%3B%22%20d%3D%22m16.9%201.1c-9%200-16.3%207.3-16.3%2016.3%200%207.2%204.7%2013.3%2011.1%2015.5%200.8%200.1%201.1-0.4%201.1-0.8v-2.8c-4.5%201-5.5-2.2-5.5-2.2-0.7-1.9-1.8-2.4-1.8-2.4-1.5-1%200.1-1%200.1-1%201.6%200.1%202.5%201.7%202.5%201.7%201.5%202.5%203.8%201.8%204.7%201.4%200.1-1.1%200.6-1.8%201-2.2-3.6-0.4-7.4-1.8-7.4-8.1%200-1.8%200.6-3.2%201.7-4.4-0.2-0.4-0.7-2.1%200.2-4.3%200%200%201.4-0.4%204.5%201.7%201.4-0.3%202.8-0.5%204.1-0.5%201.4%200%202.8%200.2%204.1%200.5%203.1-2.1%204.5-1.7%204.5-1.7%200.9%202.2%200.3%203.9%200.2%204.3%201%201.1%201.7%202.6%201.7%204.4%200%206.3-3.8%207.6-7.4%208%200.6%200.5%201.1%201.5%201.1%203v4.5c0%200.4%200.3%200.9%201.1%200.8%206.5-2.2%2011.1-8.3%2011.1-15.5-0.1-8.9-7.4-16.2-16.4-16.2z%22%20clip-rule%3D%22evenodd%22%20fill%3D%22%23fff%22%20fill-rule%3D%22evenodd%22%2F%3E%0A%3Cpath%20style%3D%22fill-rule%3Aevenodd%3Bclip-rule%3Aevenodd%3Bfill%3A%23FFFFFF%3B%22%20d%3D%22m16.9%200.1c-9%200-16.3%207.3-16.3%2016.3%200%207.2%204.7%2013.3%2011.1%2015.5%200.8%200.1%201.1-0.4%201.1-0.8v-2.8c-4.5%201-5.5-2.2-5.5-2.2-0.7-1.9-1.8-2.4-1.8-2.4-1.5-1%200.1-1%200.1-1%201.6%200.1%202.5%201.7%202.5%201.7%201.5%202.5%203.8%201.8%204.7%201.4%200.1-1.1%200.6-1.8%201-2.2-3.6-0.4-7.4-1.8-7.4-8.1%200-1.8%200.6-3.2%201.7-4.4-0.2-0.4-0.7-2.1%200.2-4.3%200%200%201.4-0.4%204.5%201.7%201.4-0.3%202.8-0.5%204.1-0.5%201.4%200%202.8%200.2%204.1%200.5%203.1-2.1%204.5-1.7%204.5-1.7%200.9%202.2%200.3%203.9%200.2%204.3%201%201.1%201.7%202.6%201.7%204.4%200%206.3-3.8%207.6-7.4%208%200.6%200.5%201.1%201.5%201.1%203v4.5c0%200.4%200.3%200.9%201.1%200.8%206.5-2.2%2011.1-8.3%2011.1-15.5-0.1-8.9-7.4-16.2-16.4-16.2z%22%20clip-rule%3D%22evenodd%22%20fill%3D%22%23fff%22%20fill-rule%3D%22evenodd%22%2F%3E%0A%3Cpath%20style%3D%22fill-rule%3Aevenodd%3Bclip-rule%3Aevenodd%3Bfill%3A%23FFFFFF%3B%22%20d%3D%22m16.1%200.6c-8.1%200.4-14.9%207-15.4%2015.2-0.5%207.7%204.3%2014.3%2011.1%2016.6%200.8%200.1%201.1-0.4%201.1-0.8v-2.8c-4.5%201-5.5-2.2-5.5-2.2-0.7-1.9-1.8-2.4-1.8-2.4-1.5-1%200.1-1%200.1-1%201.6%200.1%202.5%201.7%202.5%201.7%201.5%202.5%203.8%201.8%204.7%201.4%200.1-1.1%200.6-1.8%201-2.2-3.6-0.4-7.4-1.8-7.4-8.1%200-1.8%200.6-3.2%201.7-4.4-0.2-0.4-0.7-2.1%200.2-4.3%200%200%201.4-0.4%204.5%201.7%201.3-0.4%202.7-0.5%204.1-0.5s2.8%200.2%204.1%200.5c3.1-2.1%204.5-1.7%204.5-1.7%200.9%202.2%200.3%203.9%200.2%204.3%201%201.1%201.7%202.6%201.7%204.4%200%206.3-3.8%207.6-7.4%208%200.6%200.5%201.1%201.5%201.1%203v4.5c0%200.4%200.3%200.9%201.1%200.8%206.5-2.2%2011.1-8.3%2011.1-15.5-0.2-9.2-7.9-16.6-17.3-16.2z%22%20clip-rule%3D%22evenodd%22%20fill%3D%22%23fff%22%20fill-rule%3D%22evenodd%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.header--row.shields {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.header--row.shields a {
+  margin-right: 10px;
+  display: inline-block;
+  line-height: 0.8;
+}
+
+.header--row.shields a:last-child {
+  margin-right: 0px;
+}
+
+@media (max-width: 600px) {
+  .page--title span {
+    display: block;
+  }
+
+  .page--title b {
+    display: none;
+  }
+}
+
+@media (max-width: 650px) {
+  .header {
+    flex-direction: column;
+  }
+
+  .header--row {
+    flex-basis: 100%;
+  }
+
+  .header--row.shields {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .header--row.shields a {
+    margin-top: 10px;
+  }
 }

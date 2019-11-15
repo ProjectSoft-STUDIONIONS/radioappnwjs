@@ -4,6 +4,42 @@
 		"selected_items":
 		[
 			[
+				"marg",
+				"margin-right\tproperty"
+			],
+			[
+				"margi",
+				"margin-right\tproperty"
+			],
+			[
+				"di",
+				"display\tproperty"
+			],
+			[
+				"flex",
+				"flex-wrap\tproperty"
+			],
+			[
+				"bac",
+				"background-image"
+			],
+			[
+				"flex-",
+				"flex-basis\tproperty"
+			],
+			[
+				"te",
+				"text-left"
+			],
+			[
+				"font",
+				"font-weight\tproperty"
+			],
+			[
+				"fil",
+				"filter\tproperty"
+			],
+			[
 				"tra",
 				"transition\tproperty"
 			],
@@ -28,24 +64,12 @@
 				"nowrap\twhite-space"
 			],
 			[
-				"marg",
-				"margin-bottom\tproperty"
-			],
-			[
-				"font",
-				"font-weight\tproperty"
-			],
-			[
 				"fon",
 				"font-size\tproperty"
 			],
 			[
 				"ro",
 				"row-reverse\tflex-direction"
-			],
-			[
-				"flex-",
-				"flex-direction\tproperty"
 			],
 			[
 				"s",
@@ -84,16 +108,8 @@
 				"flex-nowrap"
 			],
 			[
-				"flex",
-				"flex-row-reverse"
-			],
-			[
 				"displ",
 				"display-flex"
-			],
-			[
-				"di",
-				"display-inline-block"
 			],
 			[
 				"b",
@@ -103,6 +119,42 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "gruntfile.js",
+			"settings":
+			{
+				"buffer_size": 13125,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "docs/src/pug/index.pug",
+			"settings":
+			{
+				"buffer_size": 3144,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "docs/src/less/main.less",
+			"settings":
+			{
+				"buffer_size": 3513,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "test/docs/html/readme.html",
+			"settings":
+			{
+				"buffer_size": 4044,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -152,10 +204,25 @@
 	},
 	"expanded_folders":
 	[
-		"/D/ProjectSoft/soft/RadioApp"
+		"/D/ProjectSoft/soft/RadioApp",
+		"/D/ProjectSoft/soft/RadioApp/docs",
+		"/D/ProjectSoft/soft/RadioApp/docs/css",
+		"/D/ProjectSoft/soft/RadioApp/docs/src",
+		"/D/ProjectSoft/soft/RadioApp/docs/src/less",
+		"/D/ProjectSoft/soft/RadioApp/docs/src/pug",
+		"/D/ProjectSoft/soft/RadioApp/src",
+		"/D/ProjectSoft/soft/RadioApp/src/glyph",
+		"/D/ProjectSoft/soft/RadioApp/src/less",
+		"/D/ProjectSoft/soft/RadioApp/src/less/bin",
+		"/D/ProjectSoft/soft/RadioApp/src/modules",
+		"/D/ProjectSoft/soft/RadioApp/test",
+		"/D/ProjectSoft/soft/RadioApp/test/docs",
+		"/D/ProjectSoft/soft/RadioApp/test/docs/html"
 	],
 	"file_history":
 	[
+		"/D/ProjectSoft/soft/RadioApp/test/docs/html/readme.html",
+		"/D/ProjectSoft/soft/RadioApp/docs/index.html",
 		"/D/ProjectSoft/soft/RadioApp/RadioApp.sublime-project",
 		"/C/OSPanel/my_domains/logoped.my/src/less/inc/events.less",
 		"/C/OSPanel/my_domains/logoped.my/src/pug/tpl/breadcrumds.pug",
@@ -256,8 +323,124 @@
 	"groups":
 	[
 		{
+			"selected": 2,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "gruntfile.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 13125,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1894,
+								1894
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 295.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "docs/src/pug/index.pug",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3144,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2192,
+								2192
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Pug/Syntaxes/Pug.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 918.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "docs/src/less/main.less",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3513,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3422,
+								3422
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/LESS/Syntaxes/LESS.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 2922.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "test/docs/html/readme.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 4044,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2426,
+								3126
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1939.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				}
 			]
 		}
 	],

@@ -1,9 +1,11 @@
-- var page = "https://projectsoft-studionions.github.io/radioappnwjs/";
+//- var page = "https://projectsoft-studionions.github.io/radioappnwjs/";
+- var page = "";
 - var site_name = "GitHub Repositories @ProjectSoft (А. Чернышёв)";
 - var screen = "https://raw.githubusercontent.com/ProjectSoft-STUDIONIONS/radioappnwjs/master/src/screen.png";
 - var title = "Your radio / Ваше Радио (Node Webkit JavaScript)";
 - var keyw = "";
 - var desc = "";
+- var spec = " / ";
 doctype html
 html(lang="ru" prefix="og: http://ogp.me/ns#" class="no-js")
 	head
@@ -44,12 +46,30 @@ html(lang="ru" prefix="og: http://ogp.me/ns#" class="no-js")
 		.page
 			.page--wrapper
 				header
-					|header
+					.header
+						.header--row.text-left
+							a.github(href="https://github.com/ProjectSoft-STUDIONIONS/radioappnwjs/" target="_blank")
+								|Your radio
+								br
+								|GitHub Project
+						.header--row.shields
+							a(href="https://github.com/ProjectSoft-STUDIONIONS/radioappnwjs/releases/latest" target="_blank")
+								img(alt="GitHub release (latest by date)" src!="https://img.shields.io/github/v/release/ProjectSoft-STUDIONIONS/radioappnwjs?label=%D0%A0%D0%95%D0%90%D0%9B%D0%98%D0%97&style=for-the-badge")
+							a(href!="https://github.com/ProjectSoft-STUDIONIONS/radioappnwjs/blob/master/LICENSE.md" target="_blank")
+								img(alt="GitHub" src!="https://img.shields.io/github/license/ProjectSoft-STUDIONIONS/radioappnwjs?label=%D0%9B%D0%98%D0%A6%D0%95%D0%9D%D0%97%D0%98%D0%AF&style=for-the-badge")
+							a(href="https://github.com/ProjectSoft-STUDIONIONS/radioappnwjs/releases/download/1.0.4/YouRadio.exe" target="_blank")
+								img(src!="https://img.shields.io/github/downloads/ProjectSoft-STUDIONIONS/radioappnwjs/total.svg?label=%D0%A1%D0%9A%D0%90%D0%A7%D0%95%D0%9D%D0%9E&amp;style=for-the-badge" alt="")
 				main
 					.outer
 						.main
 							.main--wrapper
-								|main
+								h1.text-center.page--title
+									span
+										|Your radio
+									b
+										= spec
+									span
+										|Ваше Радио
 				footer
 					|footer
 		
