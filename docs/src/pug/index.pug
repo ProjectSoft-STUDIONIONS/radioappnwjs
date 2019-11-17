@@ -55,7 +55,7 @@ html(lang="ru" prefix="og: http://ogp.me/ns#" class="no-js")
 						.header--row.shields
 							a(href="https://github.com/ProjectSoft-STUDIONIONS/radioappnwjs/releases/latest" target="_blank")
 								img(alt="GitHub release (latest by date)" src!="https://img.shields.io/github/v/release/ProjectSoft-STUDIONIONS/radioappnwjs?label=%D0%A0%D0%95%D0%90%D0%9B%D0%98%D0%97&style=for-the-badge")
-							a(href!="https://github.com/ProjectSoft-STUDIONIONS/radioappnwjs/blob/master/LICENSE.md" target="_blank")
+							a(href!="https://github.com/ProjectSoft-STUDIONIONS/radioappnwjs/blob/master/LICENSE.md" target="_blank" data-fancybox data-src="#license")
 								img(alt="GitHub" src!="https://img.shields.io/github/license/ProjectSoft-STUDIONIONS/radioappnwjs?label=%D0%9B%D0%98%D0%A6%D0%95%D0%9D%D0%97%D0%98%D0%AF&style=for-the-badge")
 							a(href="https://github.com/ProjectSoft-STUDIONIONS/radioappnwjs/releases/download/1.0.4/YouRadio.exe" target="_blank")
 								img(src!="https://img.shields.io/github/downloads/ProjectSoft-STUDIONIONS/radioappnwjs/total.svg?label=%D0%A1%D0%9A%D0%90%D0%A7%D0%95%D0%9D%D0%9E&amp;style=for-the-badge" alt="")
@@ -67,9 +67,29 @@ html(lang="ru" prefix="og: http://ogp.me/ns#" class="no-js")
 									span
 										|Your radio
 									b
-										= spec
+										|#{spec}
 									span
 										|Ваше Радио
+								.main--description
+									a(href="javascript:;")
+										|LINK link
+									p
+										|Когда-то давно мною было разработано расширение для браузеров - «Онлайн радио в твоём браузере»
+										br
+										|Поддерживать проект на плаву было не выгодно. Не любит российский сектор донатить)))
+										br
+										|Так как расширение было основано на моём хобби слушать интернет радио, то я решил перенести всё это дело на платформу node webkit - nwjs.
+										br
+										|В этом приложении пользователь будет сам управлять списком радиостанций, добавление, редактирование, удаление, экспорт списка со всеми надстройками и, соответственно, импорт.
+									p
+										|Проект находится на стадии разработки и тестирования и всё может поменяться в корне.
+									p
+										|Инсталлятор осуществляет автоматическое определение вашей системы (win32 или win64) и устанавливает приложение именно для вашей платформы.
+					.hidden
+						#license
+							include license.html
 				footer
 					|footer
+		script
+			include script.js
 		

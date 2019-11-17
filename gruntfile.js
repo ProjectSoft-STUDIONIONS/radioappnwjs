@@ -59,6 +59,12 @@ module.exports = function(grunt){
 				all: {
 					files: {
 						"test/docs/html/readme.html": ['README.md'],
+						"test/docs/html/license.html": ['LICENSE.md'],
+					},
+					options: {
+						markdownOptions: {
+							gfm: false,
+						}
 					}
 				}
 			},
