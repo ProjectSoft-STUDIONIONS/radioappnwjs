@@ -870,23 +870,7 @@ function initializeApp(){
 
 	// Close
 	nw.Window.get().on('close', function () {
-		var screenW =window.screen.availWidth,
-			screenH =window.screen.availHeight,
-			$this = this;
-		this.setAlwaysOnTop(false);
-		this.isFullscreen && this.leaveFullscreen();
-		this.isKioskMode && this.leaveKioskMode();
-		this.show(true);
-		this.width = 400;
-		this.height = 500;
-		setTimeout(function(){
-			this.x = parseInt((screenW - this.width) / 2);
-			this.y = parseInt((screenH - this.height) / 2);
-			app.saveOptions().then(function(data){
-				nw.App.clearCache();
-				$this.close(true);
-			});
-		}, 50);
+		appShow();
 		return !1;
 	});
 	
@@ -1182,7 +1166,25 @@ function initializeApp(){
 			label: '  Закрыть',
 			icon: 'assets/images/close.png',
 			click: function(){
-				win.close();
+				//win.close();
+
+				var screenW =window.screen.availWidth,
+					screenH =window.screen.availHeight,
+					$this = nw.Window.get();
+				$this.setAlwaysOnTop(false);
+				$this.isFullscreen && $this.leaveFullscreen();
+				$this.isKioskMode && $this.leaveKioskMode();
+				$this.show(true);
+				$this.width = 400;
+				$this.height = 500;
+				setTimeout(function(){
+					$this.x = parseInt((screenW - $this.width) / 2);
+					$this.y = parseInt((screenH - $this.height) / 2);
+					app.saveOptions().then(function(data){
+						nw.App.clearCache();
+						nw.App.quit();
+					});
+				}, 50);
 			}
 		})
 	);

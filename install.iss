@@ -1,4 +1,4 @@
-#define AppVersion '1.4'
+#define AppVersion '1.5'
 #define AppCopyright 'Copyright © 2010 all right reserved ProjectSoft && STUDIONIONS'
 #define DirName 'YourRadio'
 

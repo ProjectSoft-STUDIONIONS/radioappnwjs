@@ -4,20 +4,32 @@
 		"selected_items":
 		[
 			[
-				"marg",
-				"margin-right\tproperty"
+				"res",
+				"responseType"
 			],
 			[
-				"flex-",
-				"flex-direction\tproperty"
+				"lo",
+				"log"
+			],
+			[
+				"q",
+				"query"
+			],
+			[
+				"con",
+				"config"
+			],
+			[
+				"fun",
+				"function"
+			],
+			[
+				"pu",
+				"public"
 			],
 			[
 				"bac",
-				"background-position"
-			],
-			[
-				"paddi",
-				"padding-top"
+				"background-color"
 			],
 			[
 				"max-",
@@ -28,44 +40,52 @@
 				"flex-basis\tproperty"
 			],
 			[
-				"margin",
-				"margin-right\tproperty"
+				"flex-",
+				"flex-basis\tproperty"
 			],
 			[
-				"fle",
-				"flex-direction\tproperty"
-			],
-			[
-				"tran",
-				"transition\tproperty"
-			],
-			[
-				"load",
-				"loadScript"
-			],
-			[
-				"_",
-				"_blank"
-			],
-			[
-				"margi",
-				"margin-right\tproperty"
+				"spa",
+				"space-between\tjustify-content"
 			],
 			[
 				"di",
 				"display\tproperty"
 			],
 			[
-				"te",
-				"text-left"
+				"sp",
+				"space-between\tjustify-content"
 			],
 			[
-				"font",
-				"font-weight\tproperty"
+				"text",
+				"text-overflow\tproperty"
 			],
 			[
-				"fil",
-				"filter\tproperty"
+				"ico",
+				"icon-prev"
+			],
+			[
+				"for",
+				"foreach\tforeach …"
+			],
+			[
+				"pr",
+				"pre-wrap\twhite-space"
+			],
+			[
+				"print",
+				"print_r"
+			],
+			[
+				"strt",
+				"strtolower"
+			],
+			[
+				"fa",
+				"fancybox"
+			],
+			[
+				"set",
+				"setTimeout"
 			],
 			[
 				"tra",
@@ -76,20 +96,20 @@
 				"pre-line\twhite-space"
 			],
 			[
-				"con",
-				"container"
-			],
-			[
 				"tool",
 				"tooltip"
 			],
 			[
-				"text",
-				"text-align\tproperty"
-			],
-			[
 				"no",
 				"nowrap\twhite-space"
+			],
+			[
+				"marg",
+				"margin-bottom\tproperty"
+			],
+			[
+				"font",
+				"font-weight\tproperty"
 			],
 			[
 				"fon",
@@ -132,6 +152,10 @@
 				"padding-right"
 			],
 			[
+				"fle",
+				"flex-nowrap"
+			],
+			[
 				"displ",
 				"display-flex"
 			],
@@ -143,46 +167,6 @@
 	},
 	"buffers":
 	[
-		{
-			"file": "docs/src/pug/index.pug",
-			"settings":
-			{
-				"buffer_size": 4410,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "docs/src/pug/license.html",
-			"settings":
-			{
-				"buffer_size": 2519,
-				"encoding": "UTF-8",
-				"line_ending": "Windows",
-				"name": "<p>Copyright (c) 2008-2019 ProjectSoft (projectsof"
-			}
-		},
-		{
-			"file": "docs/src/pug/script.js",
-			"settings":
-			{
-				"buffer_size": 1286,
-				"encoding": "UTF-8",
-				"line_ending": "Windows",
-				"name": "function loadScript(src, callback)"
-			}
-		},
-		{
-			"contents": "@fontpath: 'fonts';\n.Muller(){\n\tMullerThin\t\t\t\t:\t100;\n\tMullerUltraLight\t\t:\t200;\n\tMullerLight\t\t\t\t:\t300;\n\tMullerRegular\t\t\t:\t400;\n\tMullerMedium\t\t\t:\t500;\n\tMullerBold\t\t\t\t:\t700;\n\tMullerExtraBold\t\t\t:\t800;\n\tMullerBlack\t\t\t\t:\t900;\n}\neach(.Muller(), .(@v, @k, @i) {\n\t@font-face {\n\t\tfont-family\t:\t\"Muller\";\n\t\tfont-weight\t:\t@v;\n\t\tfont-style\t:\titalic;\n\t\tsrc\t\t\t:\turl(\"@{fontpath}/@{k}Italic.eot\");\n\t\tsrc\t\t\t:\turl(\"@{fontpath}/@{k}Italic.eot#iefix\") format(\"embedded-opentype\"),\n\t\t\t\t\t\turl(\"@{fontpath}/@{k}Italic.woff2\") format(\"woff2\"),\n\t\t\t\t\t\turl(\"@{fontpath}/@{k}Italic.woff\") format(\"woff\"),\n\t\t\t\t\t\turl(\"@{fontpath}/@{k}Italic.ttf\") format(\"truetype\");\n\t}\n\t@font-face {\n\t\tfont-family\t:\t\"Muller\";\n\t\tfont-weight\t:\t@v;\n\t\tfont-style\t:\tnormal;\n\t\tsrc\t\t\t:\turl(\"@{fontpath}/@{k}.eot\");\n\t\tsrc\t\t\t:\turl(\"@{fontpath}/@{k}.eot#iefix\") format(\"embedded-opentype\"),\n\t\t\t\t\t\turl(\"@{fontpath}/@{k}.woff2\") format(\"woff2\"),\n\t\t\t\t\t\turl(\"@{fontpath}/@{k}.woff\") format(\"woff\"),\n\t\t\t\t\t\turl(\"@{fontpath}/@{k}.ttf\") format(\"truetype\");\n\t}\n});\n* {\n\t&,\n\t&::before,\n\t&::after {\n\t\tbox-sizing: border-box;\n\t}\n}\nhtml,\nbody {\n\tmargin: 0;\n\tpadding: 0;\n}\nbody {\n\tcolor: #333333;\n\tfont-family: Muller, sans-serif;\n\tbackground-color: #fff;\n\tfont-weight: 300;\n\tfont-size: 1.3em;\n\tline-height: 1.3;\n}\np {\n\tmargin-top: 0px;\n}\na {\n\ttransition: color .3s ease;\n\t&,\n\t&:visited,\n\t&:active {\n\t\tcolor: #0022ff;\n\t}\n\t&:hover {\n\t\tcolor: #0098ff;\n\t}\n}\n\n.text-left {\n\ttext-align: left;\n}\n.text-center {\n\ttext-align: center;\n}\n.text-right {\n\ttext-align: right;\n}\n.text-justify {\n\ttext-align: justify;\n}\n.page {\n\tmin-height: 100vh;\n\tbackground-image: data-uri(\"lazy_bg.svg\"), radial-gradient(circle, #FFA966, #FF7000);\n\tbackground-repeat: no-repeat;\n\tbackground-position: bottom center, center center;\n\tbackground-attachment: fixed, fixed;\n\tbackground-size: cover, auto;\n\t&--wrapper {\n\t\tdisplay: flex;\n\t\tflex-direction: column;\n\t\tmin-height: 100vh;\n\t\talign-items: center;\n\t\tbackground: inherit;\n\t}\n\t&--title {\n\t\t@media (max-width: 600px) {\n\t\t\tspan {\n\t\t\t\tdisplay: block;\n\t\t\t}\n\t\t\tb {\n\t\t\t\tdisplay: none;\n\t\t\t}\n\t\t}\n\t}\n}\nheader,\nmain,\nfooter {\n\tdisplay: block;\n\twidth: 100%;\n}\nheader,\nfooter {\n\tflex: 0 0 auto;\n\tbackground-color: #000;\n\tpadding: 15px;\n\t&,\n\ta {\n\t\t&,\n\t\t&:active,\n\t\t&:visited,\n\t\t&:hover {\n\t\t\tcolor: #fff;\n\t\t}\n\t}\n\ta {\n\t\ttext-decoration: none;\n\t}\n}\nheader {\n\twidth: 100%;\n\tposition: fixed;\n\ttop: 0;\n\tleft: 0;\n\ttransition: all .3s ease;\n\tz-index: 20;\n}\nmain {\n\tflex: 1 1 100%;\n\tbackground: inherit;\n\tfont-weight: 400;\n\tpadding-top: 3.35em;\n\ttransition: all .3s ease;\n}\n@media (max-width: 650px) {\n\theader {\n\t\tposition: static;\n\t}\n\tmain {\n\t\tpadding-top: unset;\n\t}\n}\n.hidden {\n\tdisplay: none !important;\n}\n.license {\n\t&--title {\n\t\tdisplay: flex;\n\t\tflex-direction: row;\n\t\talign-items: center;\n\t\tjustify-content: center;\n\t\tcolor: #000;\n\t\twidth: 100%;\n\t\t&::before {\n\t\t\tdisplay: inline-block;\n\t\t\tcontent: \"\";\n\t\t\tbackground-image: data-uri(\"license.svg\");\n\t\t\tbackground-size: contain;\n\t\t\tbackground-repeat: no-repeat;\n\t\t\tbackground-position: center center;\n\t\t\theight: 1.5em;\n\t\t\twidth: 1.5em;\n\t\t\tmargin-right: 0.5em;\n\t\t}\n\t}\n}\n.outer {\n\tbackground: inherit;\n\tpadding: 15px;\n\t.main {\n\t\tmax-width: 1200px;\n\t\tmargin-left: auto;\n\t\tmargin-right: auto;\n\t\tbackground: inherit;\n\t\tposition: relative;\n\t\toverflow: hidden;\n\t\tborder-radius: 10px;\n\t\tbox-shadow: 0 0 10px fade(#000, 33);\n\t\t&::before {\n\t\t\tposition: absolute;\n\t\t\ttop: 0px;\n\t\t\tleft: 0px;\n\t\t\tright: 0px;\n\t\t\tbottom: 0px;\n\t\t\twidth: 100%;\n\t\t\theight: 100%;\n\t\t\tz-index: 1;\n\t\t\tcontent: \"\";\n\t\t\tbackground: inherit;\n\t\t\tfilter: blur(6px);\n\t\t}\n\t\t&--wrapper {\n\t\t\tpadding: 15px;\n\t\t\tposition: relative;\n\t\t\tz-index: 10;\n\t\t\t//min-height: 80vh;\n\t\t\tbackground-color: fade(#fff, 75);\n\t\t}\n\t}\n}\n.header {\n\tdisplay: flex;\n\tflex-direction: row;\n\tflex-wrap: nowrap;\n\t&--row {\n\t\tflex-basis: 50%;\n\t\ta.github {\n\t\t\twhite-space: nowrap;\n\t\t\tdisplay: inline-flex;\n\t\t\tflex-direction: row;\n\t\t\talign-items: center;\n\t\t\tflex-wrap: nowrap;\n\t\t\tfont-size: 0.7em;\n\t\t\t&::before {\n\t\t\t\tcontent: \"\";\n\t\t\t\tdisplay: inline-block;\n\t\t\t\tmargin-right: 10px;\n\t\t\t\twidth: 32px;\n\t\t\t\theight: 32px;\n\t\t\t\tbackground-size: cover;\n\t\t\t\tbackground-repeat: no-repeat;\n\t\t\t\tbackground-position: center center;\n\t\t\t\tbackground-image: data-uri(\"github_wc.svg\");\n\t\t\t}\n\t\t}\n\t\t&.shields {\n\t\t\tdisplay: flex;\n\t\t\tflex-direction: row;\n\t\t\tjustify-content: flex-end;\n\t\t\talign-items: center;\n\t\t\ta {\n\t\t\t\tmargin-right: 10px;\n\t\t\t\tdisplay: inline-block;\n\t\t\t\tline-height: 0.8;\n\t\t\t\t&:last-child {\n\t\t\t\t\tmargin-right: 0px;\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n\t@media (max-width: 650px) {\n\t\t//flex-direction: column;\n\t\t&--row {\n\t\t\t&.shields {\n\t\t\t\tflex-direction: column;\n\t\t\t\tmargin-right: unset;\n\t\t\t\talign-items: flex-end;\n\t\t\t\ta {\n\t\t\t\t\tmargin-top: 10px;\n\t\t\t\t\tmargin-right: unset;\n\t\t\t\t\t&:first-child {\n\t\t\t\t\t\tmargin-top: 0px;\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n\t@media (max-width: 350px) {\n\t\tflex-direction: column;\n\t\t&--row {\n\t\t\tflex-direction: column;\n\t\t\tflex-basis: 100%;\n\t\t\t&.shields {\n\t\t\t\talign-items: center;\n\t\t\t\ta {\n\t\t\t\t\t&:first-child {\n\t\t\t\t\t\tmargin-top: 10px;\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n}",
-			"file": "docs/src/less/main.less",
-			"file_size": 5231,
-			"file_write_time": 132183824960239760,
-			"settings":
-			{
-				"buffer_size": 4951,
-				"line_ending": "Windows"
-			}
-		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -195,6 +179,10 @@
 		"last_filter": "",
 		"selected_items":
 		[
+			[
+				"Pa",
+				"Package Control: Install Package"
+			],
 			[
 				"P",
 				"Package Control: Install Package"
@@ -232,66 +220,83 @@
 	},
 	"expanded_folders":
 	[
-		"/D/ProjectSoft/soft/RadioApp",
-		"/D/ProjectSoft/soft/RadioApp/docs",
-		"/D/ProjectSoft/soft/RadioApp/docs/css",
-		"/D/ProjectSoft/soft/RadioApp/docs/src",
-		"/D/ProjectSoft/soft/RadioApp/docs/src/less",
-		"/D/ProjectSoft/soft/RadioApp/docs/src/pug",
-		"/D/ProjectSoft/soft/RadioApp/src",
-		"/D/ProjectSoft/soft/RadioApp/src/glyph",
-		"/D/ProjectSoft/soft/RadioApp/src/less",
-		"/D/ProjectSoft/soft/RadioApp/src/less/bin",
-		"/D/ProjectSoft/soft/RadioApp/src/modules",
-		"/D/ProjectSoft/soft/RadioApp/test",
-		"/D/ProjectSoft/soft/RadioApp/test/docs",
-		"/D/ProjectSoft/soft/RadioApp/test/docs/html"
+		"/D/ProjectSoft/soft/RadioApp"
 	],
 	"file_history":
 	[
-		"/D/ProjectSoft/soft/RadioApp/gruntfile.js",
-		"/D/ProjectSoft/soft/RadioApp/test/docs/html/readme.html",
-		"/D/ProjectSoft/soft/RadioApp/LICENSE.md",
-		"/D/ProjectSoft/soft/RadioApp/docs/index.html",
-		"/D/ProjectSoft/soft/RadioApp/RadioApp.sublime-project",
-		"/C/OSPanel/my_domains/logoped.my/src/less/inc/events.less",
-		"/C/OSPanel/my_domains/logoped.my/src/pug/tpl/breadcrumds.pug",
+		"/C/OSPanel/my_domains/logoped.my/src/pug/tpl/pageParentsOut.pug",
+		"/C/OSPanel/my_domains/logoped.my/vendor/projectsoft/logoped/src/ProjectSoft/Util.php",
+		"/C/OSPanel/my_domains/logoped.my/.htaccess",
 		"/C/OSPanel/my_domains/logoped.my/src/js/main.js",
-		"/C/OSPanel/my_domains/logoped.my/src/pug/tpl/present.pug",
-		"/C/OSPanel/my_domains/logoped.my/assets/custom/modules/settings/config/01-homeslider.php",
-		"/C/OSPanel/my_domains/logoped.my/src/pug/lession.pug",
-		"/C/OSPanel/my_domains/logoped.my/src/pug/lessions.pug",
-		"/C/OSPanel/my_domains/logoped.my/assets/custom/snippets/DateRus/snippet.DateRus.php",
-		"/C/OSPanel/my_domains/logoped.my/src/pug/event.pug",
+		"/C/OSPanel/my_domains/logoped.my/src/pug/tpl/pageParentsTpl.pug",
 		"/C/OSPanel/my_domains/logoped.my/src/pug/tpl/linkesouter.pug",
+		"/C/OSPanel/my_domains/logoped.my/src/pug/tpl/lessions.pug",
+		"/C/OSPanel/my_domains/logoped.my/src/pug/lessions.pug",
+		"/C/OSPanel/my_domains/logoped.my/src/pug/tpl/parents.pug",
+		"/C/OSPanel/my_domains/logoped.my/src/pug/for-parents.pug",
+		"/C/OSPanel/my_domains/logoped.my/src/pug/default.pug",
+		"/C/OSPanel/my_domains/logoped.my/src/pug/tpl/head.pug",
+		"/C/OSPanel/my_domains/logoped.my/assets/custom/snippets/fullUrl/snippet.fullUrl.php",
+		"/C/OSPanel/my_domains/logoped.my/vendor/projectsoft/logoped/src/ProjectSoft/Snippets.php",
+		"/C/OSPanel/my_domains/logoped.my/src/js/fancybox.share.js",
+		"/C/OSPanel/my_domains/logoped.my/manager/includes/document.parser.class.inc.php",
+		"/C/OSPanel/my_domains/logoped.my/assets/lib/Helpers/PHPThumb.php",
+		"/C/OSPanel/my_domains/logoped.my/assets/snippets/phpthumb/phpthumb.class.php",
+		"/C/OSPanel/my_domains/logoped.my/assets/custom/snippets/ogImage/snippet.ogImage.php",
+		"/C/OSPanel/my_domains/logoped.my/Gruntfile.js",
+		"/C/OSPanel/my_domains/logoped.my/src/less/util/text.less",
+		"/C/OSPanel/my_domains/logoped.my/src/less/util/mixin.less",
+		"/C/OSPanel/my_domains/logoped.my/src/pug/advance.pug",
+		"/C/OSPanel/my_domains/logoped.my/assets/templates/studionions/tpl/head.html",
+		"/C/OSPanel/my_domains/logoped.my/bower_components/fancybox/src/js/hash.js",
+		"/C/OSPanel/my_domains/logoped.my/vendor/projectsoft/logoped/src/ProjectSoft/PrepareDL.php",
+		"/C/OSPanel/my_domains/logoped.my/assets/tvs/multitv/configs/gallery.config.inc.php",
+		"/C/OSPanel/my_domains/logoped.my/test/js/main.js",
+		"/C/OSPanel/my_domains/logoped.my/assets/custom/snippets/fileGetInfo/snippet.fileGetInfo.php",
+		"/C/OSPanel/my_domains/logoped.my/assets/custom/snippets/prevnext/snippet.prevnext.php",
+		"/C/OSPanel/my_domains/logoped.my/src/less/util/reset.less",
+		"/C/OSPanel/my_domains/logoped.my/src/less/main.less",
+		"/C/OSPanel/my_domains/logoped.my/src/less/util/tooltip.less",
+		"/C/OSPanel/my_domains/logoped.my/src/less/slick-theme.less",
+		"/C/OSPanel/my_domains/logoped.my/src/less/eye/white.less",
+		"/C/OSPanel/my_domains/logoped.my/src/less/eye/black.less",
+		"/C/OSPanel/my_domains/logoped.my/src/less/inc/linkesouter.less",
+		"/C/OSPanel/my_domains/logoped.my/src/less/inc/prevnext.less",
+		"/C/OSPanel/my_domains/logoped.my/vendor/projectsoft/logoped/src/ProjectSoft/PluginEvolution.php",
+		"/C/OSPanel/my_domains/logoped.my/assets/custom/snippets/DateRus/snippet.DateRus.php",
+		"/C/OSPanel/my_domains/logoped.my/src/pug/tpl/events.pug",
+		"/C/OSPanel/my_domains/logoped.my/src/pug/event.pug",
+		"/C/OSPanel/my_domains/logoped.my/README.html",
+		"/C/OSPanel/my_domains/logoped.my/README.md",
+		"/C/OSPanel/my_domains/logoped.my/LICENSE.md",
+		"/C/OSPanel/my_domains/logoped.my/src/less/inc/events.less",
+		"/C/OSPanel/my_domains/logoped.my/src/less/inc/preloader.less",
+		"/C/OSPanel/my_domains/logoped.my/src/pug/lession.pug",
+		"/C/OSPanel/my_domains/logoped.my/src/pug/index.pug",
+		"/C/OSPanel/my_domains/logoped.my/src/pug/events.pug",
+		"/C/OSPanel/my_domains/logoped.my/src/js/tooltip.js",
+		"/C/OSPanel/my_domains/logoped.my/src/pug/tpl/present.pug",
+		"/C/OSPanel/my_domains/logoped.my/package.json",
+		"/C/OSPanel/my_domains/logoped.my/src/less/inc/present_slider.less",
+		"/C/OSPanel/my_domains/logoped.my/src/pug/tpl/breadcrumds.pug",
+		"/C/OSPanel/my_domains/logoped.my/assets/custom/modules/settings/config/01-homeslider.php",
 		"/C/OSPanel/my_domains/logoped.my/assets/custom/snippets/trim/snippet.trim.php",
 		"/C/OSPanel/my_domains/logoped.my/assets/tvs/multitv/configs/homeslider.config.inc.php",
 		"/C/OSPanel/my_domains/logoped.my/.gitignore",
-		"/C/OSPanel/my_domains/logoped.my/src/js/tooltip.js",
 		"/C/OSPanel/my_domains/logoped.my/src/pug/tpl/footer.pug",
-		"/C/OSPanel/my_domains/logoped.my/src/pug/tpl/events.pug",
 		"/C/OSPanel/my_domains/logoped.my/assets/custom/modules/settings/settings.module.php",
-		"/C/OSPanel/my_domains/logoped.my/src/pug/advance.pug",
 		"/C/OSPanel/my_domains/logoped.my/index.php",
 		"/C/OSPanel/my_domains/logoped.my/src/pug/tpl/pageEventsOut.pug",
-		"/C/OSPanel/my_domains/logoped.my/src/less/util/mixin.less",
 		"/C/OSPanel/my_domains/logoped.my/src/pug/tpl/header.pug",
 		"/C/OSPanel/my_domains/logoped.my/src/less/inc/head_block.less",
 		"/C/OSPanel/my_domains/logoped.my/src/less/variables.less",
-		"/C/OSPanel/my_domains/logoped.my/src/less/util/tooltip.less",
 		"/C/OSPanel/my_domains/logoped.my/src/pug/tpl/pageEventsTpl.pug",
-		"/C/OSPanel/my_domains/logoped.my/src/less/util/reset.less",
 		"/C/OSPanel/my_domains/logoped.my/src/pug/tpl/eye_panel.pug",
-		"/C/OSPanel/my_domains/logoped.my/Gruntfile.js",
-		"/C/OSPanel/my_domains/logoped.my/src/less/main.less",
 		"/C/OSPanel/my_domains/logoped.my/src/less/util/btn.less",
-		"/C/OSPanel/my_domains/logoped.my/vendor/projectsoft/logoped/src/ProjectSoft/PrepareDL.php",
 		"/C/Users/projectsoft/AppData/Roaming/Sublime Merge/Packages/User/Preferences.sublime-settings",
 		"/C/OSPanel/my_domains/komsadmin.my/src/fonts/komsomolskiy.svg",
-		"/C/OSPanel/my_domains/logoped.my/vendor/projectsoft/logoped/src/ProjectSoft/PluginEvolution.php",
 		"/C/OSPanel/my_domains/logoped.my/comps/src/ProjectSoft/PrepareDL.php",
 		"/C/OSPanel/my_domains/logoped.my/comps/src/ProjectSoft/PluginEvolution.php",
-		"/C/OSPanel/my_domains/logoped.my/src/pug/events.pug",
 		"/C/OSPanel/my_domains/logoped.my/manager/includes/lang/override/example.english.inc.php",
 		"/C/Users/projectsoft/Desktop/windows7.vbs",
 		"/C/Users/projectsoft/Desktop/office.vbs",
@@ -299,21 +304,16 @@
 		"/C/OSPanel/my_domains/logoped.my/manager/includes/lang/override/russian-UTF8.inc.php",
 		"/C/OSPanel/my_domains/logoped.my/assets/custom/plugins/moviedseotv/plugin.moviedseotv.php",
 		"/C/OSPanel/my_domains/logoped.my/src/less/muller.less",
-		"/C/OSPanel/my_domains/logoped.my/src/pug/default.pug",
 		"/C/OSPanel/my_domains/logoped.my/src/less/inc/footer_block.less",
 		"/C/OSPanel/my_domains/logoped.my/src/less/util/font.less",
 		"/C/OSPanel/my_domains/logoped.my/src/less/inc/main_menu.less",
-		"/C/OSPanel/my_domains/logoped.my/src/less/inc/present_slider.less",
 		"/C/OSPanel/my_domains/logoped.my/src/pug/tpl/close_body.pug",
 		"/C/OSPanel/my_domains/logoped.my/src/less/util/animations.less",
 		"/C/OSPanel/my_domains/logoped.my/src/less/inc/main_block.less",
 		"/C/OSPanel/my_domains/logoped.my/src/less/util/block.less",
 		"/C/OSPanel/my_domains/logoped.my/assets/templates/studionions/css/main.css",
 		"/C/OSPanel/my_domains/logoped.my/src/pug/tpl/presentSliderOut.pug",
-		"/C/OSPanel/my_domains/logoped.my/src/pug/index.pug",
-		"/C/OSPanel/my_domains/logoped.my/src/less/util/container.less",
-		"/C/OSPanel/my_domains/logoped.my/src/less/util/text.less",
-		"/C/OSPanel/my_domains/logoped.my/src/less/slick-theme.less"
+		"/C/OSPanel/my_domains/logoped.my/src/less/util/container.less"
 	],
 	"find":
 	{
@@ -331,6 +331,9 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"phpThumbDebug",
+			"$zc",
+			"loading",
 			"  ",
 			"    ",
 			"Анотация",
@@ -353,125 +356,8 @@
 	"groups":
 	[
 		{
-			"selected": 3,
 			"sheets":
 			[
-				{
-					"buffer": 0,
-					"file": "docs/src/pug/index.pug",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 4410,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2671,
-								2671
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Pug/Syntaxes/Pug.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 1020.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 3,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "docs/src/pug/license.html",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 2519,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								55,
-								55
-							]
-						],
-						"settings":
-						{
-							"auto_name": "<p>Copyright (c) 2008-2019 ProjectSoft (projectsof",
-							"syntax": "Packages/HTML/HTML.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "docs/src/pug/script.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1286,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								276,
-								276
-							]
-						],
-						"settings":
-						{
-							"auto_name": "function loadScript(src, callback)",
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "docs/src/less/main.less",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 4951,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1385,
-								1385
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/LESS/Syntaxes/LESS.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 728.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				}
 			]
 		}
 	],
@@ -510,7 +396,11 @@
 	{
 		"height": 0.0
 	},
-	"pinned_build_system": "",
+	"output.markdown":
+	{
+		"height": 109.0
+	},
+	"pinned_build_system": "Packages/MarkdownPreview/Markdown.sublime-build",
 	"project": "RadioApp.sublime-project",
 	"replace":
 	{
@@ -534,7 +424,7 @@
 		[
 			[
 				"",
-				"C:\\OSPanel\\my_domains\\logoped.my\\logoped.my.sublime-project"
+				"D:\\ProjectSoft\\soft\\RadioApp\\RadioApp.sublime-project"
 			]
 		],
 		"width": 380.0
@@ -556,7 +446,7 @@
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 268.0,
+	"side_bar_width": 369.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{
