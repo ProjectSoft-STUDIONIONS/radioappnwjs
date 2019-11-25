@@ -4,6 +4,14 @@
 		"selected_items":
 		[
 			[
+				"margi",
+				"margin-bottom\tproperty"
+			],
+			[
+				"mar",
+				"margin-top\tproperty"
+			],
+			[
 				"res",
 				"responseType"
 			],
@@ -167,6 +175,51 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "src/js/main.js",
+			"settings":
+			{
+				"buffer_size": 32737,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "README.md",
+			"settings":
+			{
+				"buffer_size": 1530,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "docs/src/pug/index.pug",
+			"settings":
+			{
+				"buffer_size": 4419,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "docs/src/pug/license.html",
+			"settings":
+			{
+				"buffer_size": 2519,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "docs/src/less/main.less",
+			"settings":
+			{
+				"buffer_size": 5067,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -220,7 +273,13 @@
 	},
 	"expanded_folders":
 	[
-		"/D/ProjectSoft/soft/RadioApp"
+		"/D/ProjectSoft/soft/RadioApp",
+		"/D/ProjectSoft/soft/RadioApp/docs",
+		"/D/ProjectSoft/soft/RadioApp/docs/src",
+		"/D/ProjectSoft/soft/RadioApp/docs/src/less",
+		"/D/ProjectSoft/soft/RadioApp/docs/src/pug",
+		"/D/ProjectSoft/soft/RadioApp/src",
+		"/D/ProjectSoft/soft/RadioApp/src/js"
 	],
 	"file_history":
 	[
@@ -317,7 +376,7 @@
 	],
 	"find":
 	{
-		"height": 24.0
+		"height": 40.0
 	},
 	"find_in_files":
 	{
@@ -331,6 +390,8 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"close",
+			"win.on",
 			"phpThumbDebug",
 			"$zc",
 			"loading",
@@ -356,8 +417,196 @@
 	"groups":
 	[
 		{
+			"selected": 2,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "src/js/main.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 32737,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								31733,
+								31733
+							],
+							[
+								31766,
+								31766
+							],
+							[
+								31788,
+								31788
+							],
+							[
+								31817,
+								31817
+							],
+							[
+								31838,
+								31838
+							],
+							[
+								31866,
+								31866
+							],
+							[
+								31888,
+								31888
+							],
+							[
+								31911,
+								31911
+							],
+							[
+								31963,
+								31963
+							],
+							[
+								31993,
+								31993
+							],
+							[
+								32017,
+								32017
+							],
+							[
+								32047,
+								32047
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 17249.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "README.md",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1530,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								659,
+								659
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Markdown/Markdown.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "docs/src/pug/index.pug",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 4419,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2956,
+								2956
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Pug/Syntaxes/Pug.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 810.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "docs/src/pug/license.html",
+					"semi_transient": true,
+					"settings":
+					{
+						"buffer_size": 2519,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "docs/src/less/main.less",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5067,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2614,
+								2614
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/LESS/Syntaxes/LESS.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1839.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				}
 			]
 		}
 	],
