@@ -253,6 +253,17 @@ main {
   transition: all 0.3s ease;
 }
 
+img {
+  max-width: 100%;
+  border: 0;
+}
+
+img.app-image {
+  display: block;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
 .hidden {
   display: none !important;
 }
