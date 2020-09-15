@@ -1,0 +1,43 @@
+{
+	"name": "Ваше Радио",
+	"main": "index.html",
+	"author": "ProjectSoft",
+	"license": "MIT",
+	"homepage": "https://projectsoft.ru/",
+	"version": "2.0.2",
+	"nodejs": true,
+	"winIco": "favicon.ico",
+	"chromium-args": "--child-clean-exit --ignore-certificate-errors --disk-cache-size=1 --media-cache-size=1 --disable-web-security",
+	"page-cache": false,
+	"default_locale": "en",
+	"webkit": {
+		"plugin": true
+	},
+	"window": {
+		"exe_icon": "favicon.png",
+		"title": "Ваше Радио",
+		"frame": false,
+		"icon": "favicon.png",
+		"id": "new-radioapp",
+		"kiosk_emulation": true,
+		"mac_icon": "favicon.png",
+		"position": "center",
+		"resizable": true,
+		"show_in_taskbar": true,
+		"toolbar": true,
+		"visible": true,
+		"visible_on_all_workspaces": true,
+		"min_width": 400,
+		"min_height": 500,
+		"width": 400,
+		"height": 500
+	},
+	"devDependencies": {
+		"file-zip": "^1.0.1",
+		"icecast-parser": "git+https://github.com/ProjectSoft-STUDIONIONS/icecast-parser.git",
+		"mime": "^2.4.6",
+		"node-zip-dir": "^1.0.2",
+		"read-chunk": "^3.2.0",
+		"rimraf": "^3.0.2"
+	}
+}
