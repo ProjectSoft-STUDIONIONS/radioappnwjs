@@ -1,0 +1,164 @@
+{
+	"extTitle": {
+		"message": "Your Radio"
+	},
+	"addStation": {
+		"message": "Add station"
+	},
+	"editStation": {
+		"message": "Edit station"
+	},
+	"deleteStation": {
+		"message": "Delete station"
+	},
+	"menu_add": {
+		"message": "Add station"
+	},
+	"menu_edit": {
+		"message": "Edit:"
+	},
+	"menu_delete": {
+		"message": "Delete:"
+	},
+	"menu_import": {
+		"message": "Import a list of radio stations"
+	},
+	"menu_export": {
+		"message": "Export the list of radio stations"
+	},
+	"menu_analizer": {
+		"message": "Analyzer"
+	},
+	"now_playing": {
+		"message": "Now playing:"
+	},
+	"dialog_is_title": {
+		"message": "Import"
+	},
+	"dialog_is_title_error": {
+		"message": "Import Error"
+	},
+	"dialog_is_succes": {
+		"message": "The import was successful!"
+	},
+	"dialog_is_error": {
+		"message": "The import was performed with an error!"
+	},
+	"dialog_is_break_user": {
+		"message": "Import interrupted by user!"
+	},
+	"dialog_is_restored": {
+		"message": "Restored default list!"
+	},
+	"dialog_is_confirm": {
+		"message": "You are about to import settings.<br>When importing, all radio stations in your list will be erased and replaced with new ones.<br><br>Continue?"
+	},
+	"dialog_del_title": {
+		"message": "Deleting a radio station"
+	},
+	"dialog_del_confirm": {
+		"message": "Confirm to delete the radio station"
+	},
+	"btn_cancel": {
+		"message": "CANCEL"
+	},
+	"btn_ok": {
+		"message": "OK"
+	},
+	"modal__add__statio_nname": {
+		"message": "Station name:"
+	},
+	"modal__add__statio_stream": {
+		"message": "Stream:"
+	},
+	"modal__add__statio_logo": {
+		"message": "Logotype:"
+	},
+	"dialog_exp_title": {
+		"message": "Export Result"
+	},
+	"dialog_exp_confirm": {
+		"message": "Export was successful!"
+	},
+	"dialog_exp_btn": {
+		"message": "Look"
+	},
+	"dialog_exp_title_error_01": {
+		"message": "Export Error"
+	},
+	"dialog_exp_confirm_error_01": {
+		"message": "Export was performed with an error!"
+	},
+	"dialog_exp_title_error_02": {
+		"message": "Export"
+	},
+	"dialog_exp_confirm_error_02": {
+		"message": "Export interrupted by user!"
+	},
+	"menu_bar_analizer": {
+		"message": "Bars"
+	},
+	"menu_spec_analizer": {
+		"message": "Oscilloscope line"
+	},
+	"menu_spec_full_analizer": {
+		"message": "Oscilloscope fill"
+	},
+	"menu_scep_stroke_color": {
+		"message": "Color oscilloscope"
+	},
+	"reject_unpack_error": {
+		"message": "Error unpacking default"
+	},
+	"reject_error_01": {
+		"message": "Import Error! Unpacking"
+	},
+	"reject_error_02": {
+		"message": "Import Error! Create directory"
+	},
+	"reject_error_03": {
+		"message": "Import Error! This format is not supported"
+	},
+	"color": {
+		"message": "Color"
+	},
+	"color_00": {
+		"message": "White"
+	},
+	"color_01": {
+		"message": "Red"
+	},
+	"color_02": {
+		"message": "Orange"
+	},
+	"color_03": {
+		"message": "Yellow"
+	},
+	"color_04": {
+		"message": "Lime"
+	},
+	"color_05": {
+		"message": "Aqua"
+	},
+	"color_06": {
+		"message": "Blue"
+	},
+	"color_07": {
+		"message": "Violet"
+	},
+	"minimize": {
+		"message": "Minimize"
+	},
+	"restore": {
+		"message": "Restore"
+	},
+	"maximize": {
+		"message": "Maximize"
+	},
+	"close": {
+		"message": "Close"
+	},
+	"fullscreen": {
+		"message": "Fullscreen"
+	}
+}

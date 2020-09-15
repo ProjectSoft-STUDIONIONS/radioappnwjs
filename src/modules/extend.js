@@ -5,10 +5,6 @@ function extend() {
 		deep = false,
 		toString = Object.prototype.toString,
 		hasOwn = Object.prototype.hasOwnProperty,
-		push = Array.prototype.push,
-		slice = Array.prototype.slice,
-		trim = String.prototype.trim,
-		indexOf = Array.prototype.indexOf,
 		class2type = {
 			"[object Boolean]": "boolean",
 			"[object Number]": "number",

@@ -1,0 +1,17 @@
+::-webkit {
+	&-scrollbar {
+		width: 12px;
+		&-track {
+			box-shadow: inset 0 0 1px rgba(0,0,0,0.5);
+		}
+		&-thumb {
+			background-color: #ff7000;
+			box-shadow: inset 0 0 1px rgba(0,0,0,0.5);
+			transition: background-color .3s ease;
+			cursor: grab;
+			&:window-inactive {
+				background-color: #fdc9a0;
+			}
+		}
+	}
+}

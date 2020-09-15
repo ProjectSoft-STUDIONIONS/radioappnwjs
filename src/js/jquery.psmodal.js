@@ -76,7 +76,7 @@
 		this.modal.addClass(this.type);
 		$(".psmodal--custom---modal-header--title", this.modal).text(this.title);
 		$(".psmodal--custom---modal-main--content-wrapper", this.modal).append(this.message);
-		
+
 		var okBtn = $("<button></button>", {
 			class: "psmodal--custom-btn ok",
 			text: this.callback.yes.text
@@ -132,7 +132,7 @@
 			}else{
 				$.psmodal.close();
 			}
-			
+
 		}
 	});
 	$.psmodal = {
@@ -148,7 +148,7 @@
 			var self = this,
 				modal = new PsModal(type, message, title, callback);
 			this.modal = modal;
-			
+
 			this.modal.lastElement.on('keydown', function(e){
 				if (e.keyCode == 9 && !e.shiftKey) {
 					$.psmodal.modal.firstElement.focus();
@@ -169,6 +169,7 @@
 				this.modal.close(),
 				this.modal = null
 			);
+			return this;
 		}
 	};
 	$(document).on('keydown', function(e){
@@ -177,15 +178,4 @@
 			$("body").removeClass('open--modal');
 		}
 	});
-	/*
-	(function(proxied) {
-		window.alert = function() {
-			$.psmodal.open(
-				'alert',
-				arguments[0],
-				'Сообщение'
-			);
-		};
-	})(window.alert);
-	*/
 }(jQuery));

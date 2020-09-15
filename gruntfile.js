@@ -1,590 +1,417 @@
 module.exports = function(grunt){
-	
-	var type_pro = grunt.option('type');
-	if (type_pro == "doc"){
-		grunt.loadNpmTasks('grunt-browser-sync');
-		grunt.loadNpmTasks('grunt-contrib-less');
-		grunt.loadNpmTasks('grunt-autoprefixer');
-		grunt.loadNpmTasks('grunt-group-css-media-queries');
-		grunt.loadNpmTasks('grunt-contrib-cssmin');
-		grunt.loadNpmTasks('grunt-markdown');
-		grunt.loadNpmTasks('grunt-contrib-pug');
-		grunt.loadNpmTasks('grunt-contrib-watch');
-		grunt.initConfig({
-			globalConfig : gc,
-			pkg : grunt.file.readJSON('package.json'),
-			less: {
-				main: {
-					options : {
-						compress: false,
-						ieCompat: false
-					},
-					files: {
-						'test/docs/css/main.css': [
-							'docs/src/less/main.less'
-						]
-					}
-				}
-			},
-			autoprefixer:{
-				options: {
-					browsers: ['Chrome > 70'],
-					cascade: true
-				},
-				css: {
-					files: {
-						'test/docs/css/main_autoprefix.css' : ['test/docs/css/main.css'],
-					}
-				},
-			},
-			group_css_media_queries: {
-				group: {
-					files: {
-						'docs/css/main.css': ['test/docs/css/main_autoprefix.css']
-					}
-				}
-			},
-			cssmin: {
-				options: {
-					mergeIntoShorthands: false,
-					roundingPrecision: -1
-				},
-				minify: {
-					files: {
-						'docs/css/main.min.css' : ['docs/css/main.css'],
-					}
-				}
-			},
-			markdown: {
-				all: {
-					files: {
-						"test/docs/html/readme.html": ['README.md'],
-						"test/docs/html/license.html": ['LICENSE.md'],
-					},
-					options: {
-						markdownOptions: {
-							gfm: false,
-						}
-					}
-				}
-			},
-			pug: {
-				files: {
-					options: {
-						pretty: '\t',
-						separator:  '\n'
-					},
-					files: {
-						"docs/index.html": ['docs/src/pug/index.pug'],
-					}
-				}
-			},
-			browserSync: {
-				dev: {
-					bsFiles: {
-						src : [
-							'docs/*.html'
-						]
-					},
-					options: {
-						watchTask: true,
-						server: './docs'
-					}
-				}
-			},
-			// Изменения файлов
-			watch: {
-				dev : {
-					files: [
-						'docs/src/**/*',
-					],
-					options : {
-						reload: true
-					},
-					tasks: [
-						'less',
-						'autoprefixer',
-						'group_css_media_queries',
-						'cssmin',
-						'markdown',
-						'pug'
-					]
-				}
-			},
-		});
-		grunt.registerTask('default',
-			[
-				'less',
-				'autoprefixer',
-				'group_css_media_queries',
-				'cssmin',
-				'markdown',
-				'pug'
-			]
-		);
-		grunt.registerTask('dev',
-			[
-				'browserSync',
-				'watch'
-			]
-		);
-	}else{
-		require('load-grunt-tasks')(grunt);
-		require('time-grunt')(grunt);
-		var gc = {
-			sdk: 'sdk', // sdk, normal
-			version: '0.39.2', // '0.41.2',
-			app: 'radio'
-		};
-		
-		var tasks = {
+	var cmd = grunt.option('type'),
+		tasks = {
 			default: [
-				'notify:start',
-				'clean:dev',
-				'imagemin',
-				'tinyimg',
+				'clean',
+				'ffmpeg_down',
 				'webfont',
 				'ttf2woff2',
 				'less',
 				'autoprefixer',
 				'group_css_media_queries',
-				'replace',
 				'cssmin',
 				'requirejs',
 				'uglify',
 				'pug',
-				//'exec:app_main',
-				'exec:test',
-				'notify:cancel'
+				'copy:appcopy',
+				'nwjs',
+				'copy:ffmpeg',
+				'reshack'
 			],
 			build: [
-				'notify:start',
-				'clean:nwjs',
-				'clean:all',
-				'imagemin',
-				'tinyimg',
+				'clean',
+				'ffmpeg_down',
 				'webfont',
 				'ttf2woff2',
 				'less',
 				'autoprefixer',
 				'group_css_media_queries',
-				'replace',
 				'cssmin',
 				'requirejs',
 				'uglify',
 				'pug',
-				//'exec:app_main',
+				'copy:appcopy',
 				'nwjs',
-				'copy',
-				'exec:install',
-				'notify:cancel'
+				'copy:ffmpeg',
+				'reshack'
 			],
 			test: [
-				'notify:start',
-				//'clean:all',
-				//'imagemin',
-				//'tinyimg',
-				//'webfont',
-				//'ttf2woff2',
-				//'less',
-				//'autoprefixer',
-				//'group_css_media_queries',
-				//'replace',
-				//'cssmin',
+				'ffmpeg_down',
+				'webfont',
+				'ttf2woff2',
+				'less',
+				'autoprefixer',
+				'group_css_media_queries',
+				'cssmin',
 				'requirejs',
 				'uglify',
 				'pug',
-				'copy',
-				//'exec:app_main',
-				'exec:test',
-				'notify:cancel'
+				'copy:appcopy',
+				'exec:test'
 			],
-			sdk: [
-				'notify:start',
-				'clean:nwjs',
-				'nwjs',
-				'copy',
-				'exec:win32exe_normal',
-				'exec:win64exe_normal',
-				'exec:win32dll_normal',
-				'exec:win64dll_normal',
-				'exec:win32exe_sdk',
-				'exec:win64exe_sdk',
-				'exec:win32dll_sdk',
-				'exec:win64dll_sdk',
-				'notify:cancel'
+			go: [
+				'less',
+				'autoprefixer',
+				'group_css_media_queries',
+				'cssmin',
+				//'requirejs',
+				'uglify',
+				'pug',
+				'copy:appcopy',
+				'exec:test'
+			],
+			js: [
+				//'requirejs',
+				'uglify',
+				'pug',
+				'copy:appcopy',
+				'exec:test'
+			],
+			css: [
+				'less',
+				'autoprefixer',
+				'group_css_media_queries',
+				'cssmin',
+				'pug',
+				'copy:appcopy',
+				'exec:test'
+			],
+			html: [
+				'pug',
+				'copy:appcopy',
+				'exec:test'
 			]
+		},
+		gc = {
+			sdk: 'sdk', // sdk, normal
+			version: '0.48.1'
 		};
-		
-		grunt.initConfig({
-			globalConfig : gc,
-			pkg : grunt.file.readJSON('package.json'),
-			clean: {
+	require('load-grunt-tasks')(grunt);
+	require('time-grunt')(grunt);
+	var pkg = grunt.file.readJSON('package.json'),
+		getLogName = function(){
+			date = new Date(),
+			hour = date.getHours(),
+			minute = date.getMinutes(),
+			second = date.getSeconds(),
+			millisec = date.getMilliseconds(),
+			data = date.getDay(),
+			month = date.getMonth() + 1,
+			year = date.getFullYear(),
+			format = function(len, str) {
+				let string = String(str);
+				return string.padStart(len, "0");
+			};
+			return format(2, data) + "-" + format(2, month) + "-" + year + "_" +
+					format(2, hour) + "-" + format(2, minute)+ "-" +
+					format(2, second) + "." + format(4, millisec);
+		};
+	grunt.initConfig({
+		globalConfig: gc,
+		pkg: pkg,
+		clean: {
+			options: {
+				force: true
+			},
+			all: [
+				'build/'
+			]
+		},
+		webfont: {
+			radioapp: {
+				src: 'src/glyph/*.svg',
+				dest: 'app/fonts',
 				options: {
-					force: true
+					hashes: false,
+					destLess: 'src/less/fonts',
+					relativeFontPath: "/fonts/",
+					font: 'radioapp',
+					types: 'woff2',
+					fontFamilyName: 'Radio App',
+					stylesheets: ['less'],
+					syntax: 'bootstrap',
+					execMaxBuffer: 1024 * 400,
+					htmlDemo: false,
+					version: '1.0.0',
+					normalize: true,
+					startCodepoint: 0xE900,
+					iconsStyles: false,
+					autoHint: false,
+					templateOptions: {
+						baseClass: '',
+						classPrefix: 'radioapp-'
+					},
+					//embed: ['woff2'],
+					template: 'src/radioapp.template'
+				}
+			}
+		},
+		ttf2woff2: {
+			default: {
+				src: ["src/font/*"],
+				dest: "app/fonts",
+			},
+		},
+		less: {
+			main: {
+				options : {
+					compress: false,
+					ieCompat: false
 				},
-				all: [
-					'test/',
-					'tests/',
-					'package/assets/',
-					'installer/'
-				],
-				dev: [
-					'test/',
-					'tests/',
-					'package/assets/images/',
-					'package/assets/css/',
-					'package/assets/js/',
-				],
-				nwjs: [
-					'.nwjs/'
+				files: {
+					'test/css/main.css': [
+						'src/less/main.less',
+						'bower_components/Croppie/croppie.css'
+					]
+				}
+			}
+		},
+		autoprefixer:{
+			options: {
+				browsers: ['Chrome > 70'],
+				cascade: true
+			},
+			css: {
+				files: {
+					'test/css/prefix-main.css' : [
+						'test/css/main.css'
+					]
+				}
+			},
+		},
+		group_css_media_queries: {
+			group: {
+				files: {
+					'test/css/media-main.css': ['test/css/prefix-main.css']
+				}
+			}
+		},
+		cssmin: {
+			options: {
+				mergeIntoShorthands: false,
+				roundingPrecision: -1
+			},
+			minify: {
+				files: {
+					'app/css/main.css' : ['test/css/media-main.css']
+				}
+			}
+		},
+		requirejs: {
+			ui: {
+				options: {
+					baseUrl: __dirname+"/bower_components/jquery-ui/ui/widgets/",//"./",
+					paths: {
+						jquery: __dirname+'/bower_components/jquery/dist/jquery'
+					},
+					preserveLicenseComments: false,
+					optimize: "uglify",
+					findNestedDependencies: true,
+					skipModuleInsertion: true,
+					exclude: ["jquery"],
+					include: [
+						"../disable-selection.js",
+						"sortable.js",
+					],
+					out: "src/js/jquery.ui.nogit.js",
+					done: function(done, output) {
+						grunt.log.writeln(output.magenta);
+						grunt.log.writeln("jQueryUI Custom Build ".cyan + "done!\n");
+						done();
+					},
+					error: function(done, err) {
+						grunt.log.warn(err);
+						done();
+					}
+				}
+			}
+		},
+		uglify : {
+			options: {
+				ASCIIOnly: true,
+				compress: false,
+				//beautify: true
+			},
+			main: {
+				files: {
+					'app/js/main.js': [
+						'src/js/inc/setposition.js',
+						'bower_components/jquery/dist/jquery.js',
+						'src/js/jquery.ui.nogit.js',
+						'bower_components/jquery.scrollTo/jquery.scrollTo.js',
+						'bower_components/Croppie/croppie.js',
+						'src/js/jquery.psmodal.js',
+						//'src/js/require.js',
+						//'src/js/stationitem.js',
+						'src/js/main.js'
+					]
+				}
+			},
+			modules: {
+				files: [
+					{
+						expand: true,
+						cwd: 'src/modules',
+						src: ["**//*.js"],
+						dest: 'app/modules/'
+					}
+				]
+			}
+		},
+		pug: {
+			files: {
+				options: {
+					pretty: '\t',
+					separator:  '\n'
+				},
+				files: {
+					"app/index.html": ['src/pug/index.pug'],
+				}
+			}
+		},
+		nwjs: {
+			sdk: {
+				options: {
+					platforms: ['win32'],
+					winIco: 'app/favicon.ico',
+					buildDir: __dirname+'/build/sdk',
+					flavor: 'sdk',
+					version: gc.version,
+					cacheDir: __dirname+'/.cache',
+					zip: true,
+					appName: pkg.appName,
+					appVersion: pkg.version
+
+				},
+				src: [__dirname+'/app/**/*']
+			},
+			normal: {
+				options: {
+					platforms: ['win32'],
+					winIco: 'app/favicon.ico',
+					buildDir: __dirname+'/build/normal',
+					flavor: 'normal',
+					version: gc.version,
+					cacheDir: __dirname+'/.cache',
+					zip: true,
+					appName: pkg.appName,
+					appVersion: pkg.version
+				},
+				src: [__dirname+'/app/**/*']
+			},
+		},
+		ffmpeg_down: {
+			start: {
+				options: {
+					platforms: ["win32"],
+					dest: "ffmpeg"
+				}
+			}
+		},
+		copy: {
+			ffmpeg: {
+				files: [
+					{
+						expand: true,
+						cwd: "ffmpeg/win32",
+						src: "*.dll",
+						dest: "build/sdk/" + pkg.appName + "/win32"
+					},
+					{
+						expand: true,
+						cwd: "ffmpeg/win32",
+						src: "*.dll",
+						dest: "build/normal/" + pkg.appName + "/win32"
+					},
+					{
+						expand: true,
+						cwd: "ffmpeg/win32",
+						src: "*.dll",
+						dest: ".cache/" + gc.version + "-normal/win32"
+					},
+					{
+						expand: true,
+						cwd: "ffmpeg/win32",
+						src: "*.dll",
+						dest: ".cache/" + gc.version + "-sdk/win32"
+					}
 				]
 			},
-			copy: {
-				normal: {
-					expand: true,
-					cwd: "src/ffmpeg",
-					src: "**",
-					dest: ".nwjs/normal/radio"
-				},
-				sdk: {
-					expand: true,
-					cwd: "src/ffmpeg",
-					src: "**",
-					dest: ".nwjs/sdk/radio"
-				}
-			},
-			ttf2woff2: {
-				default: {
-					src: ["src/fonts/*"],
-					dest: "package/assets/fonts",
-					dest: "src/less/fonts"
-				},
-			},
-			notify: {
-				start: {
-					options: {
-						title: "<%= pkg.name %> v<%= pkg.version %>",
-						message: 'Запуск',
-						image: __dirname+'\\favicon.png'
-					}
-				},
-				cancel: {
-					options: { 
-						title: "<%= pkg.name %> v<%= pkg.version %>",
-						message: "Успешно Завершено",
-						image: __dirname+'\\favicon.png'
-					}
-				}
-			},
-			imagemin: {
-				base: {
-					options: {
-						optimizationLevel: 3,
-						svgoPlugins: [
-							{
-								removeViewBox: false
-							}
-						]
+			appcopy: {
+				files: [
+					{
+						expand: true,
+						cwd: "src/icon",
+						src: "**",
+						dest: "app"
 					},
-					files: [
-						{
-							expand: true,
-							flatten : true,
-							src: [
-								'src/images/*.{png,jpg,gif,svg}'
-							],
-							dest: 'test/images/',
-							filter: 'isFile'
-						}
-					],
-				}
-			},
-			tinyimg: {
-				dynamic: {
-					files: [
-						{
-							expand: true,
-							cwd: 'test/images', 
-							src: ['**/*.{png,jpg,jpeg,svg}'],
-							dest: 'package/assets/images/'
-						}
-					]
-				}
-			},
-			webfont: {
-				radioapp: {
-					src: 'src/glyph/*.svg',
-					dest: 'src/less/fonts',
-					options: {
-						hashes: false,
-						destLess: 'src/less/fonts',
-						font: 'radioapp',
-						types: 'woff2',
-						fontFamilyName: 'Radi App',
-						stylesheets: ['less'],
-						syntax: 'bootstrap',
-						execMaxBuffer: 1024 * 400,
-						htmlDemo: false,
-						version: '1.0.0',
-						normalize: true,
-						startCodepoint: 0xE900,
-						iconsStyles: false,
-						autoHint: false,
-						templateOptions: {
-							baseClass: '',
-							classPrefix: 'radioapp-'
-						},
-						embed: ['woff2'],
-						template: 'src/radioapp.template'
-					}
-				},
-				lineas: {
-					src: 'src/svg/*.svg',
-					dest: 'src/less/fonts',
-					options: {
-						hashes: false,
-						destLess: 'src/less/fonts',
-						font: 'linea',
-						types: 'woff2',
-						fontFamilyName: 'Linea',
-						stylesheets: ['less'],
-						syntax: 'bootstrap',
-						execMaxBuffer: 1024 * 400,
-						htmlDemo: false,
-						version: '1.0.0',
-						normalize: true,
-						startCodepoint: 0xE900,
-						iconsStyles: false,
-						autoHint: false,
-						templateOptions: {
-							baseClass: '',
-							classPrefix: 'linea-'
-						},
-						embed: ['woff2'],
-						template: 'src/radioapp.template'
-					}
-				}
-			},
-			less: {
-				main: {
-					options : {
-						compress: false,
-						ieCompat: false
+					{
+						expand: true,
+						cwd: "src/pack",
+						src: "*.radiopack",
+						dest: "app"
 					},
-					files: {
-						'test/css/main.css': [
-							'src/less/main.less',
-							'bower_components/Croppie/croppie.css',
-						],
-						'test/css/preload.css': [
-							'src/less/preload.less'
-						],
-						'test/css/stationitem.css': [
-							'src/less/stationitem/stationitem.less'
-						]
+					{
+						expand: true,
+						cwd: "src/images",
+						src: "**",
+						dest: "app/images"
+					},
+					{
+						expand: true,
+						cwd: "src/_locales",
+						src: "**",
+						dest: "app/_locales"
 					}
-				}
+				]
+			}
+		},
+		exec: {
+			test_normal: {
+				cmd: 'start "" /wait  .cache/' + gc.version + '-normal/win32/nw.exe app/ --dev'
 			},
-			autoprefixer:{
+			test: {
+				cmd: 'start "" /wait  .cache/' + gc.version + '-sdk/win32/nw.exe app/ --dev'
+			}
+		},
+		reshack: {
+			hack_normal_32_exe: {
 				options: {
-					browsers: ['Chrome > 70'],
-					cascade: true
-				},
-				css: {
-					files: {
-						'tests/css/main.css' : ['test/css/main.css'],
-						'tests/css/preload.css' : ['test/css/preload.css'],
-					}
-				},
-			},
-			group_css_media_queries: {
-				group: {
-					files: {
-						'tests/css/media.main.css': ['tests/css/main.css'],
-						'tests/css/media.preload.css': ['tests/css/preload.css']
+					resource: "resource/nw_exe.res",
+					open: "build/normal/" + pkg.appName + "/win32/" + pkg.appName + ".exe",
+					log: false,
+					prefix_log: function(){
+						return getLogName();
 					}
 				}
 			},
-			replace: {
-				dist: {
-					options: {
-						patterns: [
-							{
-								match: /\/\* *(.*?) *\*\//g,
-								replacement: ' '
-							}
-						]
-					},
-					files: {
-						'tests/css/replace.main.css': 'tests/css/media.main.css',
-						'tests/css/replace.preload.css': 'tests/css/media.preload.css'
-					}
-				}
-			},
-			cssmin: {
+			hack_sdk_32_exe: {
 				options: {
-					mergeIntoShorthands: false,
-					roundingPrecision: -1
-				},
-				minify: {
-					files: {
-						'src/pug/main.css' : ['tests/css/replace.main.css'],
-						'src/pug/preload.css' : ['tests/css/replace.preload.css'],
-						'package/assets/css/stationitem.css': ['test/css/stationitem.css']
-					}
+					resource: "resource/nw_exe.res",
+					open: "build/sdk/" + pkg.appName + "/win32/" + pkg.appName + ".exe"
 				}
 			},
-			pug: {
-				files: {
-					options: {
-						pretty: '\t',
-						separator:  '\n'
-					},
-					files: {
-						"package/index.html": ['src/pug/index.pug'],
-					}
-				}
-			},
-			requirejs: {
-				ui: {
-					options: {
-						baseUrl: __dirname+"/bower_components/jquery-ui/ui/widgets/",//"./",
-						paths: {
-							jquery: __dirname+'/bower_components/jquery/dist/jquery'
-						},
-						preserveLicenseComments: false,
-						optimize: "uglify",
-						findNestedDependencies: true,
-						skipModuleInsertion: true,
-						exclude: ["jquery"],
-						include: [ 
-							"../disable-selection.js",
-							"sortable.js",
-						],
-						out: "tests/js/jquery.ui.js",
-						done: function(done, output) {
-							grunt.log.writeln(output.magenta);
-							grunt.log.writeln("jQueryUI Custom Build ".cyan + "done!\n");
-							done();
-						},
-						error: function(done, err) {
-							grunt.log.warn(err);
-							done();
-						}
-					}
-				}
-			},
-			uglify : {
+
+			hack_normal_32_dll: {
 				options: {
-					ASCIIOnly: true,
-					//beautify: true
-				},
-				main: {
-					files: {
-						/*'project/assets/js/app.js': [
-							'prejscss/app.js'
-						],*/
-						'package/assets/js/background.js': 'src/background/background.js',
-						//'package/assets/js/main.js''test/js/main.js'
-						'package/assets/js/main.js': [
-							'bower_components/jquery/dist/jquery.js',
-							'tests/js/jquery.ui.js',
-							'bower_components/jquery.scrollTo/jquery.scrollTo.js',
-							'bower_components/Croppie/croppie.js',
-							'src/js/jquery.psmodal.js',
-							'src/js/require.js',
-							'src/js/stationitem.js',
-							'src/js/main.js'
-						]
-					}
-				},
-				modules: {
-					files: [
-						{
-							expand: true,
-							cwd: 'src/modules', 
-							src: ['**/*.js'],
-							dest: 'package/modules/'
-						}
-					]
+					resource: "resource/nw_dll.res",
+					open: "build/normal/" + pkg.appName + "/win32/nw.dll"
 				}
 			},
-			nwjs: {
-				sdk: {
-					options: {
-						platforms: ['win'],
-						buildDir: __dirname+'/.nwjs/sdk',
-						flavor: 'sdk',
-						version: gc.version,
-						cacheDir: __dirname+'/.cache',
-						zip: true,
-						
-					},
-					src: [__dirname+'/package/**/*']
-				},
-				normal: {
-					options: {
-						platforms: ['win'],
-						buildDir: __dirname+'/.nwjs/normal',
-						flavor: 'normal',
-						version: gc.version,
-						cacheDir: __dirname+'/.cache',
-						zip: true,
-						
-					},
-					src: [__dirname+'/package/**/*']
-				},
-			},
-			exec: {
-				//rc_dll: "start \"ResHacker\" /wait ResourceHacker  -open src/dll/nw.rc -save src/dll/nw.res -action compile -log NUL",
-				//rc_exe: "start \"ResHacker\" /wait ResourceHacker  -open src/exe/nw.rc -save src/exe/nw.res -action compile -log NUL",
-				win32exe_normal: "ResourceHacker -open .cache/" + gc.version + "-normal/win32/nw.exe, -save .cache/" + gc.version + "-normal/win32/nw.exe, -action modify, -resource src/exe/nw.res, ,,",
-				win64exe_normal: "ResourceHacker -open .cache/" + gc.version + "-normal/win64/nw.exe, -save .cache/" + gc.version + "-normal/win64/nw.exe, -action modify, -resource src/exe/nw.res, ,,",
-				win32dll_normal: "ResourceHacker -open .cache/" + gc.version + "-normal/win32/nw.dll, -save .cache/" + gc.version + "-normal/win32/nw.dll, -action modify, -resource src/dll/nw.res, ,,",
-				win64dll_normal: "ResourceHacker -open .cache/" + gc.version + "-normal/win64/nw.dll, -save .cache/" + gc.version + "-normal/win64/nw.dll, -action modify, -resource src/dll/nw.res, ,,",
-				win32exe_sdk:    "ResourceHacker -open .cache/" + gc.version +    "-sdk/win32/nw.exe, -save .cache/" + gc.version + "-sdk/win32/nw.exe, -action modify, -resource src/exe/nw.res, ,,",
-				win64exe_sdk:    "ResourceHacker -open .cache/" + gc.version +    "-sdk/win64/nw.exe, -save .cache/" + gc.version + "-sdk/win64/nw.exe, -action modify, -resource src/exe/nw.res, ,,",
-				win32dll_sdk:    "ResourceHacker -open .cache/" + gc.version +    "-sdk/win32/nw.dll, -save .cache/" + gc.version + "-sdk/win32/nw.dll, -action modify, -resource src/dll/nw.res, ,,",
-				win64dll_sdk:    "ResourceHacker -open .cache/" + gc.version +    "-sdk/win64/nw.dll, -save .cache/" + gc.version + "-sdk/win64/nw.dll, -action modify, -resource src/dll/nw.res, ,,",
-				// app_main: __dirname+'/.cache/' + gc.version + '-sdk/win32/nwjc.exe ' + __dirname+'/test/js/main.js ' + __dirname+'/package/main.bin',
-				test: {
-					cmd: 'start "" /wait  .cache/' + gc.version + '-sdk/win64/nw.exe package/'
-				},
-				install: {
-					cmd: 'iscc ' + __dirname+'/install.iss'
+			hack_sdk_32_dll: {
+				options: {
+					resource: "resource/nw_dll.res",
+					open: "build/sdk/" + pkg.appName + "/win32/nw.dll"
 				}
-			},
-			// Изменения файлов
-			watch: {
-				dev : {
-					files: [
-						'src/**/*',
-					],
-					tasks: tasks.test
-				}
-			},
-		});
-		
-		/**
-		 *  default
-		 */
-		grunt.registerTask('default',tasks.default);
-		/**
-		 *  build
-		 */
-		grunt.registerTask('sdk', tasks.sdk);
-		/**
-		 *  build
-		 */
-		grunt.registerTask('build', tasks.build);
-		/**
-		 *  build
-		 */
-		grunt.registerTask('test', tasks.test);
-		/**
-		 *  dev
-		 */
-		grunt.registerTask('dev', ['watch']);
-	}
-};
+			}
+		}
+	});
+	grunt.registerTask('res', ['reshack']);
+	grunt.registerTask('default', tasks.default);
+	grunt.registerTask('build', tasks.build);
+	grunt.registerTask('test', tasks.test);
+	grunt.registerTask('go', tasks.go);
+	grunt.registerTask('js', tasks.js);
+	grunt.registerTask('css', tasks.css);
+	grunt.registerTask('html', tasks.html);
+}

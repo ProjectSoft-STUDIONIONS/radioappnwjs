@@ -1,5 +1,5 @@
-#define AppVersion '1.5'
-#define AppCopyright 'Copyright © 2010 all right reserved ProjectSoft && STUDIONIONS'
+#define AppVersion '2.0'
+#define AppCopyright 'Copyright В© 2010 all right reserved ProjectSoft && STUDIONIONS'
 #define DirName 'YourRadio'
 
 [Setup]
@@ -10,8 +10,8 @@ AppVerName=Your Radio v{#AppVersion}
 AppCopyright={#AppCopyright}
 AppMutex=Your Radio
 AppPublisher=ProjectSoft && STUDIONIONS
-AppPublisherURL=https://github.com/ProjectSoft-STUDIONIONS/radioappnwjs
-AppSupportURL=https://github.com/ProjectSoft-STUDIONIONS/radioappnwjs
+AppPublisherURL=https://projectsoft.ru/
+AppSupportURL=https://projectsoft.ru/
 AppContact=projectsoft2009@yandex.ru
 AppComments=Your Radio
 ; AppUpdatesURL={#GitReleace}
@@ -26,18 +26,18 @@ VersionInfoProductVersion={#AppVersion}
 VersionInfoProductTextVersion=Your Radio v{#AppVersion}
 
 DefaultDirName={commonpf}\{#DirName}
-DefaultGroupName=Your Radio
+; DefaultGroupName=\
 
 ; Compression=lzma/ultra
-; SolidCompression=true
+SolidCompression=false
 ; InternalCompressLevel=ultra
 ; CompressionThreads=5
 
 OutputDir=installer
 OutputBaseFilename={#DirName}
-SetupIconFile=package/favicon.ico
-WizardImageFile=src/wizard.bmp
-WizardSmallImageFile=src/logo.bmp
+SetupIconFile=src/icon/favicon.ico
+WizardImageFile=src/wizard/wizard.bmp
+WizardSmallImageFile=src/wizard/logo.bmp
 
 UninstallDisplayIcon={uninstallexe}
 
@@ -60,14 +60,9 @@ DisableProgramGroupPage=true
 DisableDirPage=true
 ShowLanguageDialog=yes
 
-; ArchitecturesInstallIn64BitMode=x64 запрашивает, чтобы установка была выполнена
-; в 64-битном режиме. Ёто означает, что она должна использовать собственный
-; каталог 64-битных программных файлов и 64-битное представление реестра.
-; во всех остальных архитектурах он будет установлен в 32-битном режиме.
-; Џримечание: мы не устанавливаем ProcessorsAllowed, потому что мы хотим,
-; чтобы эта установка работала на всех архитектурах.
-ArchitecturesInstallIn64BitMode=x64
-; PrivilegesRequired=admin
+PrivilegesRequired=admin
+
+; AppMutex=MyProgramsMutexName,Global\MyProgramsMutexName
 
 [Languages]
 Name: "ru"; MessagesFile: compiler:Languages\Russian.isl
@@ -78,14 +73,13 @@ AboutSetupNote=Your Radio Repository: https://github.com/ProjectSoft-STUDIONIONS
 
 
 [CustomMessages]
-ru.MyAppName=Ваше радио
+ru.MyAppName=Ваше Радио
 en.MyAppName=Your Radio
 ru.MyUninstallText=Удалить
 en.MyUninstallText=Uninstall
 
 [Icons]
-Name: {group}\{cm:MyAppName}; Filename: {app}\radio.exe; WorkingDir: {app}; IconFilename: {app}\radio.exe; IconIndex: 0
-Name: {group}\{cm:MyUninstallText} {cm:MyAppName}; Filename: {uninstallexe}
+Name: "{commonstartmenu}\{cm:MyAppName}"; Filename: {app}\radioapp.exe; WorkingDir: {app}; IconFilename: {app}\radioapp.exe; IconIndex: 0
 
 [Dirs]
 Name: {app}\locales
@@ -97,23 +91,13 @@ Name: {app}\; Type: filesandordirs
 
 [Files]
 #include AddBackslash(SourcePath) + "prepocessor.iss"
-; App 64
-#emit ProcessScanDir('.nwjs\normal\radio\win64', '{app}', False, 'Is64BitInstallMode')
-; swiftshader 64
-#emit ProcessScanDir('.nwjs\normal\radio\win64\swiftshader', '{app}\swiftshader\', False, 'Is64BitInstallMode')
 ; App 32
-#emit ProcessScanDir('.nwjs\normal\radio\win32', '{app}', 'solidbreak ', 'not Is64BitInstallMode')
+#emit ProcessScanDir('build\normal\radioapp\win32', '{app}', 'solidbreak ', False)
 ; swiftshader 32
-#emit ProcessScanDir('.nwjs\normal\radio\win32\swiftshader', '{app}\swiftshader\', 'solidbreak ', 'not Is64BitInstallMode')
-
-; App 32
-; #emit ProcessScanDir('.nwjs\normal\radio\win32', '{app}', 'solidbreak ', False)
-; swiftshader 32
-; #emit ProcessScanDir('.nwjs\normal\radio\win32\swiftshader', '{app}\swiftshader\', 'solidbreak ', False)
+#emit ProcessScanDir('build\normal\radioapp\win32\swiftshader', '{app}\swiftshader\', 'solidbreak ', False)
 ; pnacl
-; #emit ProcessScanDir('.nwjs\normal\radio\win32\pnacl', '{app}\pnacl\', 'solidbreak ', False)
-
+#emit ProcessScanDir('build\normal\radioapp\win32\pnacl', '{app}\pnacl\', 'solidbreak ', False)
 ; locales
-#emit ProcessScanDir('.nwjs\normal\radio\win32\locales', '{app}\locales\', 'solidbreak ', False)
+#emit ProcessScanDir('build\normal\radioapp\win32\locales', '{app}\locales\', 'solidbreak ', False)
 
 #expr SaveToFile (AddBackslash (SourcePath) + ".install.iss")

@@ -1,53 +1,5 @@
-var helper = require('./helper');
-var EventDispatcher = function () {};
-Object.assign( EventDispatcher.prototype, {
-	addEventListener: function ( type, listener ) {
-		if ( this._listeners === undefined ) this._listeners = {};
-		var listeners = this._listeners;
-		if ( listeners[ type ] === undefined ) {
-			listeners[ type ] = [];
-		}
-		if ( listeners[ type ].indexOf( listener ) === - 1 ) {
-			listeners[ type ].push( listener );
-		}
-	},
-	hasEventListener: function ( type, listener ) {
-		if ( this._listeners === undefined ) return false;
-		var listeners = this._listeners;
-		if ( listeners[ type ] !== undefined && listeners[ type ].indexOf( listener ) !== - 1 ) {
-			return true;
-		}
-		return false;
-	},
-	removeEventListener: function ( type, listener ) {
-		if ( this._listeners === undefined ) return;
-		var listeners = this._listeners;
-		var listenerArray = listeners[ type ];
-		if ( listenerArray !== undefined ) {
-			var index = listenerArray.indexOf( listener );
-			if ( index !== - 1 ) {
-				listenerArray.splice( index, 1 );
-			}
-		}
-	},
-	dispatchEvent: function ( event ) {
-		if ( this._listeners === undefined ) return;
-		var listeners = this._listeners;
-		var listenerArray = listeners[ event.type ];
-		if ( listenerArray !== undefined ) {
-			event.target = this;
-			var array = [], i = 0;
-			var length = listenerArray.length;
-			for ( i = 0; i < length; i ++ ) {
-				array[ i ] = listenerArray[ i ];
-			}
-			for ( i = 0; i < length; i ++ ) {
-				array[ i ].call( this, event );
-			}
-		}
-	}
-});
-var _isPlaying = false,
+var EventDispatcher = require(__dirname + '/eventdispatcher.js'),
+	_isPlaying = false,
 	_isProgress = false,
 	_net = false,
 	_this,
@@ -125,7 +77,7 @@ var _isPlaying = false,
 	},
 	audio;
 	
-function AudioPlayer(doc){
+function AudioPlayer(document){
 	var dispatchHandlers = [], i=0;
 	_this = this;
 	audio = new Audio();
@@ -135,7 +87,7 @@ function AudioPlayer(doc){
 		audio.addEventListener(a, audioHandler);
 	});
 	audio.controls = null;
-	doc.body.appendChild(audio);
+	document.body.appendChild(audio);
 	function updateOnlineStatus(e){
 		var net = _net;
 		_status = e.type;
@@ -176,7 +128,7 @@ AudioPlayer.prototype = {
 		return _stream;
 	},
 	set volume(value) {
-		_volume = helper.inInterval(value, 0, 1);
+		_volume = Math.min(1, Math.max(0, value));
 		if(_volume==audio.volume){
 			return;
 		}

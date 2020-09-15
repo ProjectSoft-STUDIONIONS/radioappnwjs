@@ -1,0 +1,257 @@
+@pd: 5px;
+@st_height: 48px;
+@st_width: 48px;
+@text_indent: 10px;
+@sort_widht: 16px;
+@loader_widht: @st_width + @text_indent + @sort_widht;
+@select_bg: #484848;
+.station {
+	display: block;
+	margin-top: 0;
+	margin-bottom: 0;
+	padding-right: 0;
+	padding-left: 0;
+	overflow: hidden;
+	position: relative;
+	user-select: none;
+	background-color: #fff;
+	box-shadow: 0 0 1px #000;
+	.svg {
+		display: block;
+		position: absolute;
+		bottom: 0;
+		right: @sort_widht;
+		width: 314px;
+		height: @st_height / 3;
+		visibility: hidden;
+		background-color: @select_bg;
+		background-repeat: repeat-x;
+		background-size: contain;
+		background-position: center left;
+		.datauri('loading.svg');
+		pointer-events: none;
+	}
+	&__wrapper {
+		display: flex;
+		flex-direction: row;
+		overflow: hidden;
+		flex-wrap: nowrap;
+		list-style: none;
+		justify-content: space-between;
+		align-items: center;
+	}
+	.st {
+		&__btn {
+			position: relative;
+			width: @st_width;
+			height: @st_height;
+			padding: @pd;
+			cursor: pointer;
+			.icon {
+				display: block;
+				position: relative;
+				margin: 0;
+				padding: 0;
+				border: unset;
+				width: 100%;
+				height: 100%;
+				object-fit: contain;
+				object-position: center center;
+				border-radius: 50%;
+				box-shadow: 0 0 1px 2px #fff;
+			}
+			.btn {
+				position: absolute;
+				z-index: 1;
+				user-select: 0;
+				pointer-events: none;
+				top: @pd;
+				left: @pd;
+				width: @st_width - (@pd * 2);
+				height: @st_height - (@pd * 2);
+				border-radius: 50%;
+				overflow: hidden;
+				&::before {
+					font-family: "Radio App" !important;
+					speak: none;
+					font-style: normal;
+					font-weight: normal;
+					font-variant: normal;
+					text-transform: none;
+					line-height: 1;
+					text-rendering: auto;
+					-webkit-font-smoothing: antialiased;
+					-moz-osx-font-smoothing: grayscale;
+					width: @st_width - (@pd * 2);
+					height: @st_height - (@pd * 2);
+					font-size: (@st_height - (@pd * 2)) / 2.6666666666666666666666667;
+					transition: transform .3s ease;
+					transform: scale(0);
+					display: flex;
+					flex-direction: row;
+					align-items: center;
+					justify-content: center;
+					color: #fff;
+					background-color: rgba(0, 0, 0, .2);
+					border-radius: 50%;
+				}
+			}
+			&:hover {
+				.btn {
+					&::before {
+						transform: scale(1);
+					}
+				}
+			}
+		}
+		&__name {
+			flex: 1 0 auto;
+			max-width: 314px;
+			overflow: hidden;
+			display: block;
+			padding-right: 10px;
+			&__txt {
+				font-size: 16px;
+				text-indent: 10px;
+				display: block;
+				min-width: 100%;
+				max-width: 100%;
+				width: 100%;
+				text-overflow: ellipsis;
+				overflow: hidden;
+				white-space: nowrap;
+				flex-wrap: nowrap;
+				text-indent: @text_indent;
+			}
+		}
+		&__sort {
+			position: relative;
+			height: @st_height;
+			padding-top: @pd;
+			padding-bottom: @pd;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			width: 26px;
+			padding-right: 10px;
+			cursor: grab;
+			&__hand {
+				display: block;
+				width: 12px;
+				height: 12px;
+				border-radius: 100%;
+				background-color: #ff7000;
+				position: relative;
+				&::before,
+				&::after {
+					display: block;
+					content: "";
+					height: 6px;
+					width: 6px;
+					left: 0px;
+					position: absolute;
+					border-color: transparent;
+					border-width: 6px;
+					border-style: solid;
+					transition: top .3s ease, bottom .3s ease;
+				}
+				&::before {
+					top: -6px;
+					border-bottom-color: #ff7000;
+				}
+				&::after {
+					bottom: -6px;
+					border-top-color: #ff7000;
+				}
+			}
+			&:hover {
+				.st__sort__hand {
+					&::before {
+						top: -16px;
+					}
+					&::after {
+						bottom: -16px;
+					}
+				}
+			}
+		}
+	}
+	&.ui-sortable-helper {
+		.st__sort__hand {
+			&::before,
+			&::after {
+				transition: top .3s ease, bottom .3s ease;
+			}
+			&::before {
+				top: -16px;
+			}
+			&::after {
+				bottom: -16px;
+			}
+		}
+	}
+	&,
+	&.stop {
+		.st {
+			&__btn {
+				.btn {
+					&::before {
+						content: @radioapp-play;
+					}
+				}
+			}
+		}
+	}
+	&.play {
+		.st {
+			&__btn {
+				.btn {
+					&::before {
+						content: @radioapp-pause;
+					}
+				}
+			}
+		}
+	}
+	&.play {
+		.st {
+			&__sort {
+				&__hand {
+					background-color: #50ff50;
+					&::before {
+						border-bottom-color: #50ff50;
+					}
+					&::after {
+						border-top-color: #50ff50;
+					}
+				}
+			}
+		}
+		&.progress {
+			.st {
+				&__sort {
+					&__hand {
+						background-color: #004eff;
+						&::before {
+							border-bottom-color: #004eff;
+						}
+						&::after {
+							border-top-color: #004eff;
+						}
+					}
+				}
+			}
+		}
+	}
+	&.play,
+	&.select {
+		color: #fff;
+		background-color: @select_bg;
+	}
+	&.progress {
+		.svg {
+			visibility: visible;
+		}
+	}
+}

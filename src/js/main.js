@@ -1,778 +1,232 @@
-// --disable-raf-throttling --disable-devtools 
-function initializeApp(){
-	var app = new DirectoryApp(document),
-		win = nw.Window.get(),
-		menu = new nw.Menu(),
-		screenHeight = win.window.screen.availHeight - (window.outerHeight - window.innerHeight),
-		screenWidth = win.window.screen.availWidth,
-		dataStation = null,
-		stationMenu = new nw.Menu(),
-		docMenu = new nw.Menu(),
-		trayMenu = new nw.Menu(),
-		audio = new AudioPlayer(document),
-		radioStation = null;
-		selectId = -1,
-		savedInterval = 0,
-		metaInterval = 0;
-		_isShow = true,
-		_isSpectrum = true,
-		beforeTitl = "",
-		notifyInterval = 0,
-		mouseInterval = 0;
-		
-	window.AudioContext = window.AudioContext || window.webkitAudioContext || window.mozAudioContext;
-	
-	var add_station_item = new nw.MenuItem(
-			{
-				label: '  Добавить станцию',
-				icon: 'assets/images/context_add.png',
-				click: function(){
-					console.log('show add station');
-					addStationHandle();
-					dataStation = null;
-				},
-				key: "a",
-				modifiers: "ctrl+alt"
-			}
-		),
-		edit_station_item = new nw.MenuItem(
-			{
-				label: '  Редактировать',
-				icon: 'assets/images/context_edit.png',
-				click: function(){
-					if(!dataStation){
-						return;
-					}
-					console.log('show edit station');
-					stationEdit(dataStation);
-					dataStation = null;
-				}
-			}
-		),
-		delete_station_item = new nw.MenuItem(
-			{
-				label: '  Удалить',
-				icon: 'assets/images/context_delete.png',
-				click: function(){
-					if(!dataStation){
-						return;
-					}
-					console.log('show delete station');
-					$.psmodal.open(
-						'confirm',
-						'Подтверлите удаление радиостанции - <h3>' + dataStation.name + '</h3>',
-						'Удаление радиостанции',
-						{
-							yes: {
-								text: 'Да, удалить',
-								class: '',
-								callback: function(e){
-									stationDelete(dataStation);
-									dataStation = null;
-									return !0;
-								}
-							},
-							no: {
-								text: 'ОТМЕНА'
-							}
-						}
-					).addClass('dialog--deleted');
-				}
-			}
-		),
-		export_stations_item = new nw.MenuItem(
-			{
-				label: '  Сохранить список радиостанций',
-				icon: 'assets/images/context_export.png',
-				click: function(){
-					console.log('show export station');
-					exportStationsHandle();
-					dataStation = null;
-				},
-				key: "s",
-				modifiers: "ctrl+alt"
-			}
-		),
-		import_stations_item = new nw.MenuItem(
-			{
-				label: '  Загрузить список радиостанций',
-				icon: 'assets/images/context_import.png',
-				click: function(){
-					console.log('show import station');
-					importStationsHandle();
-					dataStation = null;
-				},
-				key: "i",
-				modifiers: "ctrl+alt"
-			}
-		),
-		show_notifycation = new nw.MenuItem(
-			{
-				label: '  Отображать информацию о треке',
-				type: "checkbox",
-				click: function(){
-					app.options.notify = show_notifycation.checked;
-					app.saveOptions().then(function(){}).catch(function(){});
-				}
-			}
-		),
-		projectsoft_link = new nw.MenuItem(
-			{
-				label: '  Developer ProjectSoft',
-				icon: 'assets/images/projectsoft.png',
-				click: function(){
-					nw.Shell.openExternal('https://demiart.ru/forum/index.php?showuser=1393929');
-				}
-			}
-		),
-		handlePlayStopMenu = function(){
-			if(!$("body").hasClass('preload') && !$("body").hasClass('open--modal')){
-				if(app.options.station > 0){
-					if(audio.isPlaying()){
-						// Stop audio
-						audio.stop();
-					}else{
-						// Play audio
-						//buildPlayStop('stop');
-						var data = app.options.stations[app.getStationIndex(selectId)];
-						audio.stream = data.stream;
-						audio.play();
-					}
-				}
-			}
-		},
-		play_menuitem = new nw.MenuItem(
-			{
-				label: '  Play',
-				icon: "assets/images/play.png",
-				click: handlePlayStopMenu
-			}
-		),
-		stop_menuitem = new nw.MenuItem(
-			{
-				label: '  Stop',
-				icon: "assets/images/stop.png",
-				click: handlePlayStopMenu
-			}
-		),
-		buildPlayStop = function(state){
-			if(state=='play'){
-				play_menuitem.label = '  Stop';
-				play_menuitem.icon = "assets/images/stop.png";
-			}else{
-				play_menuitem.label = '  Play';
-				play_menuitem.icon = "assets/images/play.png";
-			}
-			//try{
-				//trayMenu.removeAt(0);
-			//}catch(t){}
-			//if(state=='play'){
-				//trayMenu.insert(stop_menuitem, 0);
-			//}else{
-				//trayMenu.insert(play_menuitem, 0);
-			//}
-		};
-	
-	// Runtime Messagess
-	chrome.runtime.onMessage.addListener(function(data){
-		if(data.sender == 'settings'){
-			if(data.reload){
-				$("main.main").scrollTop(0);
-				buildListStations();
-				var vol = parseFloat(data.options.volume);
-				$("#volume").prop('value', vol).trigger('change');
-				audio.volume = vol;
-				show_notifycation.checked = !!(data.options.notify);
-			}
-		}
-		if(data.sender == "errorimport"){
-			app.readOptions().then(function(options){
-				$("main.main").scrollTop(0);
-				buildListStations(true);
-				var vol = parseFloat(options.volume);
-				$("#volume").prop('value', vol).trigger('change');
-				audio.volume = vol;
-				show_notifycation.checked = !!(options.notify);
-			}).catch(function(){
-				$.psmodal.close();
-				// Фигня короче с импортом ))
-			});
-		}
+/* App Controls */
+(function($){
+	const   closePath = 'M 0,0 0,0.7 4.3,5 0,9.3 0,10 0.7,10 5,5.7 9.3,10 10,10 10,9.3 5.7,5 10,0.7 10,0 9.3,0 5,4.3 0.7,0 Z',
+			restorePath = 'm 2,1e-5 0,2 -2,0 0,8 8,0 0,-2 2,0 0,-8 z m 1,1 6,0 0,6 -1,0 0,-5 -5,0 z m -2,2 6,0 0,6 -6,0 z',
+			maximizePath = 'M 0,0 0,10 10,10 10,0 Z M 1,1 9,1 9,9 1,9 Z',
+			minimizePath = 'M 0,5 10,5 10,6 0,6 Z',
+			gui = require('nw.gui'),
+			win = nw.Window.get(),
+			closeBtn = $(".app button.close"),
+			miniBtn  = $(".app button.minimize"),
+			maxiBtn  = $(".app button.maximize"),
+			fullBtn  = $(".app button.fullscreen"),
+			maxRes   = $("svg path", maxiBtn),
+			getMessage = function(msg) {
+				return chrome.i18n.getMessage(msg);
+			};
+	var state = false;
+	closeBtn.attr({title: getMessage('close')});
+	miniBtn.attr({title: getMessage('minimize')});
+	maxiBtn.attr({title: getMessage('maximize')});
+	fullBtn.attr({title: getMessage('fullscreen')});
+	$("svg path", closeBtn).attr({d: closePath});
+	$("svg path", miniBtn).attr({d: minimizePath});
+	maxRes.attr({d: maximizePath});
+	win.on('close', function () {
+		nw.App.quit()
 	});
-	
-	function blobToBuffer(blob) {
-		return new Promise(function(resolve, reject){
-			if (typeof Blob === 'undefined' || !(blob instanceof Blob)) {
-				reject('first argument must be a Blob');
-			}
-			var reader = new FileReader();
-			function onLoadEnd (e) {
-				reader.removeEventListener('loadend', onLoadEnd, false);
-				if (e.error) reject(e.error);
-				else resolve(Buffer.from(reader.result));
-			}
-			reader.addEventListener('loadend', onLoadEnd, false);
-			reader.readAsArrayBuffer(blob);
-		});
-	}
-	
-	function hideNotify(done) {
-		clearTimeout(notifyInterval);
-		chrome.notifications.clear('radioapp_projectsoft', function() {
-			done && done();
-		});
-	}
-
-	function showNotify(data, delay){
-		hideNotify(function() {
-			if(show_notifycation.checked) {
-				//fs.writeFileSync('D:\\ProjectSoft\\soft\\RadioApp\\.log.txt', "Сейчас играет:\n"+data.title);
-				chrome.notifications.create(
-					'radioapp_projectsoft',
-					{
-						iconUrl: data.icon,
-						title: "Ваше Радио\n" + data.name,
-						type: 'basic',//'image'
-						message: "Сейчас играет:\n"+data.title,
-						isClickable: true,
-						priority: 2,
-					},
-					function() {
-						notifyInterval = setTimeout(hideNotify, 5000);
-					}
-				);
-			}
-		});
-	}
-	// Audio
-	audio.addEventListener('statechange', function(e){
-		if(e.playing){
-			if(e.bufering){
-				win.setProgressBar(2);
-				$("li#" + selectId).addClass('buffering');
-			}else{
-				$("li#" + selectId).removeClass('buffering');
-				win.setProgressBar(0);
-			}
-			$("li#" + selectId).addClass('play select');
-			var ttl = win.title;
-			win.title = (ttl == "Ваше Радио") ? "Ваше Радио - " + app.options.stations[app.getStationIndex(selectId)].name : ttl;
-			buildPlayStop('play');
-		}else{
-			$("li#" + selectId).removeClass("play");
-			win.setProgressBar(0);
-			clearTimeout(metaInterval);
-			win.title = "Ваше Радио";
-			beforeTitl = "";
-			buildPlayStop('stop');
-		}
+	win.on('minimize', function() {
+		//console.log('Window is minimized');
 	});
-	audio.addEventListener('networkchange', function(e){
-		if(e.state=="online"){
-			var nm = app.options.stations[app.getStationIndex(selectId)];
-			beforeTitl = "";
-			setTimeout(function(){getMetadata(nm);}, 5000);
-		}else{
-			beforeTitl = "";
-		}
+	win.on('maximize', function() {
+		maxRes.attr({d: restorePath});
+		maxiBtn.attr({title: getMessage('restore')});
+		state = true;
 	});
-	// Get Metadata
-	function getMetadata(data){
-		clearTimeout(metaInterval);
-		var nm = app.options.stations[app.getStationIndex(selectId)];
-		//win.title = "Ваше Радио - " + nm.name ;
-		if(!radioStation){
-			radioStation = new Parser({
-				url: data.stream,
-				keepListen: false,
-				autoUpdate: false,
-				url: data.stream, // URL to radio station
-				errorInterval: 10 * 60, // retry connection after 10 minutes
-				emptyInterval: 5 * 60, // retry get metadata after 5 minutes
-				metadataInterval: 5 // update metadata after 5 seconds
-			});
-			radioStation.on('metadata', requestMetadata);
-			radioStation.on('stream', requestStream);
-			radioStation.on('error', requestErrorMetadata);
-			radioStation.on('empty', requestEmptyMetadata);
-			return;
-		}else{
-			radioStation.setConfig({
-				url: data.stream, // URL to radio station
-				keepListen: false,
-				autoUpdate: false
-			});
-		}
-		radioStation.queueRequest();
-	}
-	function requestStream(stream){
-		//console.log(stream);
-	}
-	function requestMetadata(metadata){
-		if(audio.isPlaying()){
-			var nm = app.options.stations[app.getStationIndex(selectId)];
-			var ttl = "Ваше Радио" + (nm ? " - " + nm.name : "");
-			if(metadata.StreamTitle.length > 7){
-				// No Suported win-1251
-				// Проще говоря кряко-вопросы
-				const regex = /�/;
-				if(regex.exec(metadata.StreamTitle) === null){
-					// Поддержка 101.ru. Где в title передаётся JSON объект
-					const reg101ex = /{".+}/;
-					let m = metadata.StreamTitle.match(reg101ex);
-					if(m){
-						let tT = helper.unpack(m[0]);
-						if(tT && tT.t){
-							metadata.StreamTitle = tT.t;
-						}else{
-							metadata.StreamTitle = "";
-						}
-					}
-					
-					if(beforeTitl !=  metadata.StreamTitle){
-						showNotify({
-							name: nm.name,
-							icon: app.getIcon(selectId),
-							title: metadata.StreamTitle
-						}, 6000);
-					}
-					beforeTitl = metadata.StreamTitle;
-					ttl += " - \"" + beforeTitl + "\"";
-				}
-			}else{
-				beforeTitl = "";
-			}
-			win.title = ttl;
-			metaInterval = setTimeout(function(){radioStation.queueRequest();}, 5000);
-		}else{
-			beforeTitl = "";
-			win.title = "Ваше Радио" + (nm ? " - " + nm.name : "");;
-		}
-	}
-	function requestErrorMetadata(error){
-		beforeTitl = "";
-		var nm = app.options.stations[app.getStationIndex(selectId)];
-		win.title = "Ваше Радио - " + nm.name ;
-		metaInterval = setTimeout(function(){win.title = "Ваше Радио - " + nm.name ; radioStation.queueRequest();}, 5000);
-		//console.log('GET Metadata Error', nm);
-	}
-	function requestEmptyMetadata(){
-		beforeTitl = "";
-		var nm = app.options.stations[app.getStationIndex(selectId)];
-		metaInterval = setTimeout(function(){win.title = "Ваше Радио - " + nm.name ; radioStation.queueRequest();}, 5000);
-		win.title = "Ваше Радио" + (nm ? " - " + nm.name : "");
-	}
-	
-	// Add station
-	function addStationHandle(){
-		var $inputName = $("<input />",{
-				type: 'text',
-				class: '.station_name'
-			}),
-			$inputStream = $("<input />",{
-				type: 'text',
-				class: '.station_stream'
-			}),
-			$inputSity = $("<input />",{
-				type: 'text',
-				class: '.station_sity'
-			}),
-			$divFile = $('<div></div>', {
-				class: 'div--file linea-basic-picture'
-			}).data({result: false}),
-			$crp = $('<div></div>', {
-				class: 'div--crop'
-			});
-		$crp.croppie({
-			viewport: {
-				width: 100,
-				height: 100,
-				type: 'circle'
-			},
-			boundary: {
-				width: 100,
-				height: 100
-			},
-			showZoomer: true,
-			enableOrientation: true,
-			mouseWheelZoom: 'ctrl',
-			enableExif: true
-		}).croppie('bind', {
-			url: 'assets/images/favicon.png'
-		});
-		$divFile.on('click', function(ev){
-			ev.preventDefault();
-			dialog.openFileDialog(['.jpeg', '.jpg', '.png'], function(result){
-				if(!result)
-					return;
-				result = "file:///" + result.split('\\').join('/');
-				$divFile.data({result: result});
-				$crp.croppie('bind', {
-					url: result
-				});
-			});
-			return !1;
-		});
-		$.psmodal.open(
-			'modal',
-			$('<div></div>', {
-				class: 'station-dialog'
-			}).append([$('<div></div>', {class: 'div--inputs'}).append([$('<span>Название станции:</span>'), $inputName, $('<span>Стрим:</span>'), $inputStream]), $divFile, $crp]),
-			'Добавить станцию',
-			{
-				yes: {
-					text: '',
-					class: 'linea-arrows-circle-check',
-					callback: function(e){
-						const regex = /^https?:\/\//;
-						var name = $.trim($inputName.val()),
-							stream = $.trim($inputStream.val()),
-							sity = $.trim($inputSity.val()),
-							id = (new Date()).getTime();
-						name = name.length < 2 ? 'Новая станция' : name
-						stream = stream.length < 15 ? '' : stream;
-						sity = sity.length < 10 ? '' : sity;
-						let m;
-						sity = ((m = regex.exec(sity)) !== null) ? sity : "";
-						$crp.croppie('result', 'blob').then(function(blob) {
-							blobToBuffer(blob).then(function(buffer){
-								app.saveIcon(id, buffer);
-								var _options = $.extend({}, app.options);
-								_options.stations.push({
-									name: name,
-									stream: stream,
-									id: id,
-									sity: sity
-								});
-								app.options = _options;
-								buildListStations(true);
-							}).catch(function(error){
-								console.log(error);
-							});
-						});
-						return !0;
-					}
-				}
-			}
-		).addClass('dialog--edit-save');
-	}
-
-	// Station Edit
-	function stationEdit(data){
-		var stationId = data.id,
-			index = app.getStationIndex(stationId);
-		var $li = $("#stations li#" + stationId);
-		var $inputName = $("<input />",{
-				type: 'text',
-				class: '.station_name'
-			}).val(data.name),
-			$inputStream = $("<input />",{
-				type: 'text',
-				class: '.station_stream'
-			}).val(data.stream),
-			$inputSity = $("<input />",{
-				type: 'text',
-				class: '.station_sity'
-			}).val(data.sity),
-			$divFile = $('<div></div>', {
-				class: 'div--file linea-basic-picture'
-			}).data({result: false}),
-			$crp = $('<div></div>', {
-				class: 'div--crop'
-			});
-		dataStation = null;
-		$crp.croppie({
-			viewport: {
-				width: 100,
-				height: 100,
-				type: 'circle'
-			},
-			boundary: {
-				width: 100,
-				height: 100
-			},
-			showZoomer: true,
-			enableOrientation: true,
-			mouseWheelZoom: 'ctrl',
-			enableExif: true
-		}).croppie('bind', {
-			url: 'file:///' + app.getIcon(stationId)+"?" + (new Date()).getTime()
-		});
-		$divFile.on('click', function(ev){
-			ev.preventDefault();
-			dialog.openFileDialog(['.jpeg', '.jpg', '.png'], function(result){
-				if(!result)
-					return;
-				result = "file:///" + result.split('\\').join('/');
-				$divFile.data({result: result});
-				$crp.croppie('bind', {
-					url: result
-				});
-			});
-			return !1;
-		});
-		$.psmodal.open(
-			'modal',
-			$('<div></div>', {
-				class: 'station-dialog'
-			}).append([$('<div></div>', {class: 'div--inputs'}).append([$('<span>Название станции:</span>'), $inputName, $('<span>Стрим:</span>'), $inputStream, $('<span>Сайт:</span>'), $inputSity]), $divFile, $crp]),
-			'Редактировать станцию',
-			{
-				yes: {
-					text: '',
-					class: 'linea-arrows-circle-check',
-					callback: function(e){
-						const regex = /^https?:\/\//;
-						let m;
-						var name = $.trim($inputName.val()),
-							stream = $.trim($inputStream.val()),
-							sity = $.trim($inputSity.val());
-						name = name.length < 2 ? 'Новая станция' : name;
-						stream = stream.length < 15 ? '' : stream;
-						sity = sity.length < 10 ? '' : sity;
-						sity = ((m = regex.exec(sity)) !== null) ? sity : "";
-						$crp.croppie('result', 'blob').then(function(blob) {
-							blobToBuffer(blob).then(function(buffer){
-								app.saveIcon(stationId, buffer);
-								var _options = $.extend({}, app.options),
-									_playing = audio.isPlaying(),
-									dataSt = {
-										name: name,
-										stream: stream,
-										id: stationId,
-										sity: sity
-									};
-								_options.stations[index] = dataSt;
-								$li.data(dataSt);
-								$('img.image', $li).attr({src: 'file:///' + app.getIcon(stationId)+"?" + (new Date()).getTime()});
-								$('span.text', $li).text(dataSt.name);
-								$('span.item-station--sity', $li).empty();
-								if(dataSt.sity != ""){
-									$('span.item-station--sity', $li).append($("<a></a>", {
-										class: "radioapp-external-link",
-										href: dataSt.sity,
-										title: "Сайт радиостанции:\n" + dataSt.sity
-									}));
-								}
-								app.options = _options;
-								if(_playing){
-									if(selectId == stationId){
-										audio.stop();
-										audio.stream = stream;
-										audio.play();
-									}
-								}
-							}).catch(function(err){
-								console.log(error);
-							});
-						});
-						return !0;
-					}
-				}
-			}
-		).addClass('dialog--edit-save');
+	win.on('restore', function() {
+		maxRes.attr({d: maximizePath});
+		maxiBtn.attr({title: getMessage('maximize')});
+		state = false;
+	});
+	closeBtn.on("click", function(e){
+		e.preventDefault();
+		win.close();
+		$(this).blur();
 		return !1;
-	}
-	
-	// Station Delete
-	function stationDelete(data) {
-		var _options = app.options,
-			removed = false;
-		app.options.stations = [];
-		$("#stations li").each(function(){
-			var ds = $(this).data();
-			if(ds.id == data.id){
-				removed = $(this);
-				app.removeIcon(data.id);
-				if(selectId == data.id){
-					audio.isPlaying() && audio.stop();
-					app.options.station = -1;
-				}
-			}else{
-				var opt = {
-					id: ds.id,
-					name: ds.name,
-					stream: ds.stream,
-					sity: ds.sity
-				}
-				app.options.stations.push(opt);
-			}
-		});
-		if(removed){
-			if(selectId == data.id){
-				audio.isPlaying() && audio.stop();
-				app.options.station = -1;
-			}
-			removed.remove();
+	});
+	miniBtn.on('click', function(e){
+		e.preventDefault();
+		win.minimize();
+		$(this).blur();
+		return !1;
+	});
+	maxiBtn.on('click', function(e){
+		e.preventDefault();
+		state ? win.restore() : win.maximize();
+		$(this).blur();
+		return !1;
+	});
+	fullBtn.on('click', function(e){
+		e.preventDefault();
+		win.enterFullscreen();
+		$(document.body).addClass('kiosk__mode');
+		$(this).blur();
+		return !1;
+	});
+	$(window).on('keydown', function(e){
+		if(e.code == "Escape" || e.code == "F11"){
+			e.preventDefault();
+			win.leaveFullscreen();
+			$(document.body).removeClass('kiosk__mode');
+			win.focus();
+			return !1;
 		}
-		selectId = app.options.station;
-		app.saveOptions().then(function(data){
-			//console.log(data);
-			if(selectId > -1){
-				$("main.main").scrollTo('li#' + selectId);
-			}
-		}).catch(function(err){
-			//console.log(err);
-		});
-	}
+	})
+	win.restore();
+	win.focus();
+}(jQuery));
 
-	// Station Item
-	function buildItemListStation(station, favorite){
-		favorite = favorite ? " favorite" : "";
-		const regex = /^https?:\/\//;
-		let m;
-		var pathIcon = 'file:///' + app.getIcon(station.id)+"?" + (new Date()).getTime(),
-			stationName = station.name,
-			$img = $("<img />", {
-				class: "image"
-			}).attr({src: pathIcon}),
-			$imgLogo = $("<span></span>", {
-				class: "item-station--image"
-			}).append($img).append($("<span></span>", {class: 'icon'})),
-			$text = $("<span></span>", {
-				class: "text",
-				text: stationName
-			}),
-			$spanText = $("<span></span>", {
-				class: "item-station--text"
-			}).append($text),
-			$favorite =  $("<span></span>", {
-				class: "item-station--favorite"
-			}),
-			$sity = $("<span></span>", {
-				class: "item-station--sity"
-			}),
-			$li = $("<li></li>", {
-				class: "item-station" + favorite,
-				id: station.id
-			}).data(station).append([$imgLogo, $spanText, $sity, $favorite])
-			.on('click', ".item-station--image", function(e){
-				var target = e.delegateTarget,
-					data = $(target).data();
-				if(audio.isPlaying()) {
-					buildPlayStop('play');
-					audio.stop();
-					win.title = "Ваше радио";
-					$("ul#stations li").removeClass('play');
-					if(data.id != selectId){
-						$("ul#stations li").removeClass('play select');
-						$('li#'+data.id).addClass('play select');
-						selectId = data.id;
-						audio.stream = data.stream;
-						audio.play();
-						win.title = "Ваше радио - " + data.name;
-						buildPlayStop('stop');
-					}
-					selectId = data.id;
-				}else{
-					$("ul#stations li").removeClass('play select');
-					selectId = data.id;
-					$('li#'+selectId).addClass('play select');
-					audio.stream = data.stream;
-					audio.play();
-					win.title = "Ваше радио - " + data.name;
-					buildPlayStop('stop');
-				}
-				var _opt = $.extend({}, app.options);
-				_opt.station = selectId;
-				app.options = _opt;
-				clearTimeout(metaInterval);
-				getMetadata(data);
-			}).on('click', '.item-station--sity a', function(e){
-				e.preventDefault();
-				var target = e.delegateTarget,
-					data = $(target).data();
-				if ((m = regex.exec(data.sity)) !== null) {
-					nw.Shell.openExternal(data.sity);
-				}
-				return !1;
-			});
-		if ((m = regex.exec(station.sity)) !== null) {
-			if(station.sity.length > 10){
-				$sity.append($("<a></a>", {
-					class: "radioapp-external-link",
-					href: station.sity,
-					title: "Сайт радиостанции:\n" + station.sity
-				}));
-			}
-		}
-		return $li;
+/**
+*** Application
+**/
+(function($){
+	if(nw.App.argv.findIndex(x => x=='--dev') > -1 && nw.process.versions["nw-flavor"] == "sdk"){
+		nw.Window.get().showDevTools();
 	}
-
-	// Station List
-	function buildListStations(reload){
-		reload = reload ? true : false;
-		if($("#stations").data('sortableinit'))
-			$("#stations").sortable('destroy');
-		$("#stations").empty();
-		var stations = app.options.stations;
-		stations.forEach(function(station){
-			var $li = buildItemListStation(station, 0);
-			$('.text', $li).text(station.name);
-			$("#stations").append($li);
-			if(app.options.station == station.id) {
-				$li.addClass('select');
-				selectId = station.id;
-				dataStation = $li.data();
+	$(document).on("click", "a[target='_blank']", function(e){
+		e.preventDefault();
+		nw.Shell.openExternal(this.href);
+		return !1;
+	});
+	const gui = require('nw.gui')
+		win = nw.Window.get(),
+		fs =  require('fs'),
+		os = require('os'),
+		Parser = require('icecast-parser'),
+		helper = require("./modules/helper.js"),
+		AudioPlayer = require("./modules/audioplayer.js"),
+		AppRadio = require("./modules/appjs.js"),
+		dialog = require("./modules/nwdialog.js"),
+		b2b = require("./modules/Base64ToBlob.js"),
+		stations = [],
+		Menu = nw.Menu,
+		MenuItem = nw.MenuItem;
+	dialog.context = document;
+	window.AudioContext = window.AudioContext || window.webkitAudioContext;
+	var tVolAudio,
+		dataStation = null,
+		idStation = 0,
+		isNotify = false,
+		typeAnalizer = "bar",
+		typesAnalizer = ["bar", "spec", 'spec_full'],
+		audioPlayer = new AudioPlayer(document),
+		appRadio = new AppRadio(document),
+		range = $('input#volume')[0],
+		canvas = $('canvas#canvas')[0],
+		$volume = $("input#volume"),
+		$volchange = $("#volchange"),
+		$applist = $(".appradio__list"),
+		$template_add_dialog = $($("#addstation").html()),
+		$template_station = $($("#stationitem").html()),
+		ctx = canvas.getContext('2d'),
+		bufferLength,
+		dataArray,
+		capYPositionArray = [],
+		strokeColor = false,
+		parser,
+		metaInterval,
+		notifyInterval,
+		notifyApp,
+		titleApp = appRadio.title,
+		stationTitle = "",
+		playingTitle = "",
+		audioElement = audioPlayer.audioElement,
+		audioContext = new AudioContext(),
+		analyser = audioContext.createAnalyser(),
+		audioSrc = audioContext.createMediaElementSource(audioElement),
+		getMessage = function(msg) {
+			return chrome.i18n.getMessage(msg);
+		},
+		strokeStyleColor = 'lime';
+	audioSrc.connect(analyser);
+	analyser.connect(audioContext.destination);
+	window.ctx = ctx;
+	var setLocales = function(){
+			$("title").text(getMessage("extTitle"));
+			$(".modal__add__statio_nname").text(getMessage("modal__add__statio_nname"));
+			$(".modal__add__statio_stream").text(getMessage("modal__add__statio_stream"));
+			$(".div--file.radioapp-picture").attr({"data-text": getMessage("modal__add__statio_logo")});
+			$(".modal__add__statio_nname", $template_add_dialog).text(getMessage("modal__add__statio_nname"));
+			$(".modal__add__statio_stream", $template_add_dialog).text(getMessage("modal__add__statio_stream"));
+			$(".div--file.radioapp-picture", $template_add_dialog).attr({"data-text": getMessage("modal__add__statio_logo")});
+		},
+		saveAppOptions = function(){
+			var value = parseFloat($volume.val()),
+				min = parseFloat($volume[0].min),
+				max = parseFloat($volume[0].max),
+				val = Math.min(max, Math.max(min, value)),
+				sts = [];
+			if(val != value){
+				appRadio.options.volume = audioPlayer.volume = val;
 			}
-		});
-		if(reload) {
-			$("main.main").scrollTo('li:last-child');
-		}
-		if(app.options.station > -1 && !reload) {
-			$("main.main").scrollTo('li#' + app.options.station);
-		}
-		$("#stations").sortable({
-			axis: 'y',
-			stop: function(e, u){
-				var sts = [];
-				$("#stations li").each(function(){
-					var data = $(this).data();
-					 sts.push({
-						id: data.id,
-						name: data.name,
-						stream: data.stream
-					});
+			$("li", $applist).each(function(){
+				var data = $(this).data();
+				sts.push({
+					id: data.id,
+					name: data.name,
+					stream: data.stream
 				});
-				app.options.stations = sts;
-				app.saveOptions().then(function(out){});
-			},
-			cursor: 'n-resize',
-			handle: '.item-station--favorite'
-		}).data({sortableinit: true});
-		$('body').removeClass('preload');
-	}
-	
-	function dialogError(title, content, className){
-		$.psmodal.open(
-			'confirm',
-			content,
-			title,
-			{
-				yes: {
-					text: 'Ok',
-					class: "",
-					callback: function(){
-						return !0;
-					}
-				},
-				no: false
+			});
+			appRadio.options.stations = sts;
+			appRadio.options.station = idStation;
+			appRadio.options.notify = isNotify;
+			appRadio.options.analizer = typeAnalizer;
+			appRadio.options.color = strokeStyleColor;
+			appRadio.options.strokeColor = strokeColor;
+			appRadio.saveOptions();
+		},
+		saveVolume = function(){
+			// Скрываем тайтл громкости и сохраняем опции приложения.
+			$volchange.hasClass('view') && $volchange.removeClass('view');
+			appRadio.saveOptions();
+		},
+		setVolumeText = function(value){
+			// Установка значения громкости в тайтл
+			clearTimeout(tVolAudio);
+			let text = "";
+			val = parseInt(value).toString();
+			switch(val.length){
+				case 1:
+					text = "\xA0\xA0" + val + "%";
+					break;
+				case 2:
+					text = "\xA0" + val + "%";
+					break;
+				default:
+					text = val + "%";
+					break;
 			}
-		).addClass(className);
-	}
-	
-	function importStations(){
-		$("body").addClass('preload');
-		audio.stop();
-		app.import().then(function(result){
-			$("body").removeClass('preload');
+			$volchange.text(text);
+			// Показываем тайтл громкости
+			!$volchange.hasClass('view') && $volchange.addClass('view');
+			tVolAudio = setTimeout(saveVolume, 1500);
+		},
+		blobToBuffer = function(blob) {
+			return new Promise(function(resolve, reject){
+				if (typeof Blob === 'undefined' || !(blob instanceof Blob)) {
+					reject('first argument must be a Blob');
+				}
+				var reader = new FileReader();
+				function onLoadEnd (e) {
+					reader.removeEventListener('loadend', onLoadEnd, false);
+					if (e.error) reject(e.error);
+					else resolve(Buffer.from(reader.result));
+				}
+				reader.addEventListener('loadend', onLoadEnd, false);
+				reader.readAsArrayBuffer(blob);
+			});
+		},
+		setAppTitle = function(_title) {
+			$("#appTitle").text(_title).attr({title: _title});
+		},
+		dialogAlert = function(title, content, className){
 			$.psmodal.open(
 				'confirm',
-				'Импор проведён успешно!',
-				'Импорт',
+				content,
+				title,
 				{
 					yes: {
-						text: 'ОК',
+						text: 'Ok',
 						class: "",
 						callback: function(){
 							return !0;
@@ -780,437 +234,988 @@ function initializeApp(){
 					},
 					no: false
 				}
-			).addClass('dialog--import success');
-		}).catch(function(error){
-			$("body").removeClass('preload');
-			if(error == 'reloadlist'){
-				dialogError('Ошибка импорта','Импор проведён с ошибкой!<br>Востановлен список по-умолчанию!','dialog--import error');
-				return;
+			).addClass(className);
+		},
+		showPopupDialog = function(data, type = 'add'){
+			var $dlg = $template_add_dialog.clone(),
+				name = "",
+				stream = "",
+				icon = "images/favicon.png",
+				ttl = "",
+				icoDir = "file:///" + appRadio.iconsDir + "/",
+				$crp = $(".div--crop", $dlg),
+				$st_name = $(".station_name", $dlg),
+				$st_stream = $(".station_stream", $dlg),
+				$st_id = $(".station_id", $dlg),
+				$divFile = $(".div--file", $dlg);
+			switch(type){
+				case 'add':
+					data.id = (new Date()).getTime();
+					ttl = getMessage("addStation");
+					break;
+				case 'edit':
+					name = data.name;
+					stream = data.stream;
+					icon = icoDir + data.id + ".png";
+					ttl = getMessage("editStation");
+					break;
+				default:
+					return;
 			}
-			if(error){
-				dialogError('Ошибка импорта','Импор проведён с ошибкой!','dialog--import error');
-			} else {
-				dialogError('Импорт','Импорт прерван пользователем!','dialog--import');
-			}
-		});
-	}
-	
-	function importStationsHandle(){
-		$.psmodal.open(
-			'confirm',
-			'Вы собираетесь произвести импорт настроек.<br>При импорте будут стёрты все радиостанции в вашеи списке и заменены на новые.<br><br>Продолжить?',
-			'Импорт',
-			{
-				yes: {
-					text: 'Да, оогласен',
-					class: '',
-					callback: function(e){
-						$.psmodal.close();
-						importStations();
-						return !0;
-					}
+			$st_name.val(name);
+			$st_stream.val(stream);
+			$st_id.val(data.id);
+			$crp.croppie({
+				viewport: {
+					width: 100,
+					height: 100,
+					type: 'circle'
 				},
-				no: {
-					text: 'ОТМЕНА'
-				}
-			}
-		).addClass('dialog--import');
-	}
-	
-	function exportStationsHandle(){
-		$("body").addClass('preload');
-		app.export().then(function(result){
-			$("body").removeClass('preload');
+				boundary: {
+					width: 100,
+					height: 100
+				},
+				showZoomer: true,
+				enableOrientation: true,
+				mouseWheelZoom: true,//'ctrl',
+				enableExif: true
+			}).croppie('bind', {
+				url: icon
+			});
+			$divFile.on('click', function(ev){
+				ev.preventDefault();
+				dialog.openFileDialog(['.jpeg', '.jpg', '.png'], function(result){
+					if(!result)
+						return;
+					result = "file:///" + result.split('\\').join('/');
+					$crp.croppie('bind', {
+						url: result
+					});
+				});
+				return !1;
+			});
 			$.psmodal.open(
-				'confirm',
-				'Экспорт проведён Успешно!<br>',
-				'Результат Экспорта',
+				'modal',
+				$('<div></div>', {
+					class: 'station-dialog'
+				}).append($dlg),
+				ttl,
 				{
 					yes: {
-						text: 'Посмотреть',
-						class: "",
-						callback: function(){
-							nw.Shell.showItemInFolder(result.replace(/\//g, '\\'));
+						text: '',
+						class: 'radioapp-circle-check',
+						callback: function(e){
+							var stn_data = {
+									id: parseInt($st_id.val()),
+									name: $st_name.val(),
+									stream: $st_stream.val()
+								},
+								ico = appRadio.iconsDir + "/" + stn_data.id + ".png";
+							$crp.croppie('result', 'blob').then(function(blob) {
+								blobToBuffer(blob).then(function(buffer){
+									appRadio.saveIcon(stn_data.id, buffer);
+									switch(type){
+										case 'add':
+											addStationOption(stn_data, true);
+											break;
+										case 'edit':
+											let $li = $("li#id" + stn_data.id);
+											$li.data(stn_data);
+											$('.st__name__txt', $li).text(stn_data.name);
+											if(fs.existsSync(ico)){
+												let src = URL.createObjectURL(new Blob([fs.readFileSync(ico)], {type: 'image/png'}));
+												$('.icon', $li).attr({"src": src});
+											}
+											// Если данная станция проигрывается - остановить, назначить стрим и запустить.
+											break;
+									}
+									saveAppOptions();
+								}).catch(function(err){
+									console.log("Station type: " + type + ",\nSaveBlob:\n", err);
+								});
+							}).catch(function(err){
+								console.log("Station type: " + type + ",\nCroppie:\n", err);
+							});
+							return !0;
+						}
+					}
+				}
+			).addClass('dialog--edit-save');
+		},
+		spawnNotification = function(body, icon, title) {
+			var options = {
+				body: body,
+				icon: icon
+			};
+			clearTimeout(notifyInterval);
+			if(notifyApp) {
+				notifyApp.close();
+				notifyApp = null;
+			}
+			notifyApp = new Notification(title, options);
+			notifyInterval = setTimeout(function(){
+				clearTimeout(notifyInterval);
+				if(notifyApp) {
+					notifyApp.close();
+					notifyApp = null;
+				}
+			}, 5000);
+		},
+		deleteStation = function(data){
+			var $li = $("li#id" + data.id),
+				stn_data = $li.data();
+			$li.remove();
+			if(idStation == data.id){
+				appRadio.removeIcon(data.id);
+				audioPlayer.isPlaying() && audioPlayer.stop();
+				idStation = appRadio.options.station = -1;
+			}
+			saveAppOptions();
+		},
+		addStationOption = function (obj, newstation = false){
+			let stTemp = $($template_station.clone()),
+				icon = appRadio.iconsDir + "/" + obj.id + ".png";
+			stTemp.data(obj);
+			$('.st__name__txt', stTemp).text(obj.name);
+			if(fs.existsSync(icon)){
+				let src = URL.createObjectURL(new Blob([fs.readFileSync(icon)], {type: 'image/png'}));
+				$('.icon', stTemp).attr({"src": src});
+			}
+			if(obj.id == idStation) {
+				stTemp.addClass('select');
+			};
+			stTemp.attr({id: "id"+obj.id});
+			$applist.append(stTemp);
+			if(newstation){
+				$applist.scrollTo("li#id"+obj.id);
+			}
+		},
+		importStationsHandle = function(){
+			$.psmodal.open(
+				'confirm',
+				getMessage("dialog_is_confirm"),
+				getMessage("dialog_is_title"),
+				{
+					yes: {
+						text: getMessage("btn_ok"),
+						class: '',
+						callback: function(e){
+							$.psmodal.close();
+							audioPlayer.stop();
+							appRadio.import().then(function(result){
+								$("body").addClass('preload');
+								radioAppInit().then(function(){
+									$("body").removeClass('preload');
+									dialogAlert(getMessage("dialog_is_title"), getMessage('dialog_is_succes'), 'dialog--import success');
+								}).catch(function(error) {
+									$("body").removeClass('preload');
+									dialogAlert(getMessage("dialog_is_title_error"), getMessage("dialog_is_error"), 'dialog--import error');
+								});
+							}).catch(function(error){
+								$("body").removeClass('preload');
+								if(error == 'reloadlist'){
+									dialogAlert(getMessage("dialog_is_title_error"), getMessage("dialog_is_error") + '<br>' + getMessage("dialog_is_restored"), 'dialog--import error');
+									return;
+								}
+								if(error){
+									dialogAlert(getMessage("dialog_is_title_error"), getMessage("dialog_is_error"), 'dialog--import error');
+								} else {
+									dialogAlert(getMessage("dialog_is_title"), getMessage("dialog_is_break_user"), 'dialog--import');
+								}
+							});
 							return !0;
 						}
 					},
 					no: {
-						text: 'ОК',
-						class: "",
-						callback: function(){
-							$.psmodal.close();
+						text: getMessage("btn_cancel")
+					}
+				}
+			).addClass('dialog--import');
+		},
+		exportStationsHandle = function(){
+			appRadio.export().then(function(result){
+				$.psmodal.open(
+					'confirm',
+					getMessage("dialog_exp_confirm") + '<br>',
+					getMessage("dialog_exp_title"),
+					{
+						yes: {
+							text: getMessage("dialog_exp_btn"),
+							class: "",
+							callback: function(){
+								nw.Shell.showItemInFolder(result.replace(/\//g, '\\'));
+								return !0;
+							}
+						},
+						no: {
+							text: 'ОК',
+							class: "",
+							callback: function(){
+								$.psmodal.close();
+							}
+						}
+					}
+				).addClass('dialog--export success');
+			}).catch(function(error){
+				$("body").removeClass('preload');
+				if(error){
+					dialogAlert(getMessage("dialog_exp_title_error_01"), getMessage("dialog_exp_confirm_error_01"), 'dialog--export error');
+				} else {
+					dialogAlert(getMessage("dialog_exp_title_error_02"), getMessage("dialog_exp_confirm_error_02"), 'dialog--export');
+				}
+			});
+		},// Get Metadata
+		getMetadata = function(){
+			clearTimeout(metaInterval);
+			let stationTmp = appRadio.getStation(idStation);
+			if(stationTmp) {
+				stationTitle = stationTmp.name;
+				if(!parser){
+					parser = new Parser({
+						url: stationTmp.stream,
+						keepListen: false,
+						autoUpdate: false,
+						url: stationTmp.stream, // URL to radio station
+						errorInterval: 10 * 60, // retry connection after 10 minutes
+						emptyInterval: 5 * 60, // retry get metadata after 5 minutes
+						metadataInterval: 5 // update metadata after 5 seconds
+					});
+					parser.on('metadata', requestMetadata);
+					parser.on('stream', requestStream);
+					parser.on('error', requestErrorMetadata);
+					parser.on('empty', requestEmptyMetadata);
+					return;
+				}else{
+					parser.setConfig({
+						url: stationTmp.stream, // URL to radio station
+						keepListen: false,
+						autoUpdate: false
+					});
+				}
+				parser.queueRequest();
+			} else {
+				stationTitle = "";
+				playingTitle = "";
+				setAppTitle(appRadio.title);
+			}
+		},
+		requestStream = function(stream) {},
+		requestMetadata = function(metadata) {
+			if(audioPlayer.isPlaying()) {
+				if(metadata.StreamTitle) {
+					let streamTitle = $.trim(metadata.StreamTitle);
+					const regex = /�/;
+					if(streamTitle.length) {
+						if(regex.exec(streamTitle) === null){
+							if(playingTitle != streamTitle){
+								// Show notify
+								try {
+									// 101.ru parse metatdata StreamTitle
+									let regex = /}.*$/gms,
+										st = streamTitle.replace(regex, '}'),
+										jsup = helper.unpack(st);
+									if(helper.isObject(jsup)){
+										streamTitle = (helper.isString(jsup.result) && jsup.result.length > 3) ? "" : jsup.result;
+									}
+								}catch(e){}
+								playingTitle = streamTitle.length > 7 ? streamTitle : "";
+								setAppTitle(appRadio.title + " — " + stationTitle + (playingTitle.length ? " - " + playingTitle : ""));
+								if(playingTitle.length && isNotify) {
+									spawnNotification(getMessage("now_playing") + "\n" + playingTitle, appRadio.getIcon(idStation), stationTitle);
+								}
+							} else {
+								setAppTitle(appRadio.title + " — " + stationTitle + (playingTitle.length ? " - " + playingTitle : ""));
+							}
 						}
 					}
 				}
-			).addClass('dialog--export success');
-		}).catch(function(error){
-			$("body").removeClass('preload');
-			if(error){
-				dialogError('Ошибка Экспорта', 'Экспорт проведён с ошибкой!', 'dialog--export error');
-			}else{
-				dialogError('Экспорт', 'Экспорт прерван пользователем!', 'dialog--export');
+				metaInterval = setTimeout(getMetadata, 5000);
+			} else {
+				setAppTitle(appRadio.title);
+				stationTitle = "";
+				playingTitle = "";
 			}
-		});
-	}
-	
-
-	// Volume Change
-	$("#volume").on('input change', function(e){
-		clearTimeout(savedInterval);
-		audio.volume = app.options.volume = helper.inInterval(parseFloat($(this).val()), 0, 1);
-		var st = Math.round(audio.volume * 100) / 10;
-			//stp = st < 0parseFloat(st)
-		$(this).attr({
-			'data-step': st
-		});
-		savedInterval = setTimeout(function(){
-			app.saveOptions().then(function(options){});
-		}, 500);
-	});
-
-	// Close
-	nw.Window.get().on('close', function () {
-		appShow();
-		return !1;
-	});
-	
-	// Show Context Menu in Station Item
-	// Context Menu Document
-	
-	$("#stations").on("contextmenu", 'li', function(e){
-		e.preventDefault();
-		var $li = $(e.currentTarget),
-			data = $li.data(),
-			iconPath = app.getIcon(data.id);
-		dataStation = $.extend({}, data);
-		edit_station_item.label = '  Редактировать: ' + dataStation.name;
-		delete_station_item.label = '  Удалить: ' + dataStation.name;
-		export_stations_item.enebled = !!(app.options.stations);
-		add_station_item.enabled = export_stations_item.enabled = import_stations_item.enabled = !win.isKioskMode;
-		stationMenu.popup(e.pageX, e.pageY);
-		return !1;
-	});
-	
-	$("body").on('contextmenu', function(e){
-		e.preventDefault();
-		if(!$(this).hasClass('preload') && !$(this).hasClass('open--modal')) {
-			export_stations_item.enabled = !!(app.options.stations.length);
-			add_station_item.enabled = export_stations_item.enabled = import_stations_item.enabled = !win.isKioskMode;
-			docMenu.popup(e.pageX, e.pageY);
-		}
-		return !1;
-	}).on("mousemove click dblclick keydown mouseleave mouseenter", function(e){
-		if(win.isKioskMode || win.isFullscreen){
-			clearTimeout(mouseInterval);
-			$('body').css({
-				'cursor': ""
-			}).removeClass("hidden-cursor");
-			mouseInterval = setTimeout(
-				function(){
-					if(win.isKioskMode || win.isFullscreen){
-						$("body").css({
-							'cursor': "none"
-						}).addClass("hidden-cursor");
+		},
+		requestErrorMetadata = function(error) {
+			//stationTitle = "";
+			playingTitle = "";
+			if(audioPlayer.isPlaying()) {
+				setAppTitle(appRadio.title + " — " + stationTitle);
+				metaInterval = setTimeout(getMetadata, 5000);
+			} else {
+				setAppTitle(appRadio.title);
+				stationTitle = "";
+				playingTitle = "";
+			}
+		},
+		requestEmptyMetadata = function() {
+			//stationTitle = "";
+			playingTitle = "";
+			if(audioPlayer.isPlaying()) {
+				setAppTitle(appRadio.title + " — " + stationTitle);
+				metaInterval = setTimeout(getMetadata, 5000);
+			} else {
+				setAppTitle(appRadio.title);
+				stationTitle = "";
+				playingTitle = "";
+			}
+		},
+		showNotify = function(data){
+			spawnNotification(getMessage("now_playing") + "\n"+data.title, data.icon, getMessage("extTitle") + " - " + data.name)
+		},
+		documentMenu = new Menu(),
+		stationMenu = new Menu(),
+		canvasMenu = new Menu(),
+		analizatorMenu = new Menu(),
+		colorMenu = new Menu(),
+		add_item = new MenuItem({
+			label: '  ' + getMessage("menu_add"),
+			icon: 'images/context_add.png',
+			click: function(){
+				dataStation = {};
+				showPopupDialog(dataStation, 'add');
+				dataStation = null;
+			},
+			key: "n",
+			modifiers: "ctrl+alt"
+		}),
+		edit_item = new MenuItem({
+			label: '  ' + getMessage("menu_edit"),
+			icon: 'images/context_edit.png',
+			click: function(){
+				if(!dataStation)
+					return;
+				showPopupDialog(dataStation, 'edit');
+				dataStation = null;
+			}
+		}),
+		delete_item = new MenuItem({
+			label: '  ' + getMessage("menu_delete"),
+			icon: 'images/context_delete.png',
+			click: function(){
+				if(!dataStation)
+					return;
+				$.psmodal.open(
+					'confirm',
+					getMessage("dialog_del_confirm") + ' - <h3>' + dataStation.name + '</h3>',
+					getMessage("dialog_del_title"),
+					{
+						yes: {
+							text: getMessage("btn_ok"),
+							class: '',
+							callback: function(e){
+								deleteStation(dataStation);
+								dataStation = null;
+								return !0;
+							}
+						},
+						no: {
+							text: getMessage("btn_cancel")
+						}
 					}
-				},
-				5000
-			);
+				).addClass('dialog--deleted');
+			}
+		}),
+		import_pack = new MenuItem({
+			label: "  " + getMessage("menu_import"),
+			icon: 'images/context_import.png',
+			click: function(){
+				importStationsHandle();
+				dataStation = null;
+			},
+			key: "i",
+			modifiers: "ctrl+alt"
+		}),
+		export_pack = new MenuItem({
+			label: "  " + getMessage("menu_export"),
+			icon: 'images/context_export.png',
+			click: function(){
+				exportStationsHandle();
+				dataStation = null;
+			},
+			key: "s",
+			modifiers: "ctrl+alt"
+		}),
+		types_analizer = new MenuItem({
+			label: '  ' + getMessage("menu_analizer"),
+			submenu: analizatorMenu
+		}),
+		stroke_colors = new MenuItem({
+			label: '  ' + getMessage("color"),
+			submenu: colorMenu
+		}),
+		bar_analizer = new MenuItem({
+			label: "  " + getMessage("menu_bar_analizer"),
+			checked: false,
+			type: 'checkbox',
+			click: function(){
+				analyser.fftSize = 128;
+				analyser.maxDecibels = 40;
+				analyser.smoothingTimeConstant = 0.6;
+				dataArray = new Uint8Array(analyser.frequencyBinCount);
+				bufferLength = analyser.frequencyBinCount;
+				typeAnalizer = typesAnalizer[0];
+				bar_analizer.checked = true;
+				spec_analizer.checked = false;
+				spec_full_analizer.checked = false;
+				scep_stroke_color.enabled = false;
+				checkStrokeColor(strokeStyleColor);
+				appRadio.options.analizer = typeAnalizer;
+				appRadio.saveOptions();
+			}
+		}),
+		spec_analizer = new MenuItem({
+			label: '  ' + getMessage("menu_spec_analizer"),
+			checked: false,
+			type: 'checkbox',
+			click: function(){
+				analyser.fftSize = 2048;
+				analyser.maxDecibels = 20;
+				analyser.smoothingTimeConstant = 0.1;
+				dataArray = new Uint8Array(analyser.frequencyBinCount);
+				bufferLength = analyser.frequencyBinCount;
+				typeAnalizer = typesAnalizer[1];
+				bar_analizer.checked = false;
+				spec_analizer.checked = true;
+				spec_full_analizer.checked = false;
+				scep_stroke_color.enabled = true;
+				appRadio.options.analizer = typeAnalizer;
+				checkStrokeColor(strokeStyleColor);
+				ctx.strokeStyle = strokeStyleColor;
+				appRadio.saveOptions();
+			}
+		}),
+		spec_full_analizer = new MenuItem({
+			label: '  ' + getMessage("menu_spec_full_analizer"),
+			checked: false,
+			type: 'checkbox',
+			click: function(){
+				analyser.fftSize = 2048;
+				analyser.maxDecibels = 20;
+				analyser.smoothingTimeConstant = 0.1;
+				dataArray = new Uint8Array(analyser.frequencyBinCount);
+				bufferLength = analyser.frequencyBinCount;
+				typeAnalizer = typesAnalizer[2];
+				bar_analizer.checked = false;
+				spec_analizer.checked = false;
+				spec_full_analizer.checked = true;
+				scep_stroke_color.enabled = true;
+				appRadio.options.analizer = typeAnalizer;
+				checkStrokeColor(strokeStyleColor);
+				ctx.strokeStyle = strokeStyleColor;
+				appRadio.saveOptions();
+			}
+		}),
+		scep_stroke_color = new MenuItem({
+			label: "  " + getMessage("menu_scep_stroke_color"),
+			type: "checkbox",
+			enabled: false,
+			checked: false,
+			click: function(){
+				strokeColor = !strokeColor;
+				scep_stroke_color.checked = strokeColor;
+				appRadio.options.strokeColor = strokeColor;
+				checkStrokeColor(strokeStyleColor);
+				appRadio.saveOptions();
+			}
+		}),
+		stroke_color_00 = new MenuItem({
+			label: "  " + getMessage("color_00"),
+			type: "checkbox",
+			enabled: true,
+			checked: true,
+			click: function(){
+				checkStrokeColor('white');
+				appRadio.saveOptions();
+			}
+		}),
+		stroke_color_01 = new MenuItem({
+			label: "  " + getMessage("color_01"),
+			type: "checkbox",
+			enabled: true,
+			checked: false,
+			click: function(){
+				checkStrokeColor('red');
+				appRadio.saveOptions();
+			}
+		}),
+		stroke_color_02 = new MenuItem({
+			label: "  " + getMessage("color_02"),
+			type: "checkbox",
+			enabled: true,
+			checked: false,
+			click: function(){
+				checkStrokeColor('orange');
+				appRadio.saveOptions();
+			}
+		}),
+		stroke_color_03 = new MenuItem({
+			label: "  " + getMessage("color_03"),
+			type: "checkbox",
+			enabled: true,
+			checked: false,
+			click: function(){
+				checkStrokeColor('yellow');
+				appRadio.saveOptions();
+			}
+		}),
+		stroke_color_04 = new MenuItem({
+			label: "  " + getMessage("color_04"),
+			type: "checkbox",
+			enabled: true,
+			checked: false,
+			click: function(){
+				checkStrokeColor('lime');
+				appRadio.saveOptions();
+			}
+		}),
+		stroke_color_05 = new MenuItem({
+			label: "  " + getMessage("color_05"),
+			type: "checkbox",
+			enabled: true,
+			checked: false,
+			click: function(){
+				checkStrokeColor('aqua');
+				appRadio.saveOptions();
+			}
+		}),
+		stroke_color_06 = new MenuItem({
+			label: "  " + getMessage("color_06"),
+			type: "checkbox",
+			enabled: true,
+			checked: false,
+			click: function(){
+				checkStrokeColor('blue');
+				appRadio.saveOptions();
+			}
+		}),
+		stroke_color_07 = new MenuItem({
+			label: "  " + getMessage("color_07"),
+			type: "checkbox",
+			enabled: true,
+			checked: false,
+			click: function(){
+				checkStrokeColor('violet');
+				appRadio.saveOptions();
+			}
+		}),
+		checkStrokeColor = function(color){
+			switch(color){
+				case 'white':
+				case 'red':
+				case 'orange':
+				case 'yellow':
+				case 'lime':
+				case 'aqua':
+				case 'blue':
+				case 'violet': 
+					strokeStyleColor = color;
+					break;
+				default: 
+					strokeStyleColor = 'white';
+					break;
+			}
+			stroke_color_00.checked = (strokeStyleColor == 'white') ? true : false;
+			stroke_color_01.checked = (strokeStyleColor == 'red') ? true : false;
+			stroke_color_02.checked = (strokeStyleColor == 'orange') ? true : false;
+			stroke_color_03.checked = (strokeStyleColor == 'yellow') ? true : false;
+			stroke_color_04.checked = (strokeStyleColor == 'lime') ? true : false;
+			stroke_color_05.checked = (strokeStyleColor == 'aqua') ? true : false;
+			stroke_color_06.checked = (strokeStyleColor == 'blue') ? true : false;
+			stroke_color_07.checked = (strokeStyleColor == 'violet') ? true : false;
+			
+			//stroke_colors.enabled = 
+			stroke_color_00.enabled = 
+			stroke_color_01.enabled = 
+			stroke_color_02.enabled = 
+			stroke_color_03.enabled = 
+			stroke_color_04.enabled = 
+			stroke_color_05.enabled = 
+			stroke_color_06.enabled = 
+			stroke_color_07.enabled = 
+			scep_stroke_color.enabled && !scep_stroke_color.checked;
+			appRadio.options.analizer = typeAnalizer;
+			appRadio.options.color = strokeStyleColor;
+			appRadio.options.strokeColor = strokeColor;
+		};
+	setLocales();
+	
+	documentMenu.append(add_item);
+	documentMenu.append(new nw.MenuItem(
+		{
+			type: "separator"
+		}
+	));
+	documentMenu.append(types_analizer);
+	documentMenu.append(stroke_colors);
+	documentMenu.append(new nw.MenuItem(
+		{
+			type: "separator"
+		}
+	));
+	documentMenu.append(export_pack);
+	documentMenu.append(import_pack);
+	// Station Menu
+	stationMenu.append(add_item);
+	stationMenu.append(new nw.MenuItem(
+		{
+			type: "separator"
+		}
+	));
+	stationMenu.append(edit_item);
+	stationMenu.append(delete_item);
+	stationMenu.append(new nw.MenuItem(
+		{
+			type: "separator"
+		}
+	));
+	stationMenu.append(types_analizer);
+	stationMenu.append(stroke_colors);
+	stationMenu.append(new nw.MenuItem(
+		{
+			type: "separator"
+		}
+	));
+	stationMenu.append(export_pack);
+	stationMenu.append(import_pack);
+	// Canvas Menu
+	canvasMenu.append(add_item);
+	canvasMenu.append(new nw.MenuItem(
+		{
+			type: "separator"
+		}
+	));
+	canvasMenu.append(types_analizer);
+	canvasMenu.append(stroke_colors);
+	canvasMenu.append(new nw.MenuItem(
+		{
+			type: "separator"
+		}
+	));
+	canvasMenu.append(export_pack);
+	canvasMenu.append(import_pack);
+	// Analizer
+	colorMenu.append(scep_stroke_color);
+	colorMenu.append(new MenuItem({
+		type: 'separator'
+	}));
+	colorMenu.append(stroke_color_00);
+	colorMenu.append(stroke_color_01);
+	colorMenu.append(stroke_color_02);
+	colorMenu.append(stroke_color_03);
+	colorMenu.append(stroke_color_04);
+	colorMenu.append(stroke_color_05);
+	colorMenu.append(stroke_color_06);
+	colorMenu.append(stroke_color_07);
+	analizatorMenu.append(bar_analizer);
+	analizatorMenu.append(spec_analizer);
+	analizatorMenu.append(spec_full_analizer);
+
+	$(document).on('mousewheel', 'input#volume', function(e){
+		// Регулирровка звука кол. мыши
+		let evt = e.originalEvent,
+			delta = evt.deltaY;
+			step = delta > 0 ? parseFloat(this.step) : -parseFloat(this.step),
+			value = parseFloat(this.value),
+			val = Math.min(this.max, Math.max(this.min, step + value));
+		if(val != value){
+			appRadio.options.volume = this.value = audioPlayer.volume = val;
+		}
+		setVolumeText((val * 100));
+	}).on("input", "input#volume", function(e){
+		// Регулировка звука
+		appRadio.options.volume = audioPlayer.volume = this.value;
+		setVolumeText((this.value * 100));
+	}).on('mousewheel', 'input.cr-slider', function(e) {
+		let ed = 0.005,
+			evt = e.originalEvent,
+			delta = evt.deltaY;
+			step = delta > 0 ? ed : -ed,
+			value = parseFloat(this.value),
+			val = Math.min(this.max, Math.max(this.min, step + value));
+		if(val != value){
+			this.value = val;
+		}
+		this.dispatchEvent(new Event('input'));
+	}).on('click', 'li.station .st__btn', function(e){
+		// Клик на кнопке станции.
+		// Пуск/Стоп проигрывания
+		e.preventDefault();
+		let st = $(e.target).closest('li.station'),
+			is_play = st.hasClass('play'),
+			is_select = st.hasClass('select'),
+			stationTmp = appRadio.getStation(st.data('id'));
+		$('li.station').removeClass('play select progress');
+		st.addClass('select');
+		if(stationTmp){
+			idStation = stationTmp.id;
+			if(!is_play) {
+				// Play
+				st.addClass('play');
+				audioPlayer.stream = stationTmp.stream;
+				audioPlayer.play();
+				stationTitle = stationTmp.name;
+				setAppTitle(titleApp + " — " + stationTmp.name);
+			} else {
+				// Stop
+				if(audioPlayer.isPlaying()) {
+					audioPlayer.stop();
+				}
+				stationTitle = "";
+				playingTitle = "";
+				setAppTitle(titleApp);
+			};
+			if(!is_select) {
+				idStation = appRadio.options.station = stationTmp.id;
+				clearTimeout(tVolAudio);
+				tVolAudio = setTimeout(saveVolume, 1500);
+				audioPlayer.stream = stationTmp.stream;
+				audioPlayer.play();
+				stationTitle = stationTmp.name;
+				setAppTitle(titleApp + " — " + stationTmp.name);
+			}
 		}else{
-			if($("body").hasClass("hidden-cursor")){
-				clearTimeout(mouseInterval);
-				$('body').css({
-					'cursor': ""
-				}).removeClass("hidden-cursor");
-			}
+			stationTitle = "";
+			playingTitle = "";
+			setAppTitle(titleApp);
 		}
-	}).on("dblclick", "input[type=text]", function(e){
-		e.preventDefault();
-		e.currentTarget.select();
 		return !1;
-	});
-	
-	
-	// Shortcuts Document
-	$(document).on('keydown', function(e){
-		if(!$("body").hasClass('preload') && !$("body").hasClass('open--modal')){
-			if(e.ctrlKey && e.altKey){
-				if(!win.isKioskMode){
-					switch(e.keyCode){
-						// add
-						case 65:
-							e.preventDefault();
-							addStationHandle();
-							dataStation = null;
-							return !1;
-							break;
-						// export
-						case 83:
-							e.preventDefault();
-							exportStationsHandle();
-							dataStation = null;
-							return !1;
-							break;
-						// import
-						case 73:
-							e.preventDefault();
-							importStationsHandle();
-							dataStation = null;
-							return !1;
-							break;
-					}
+	}).on('contextmenu', 'body, ul.appradio__list li, canvas', function(e){
+		let $curTarget = $(e.currentTarget);
+		if(!$("body").hasClass('open--modal')){
+			if($curTarget.hasClass('station')){
+				e.preventDefault();
+				// Show Popup Menu Station
+				dataStation = $.extend({}, $curTarget.data());
+				edit_item.label = "  " + getMessage("menu_edit") + " " + dataStation.name;
+				delete_item.label = "  " + getMessage("menu_delete") + " " + dataStation.name;
+				stationMenu.popup(e.pageX, e.pageY);
+				return !1;
+			} else if($curTarget.hasClass('canvas')) {
+				// Show Popup Menu Canvas
+				e.preventDefault();
+				canvasMenu.popup(e.pageX, e.pageY);
+				return !1;
+			}else{
+				if(!$("body").hasClass('preload')){
+					e.preventDefault();
+					documentMenu.popup(e.pageX, e.pageY);
+					return !1;
 				}
 			}
 		}
 	});
-	
-	// Spectrum Audio Analizer
-	function initializeSpectrum() {
-		var ctx = new AudioContext();
-		var analyser = ctx.createAnalyser();
-		var audioSrc = ctx.createMediaElementSource(audio.audioElement);
-		// we have to connect the MediaElementSource with the analyser 
-		audioSrc.connect(analyser);
-		analyser.connect(ctx.destination);
-		// we could configure the analyser: e.g. analyser.fftSize (for further infos read the spec)
-		analyser.fftSize = 256;
-		analyser.maxDecibels = 20;
-		analyser.smoothingTimeConstant = 0.7;
-		
-		/*$('#thin').on('input', function(e){
-			var val = parseFloat($(this).val());
-			analyser.smoothingTimeConstant = parseFloat(val);
-			$("#thin-text").text(val);
-		});*/
-		
-		// frequencyBinCount tells you how many values you'll receive from the analyser
-		var frequencyData = new Uint8Array(analyser.frequencyBinCount);
-		//var parent = $()
-		// we're ready to receive some data!
-		var canvas = document.getElementById('canvas'),
-		   
-		   cwidth = canvas.width,
-			
-			cheight = canvas.height - 2,
-			
-			gap = 2, //gap between meters
-			
-			capHeight = 2,
-			
-			capStyle = '#fff',
-		   
-		   meterNum = 59, //59,//1024 / (meterWidth + 2), //count of the meters
-			
-			meterWidth = parseInt(cwidth / meterNum) + 1, //width of the meters in the spectrum
-			
-			capYPositionArray = []; ////store the vertical position of hte caps for the preivous frame
-		
-		ctx = canvas.getContext('2d');
-		gradient = ctx.createLinearGradient(0, 0, 0, 120);
+	$(canvas).on('dblclick', function(e){
+		win.toggleFullscreen();
+		$(document.body).toggleClass('kiosk__mode');
+	});
+	$applist.sortable({
+		axis: 'y',
+		stop: function(e, u){
+			var sts = [];
+			$("li", $applist).each(function(){
+				var data = $(this).data();
+				 sts.push({
+					id: data.id,
+					name: data.name,
+					stream: data.stream
+				});
+			});
+			appRadio.options.stations = sts;
+			appRadio.saveOptions().then(function(out){});
+		},
+		cursor: 'grabbing',
+		handle: '.st__sort'
+	}).data({sortableinit: true});
+
+	audioPlayer.addEventListener('statechange', function(e){
+		let $id = $("#id" + idStation),
+			stationTmp = appRadio.getStation(idStation);
+		e.bufering ? $id.addClass('progress') : $id.removeClass('progress');
+		if(e.audioev == "stop"){
+			$id.removeClass("play progress");
+			//win.setProgressBar(0);
+		}else{
+			e.bufering ? (!$id.hasClass('progress') && $id.addClass('progress')/*, win.setProgressBar(2)*/) : ($id.removeClass('progress')/*, win.setProgressBar(0)*/);
+			!$id.hasClass('play') && $id.addClass('play');
+		}
+		if(e.playing){
+			getMetadata();
+		}else{
+			clearTimeout(metaInterval);
+		}
+	});
+
+	// Track Info Ice Cast
+
+	var startRender = false;
+
+	// Analizers
+	function renderFrames(){
+		switch(typeAnalizer){
+			case typesAnalizer[1]:
+			case typesAnalizer[2]:
+				renderSpec();
+				break;
+			default:
+				renderBar();
+				break;
+		}
+		requestAnimationFrame(renderFrames);
+	}
+
+	// Bars
+
+	function renderBar() {
+		var cwidth = ctx.canvas.width,
+			cheight = ctx.canvas.height,
+			s = parseInt(128 / 2) - 30,
+			ww = 2,
+			bsw = parseInt(cwidth / s),
+			bw = bsw - ww,
+			val = 0,
+			vh = 0,
+			gradient = ctx.createLinearGradient(0, 0, 0, cheight);
 		gradient.addColorStop(1, '#0f0');
 		gradient.addColorStop(0.4, '#ff0');
 		gradient.addColorStop(0, '#f00');
-		// loop
-		function renderFrame() {
-			//canvas.width = parseInt($('.canvas').width());
-			//canvas.height = parseInt($('.canvas').height());
-			if(_isShow && _isSpectrum){
-				cwidth = canvas.width;
-				cheight = canvas.height - 2;
-				meterWidth = parseInt(cwidth / meterNum) + 1
-				var array = new Uint8Array(analyser.frequencyBinCount);
-				analyser.getByteFrequencyData(array);
-				var step = Math.round(array.length / 89); //sample limited data from the total array
-				ctx.clearRect(0, 0, cwidth, cheight);
-				var s = 2;
-				for (var i = s; i < meterNum; i++) {
-					var value = array[i * step];
-					if (capYPositionArray.length < Math.round(meterNum)) {
-						capYPositionArray.push(value);
-					};
-					ctx.fillStyle = capStyle;
-					//draw the cap, with transition effect
-					if (value < capYPositionArray[i-s]) {
-						ctx.fillRect((i-s) * (meterWidth + 1), cheight - (--capYPositionArray[i-s]), meterWidth, capHeight);
-					} else {
-						ctx.fillRect((i-s) * (meterWidth + 1), cheight - value, meterWidth, capHeight);
-						capYPositionArray[i-s] = value;
-					};
-					ctx.fillStyle = gradient; //set the filllStyle to gradient for a better look
-					var yx = cheight - value + capHeight;
-					yx < cheight ? cheight : yx;
-					ctx.fillRect((i-s) * (meterWidth + 1) /*meterWidth+gap*/ , yx, meterWidth, cheight + 15); //the meter
-				}
-			}
-			window.stepCanvas = requestAnimationFrame(renderFrame);
+		ctx.fillStyle = '#000';
+		ctx.fillRect(0, 0, cwidth, cheight);
+		analyser.getByteFrequencyData(dataArray);
+		for (var i = 0; i < dataArray.length; i++) {
+			val = dataArray[i];
+			ctx.fillStyle = gradient;
+			vh = cheight - val;
+			ctx.fillRect(i * bsw, vh, bw, cheight + val);
+			// Cap
+			if (capYPositionArray.length < s) {
+				capYPositionArray.push(val);
+			};
+			ctx.fillStyle = '#fff';
+			if (val < capYPositionArray[i]) {
+				capYPositionArray[i] = capYPositionArray[i] - .5;
+				ctx.fillRect(i * bsw, cheight - capYPositionArray[i], bw, 2);
+			} else {
+				ctx.fillRect(i * bsw, cheight - val - 4, bw, 2);
+				capYPositionArray[i] = val;
+			};
 		}
-		renderFrame();
 	};
-	
-	// Volume changes
-	function volumeUp(){
-		var step = parseFloat($("#volume").attr("step")),
-			val = parseFloat($("#volume").val());
-			val = helper.inInterval(val + step, 0, 1);
-		$("#volume").val(val).trigger('change');
-		return !1;
-	}
-	function volumeDown(){
-		var step = parseFloat($("#volume").attr("step")),
-			val = parseFloat($("#volume").val());
-			val = helper.inInterval(val - step, 0, 1);
-		$("#volume").val(val).trigger('change');
-		return !1;
-	}
-	
-	function toggleKioskMode(){
-		win.toggleKioskMode();
-		(win.isKioskMode) ? 
-			(
-				$("body").addClass('kiosk')
-			) : (
-				$("body").removeClass('kiosk')
-			);
-		setTimeout(function(){
-			win.show(true);
-			win.focus();
-			_isShow = true;
-			restoreMenuItem.label = "  Свернуть";
-			(audio.isPlaying() && audio.isProgress()) ? win.setProgressBar(2) : win.setProgressBar(0);
-		}, 10);
-	}
-	
-	initializeSpectrum();
-	_isShow = true;
-	
-	// Context menu
-	stationMenu.append(add_station_item);
-	stationMenu.append(new nw.MenuItem(
-		{
-			type: "separator"
-		}
-	));
-	stationMenu.append(edit_station_item);
-	stationMenu.append(new nw.MenuItem(
-		{
-			type: "separator"
-		}
-	));
-	stationMenu.append(delete_station_item);
-	stationMenu.append(new nw.MenuItem(
-		{
-			type: "separator"
-		}
-	));
-	stationMenu.append(export_stations_item);
-	stationMenu.append(import_stations_item);
-	
-	docMenu.append(add_station_item);
-	docMenu.append(new nw.MenuItem(
-		{
-			type: "separator"
-		}
-	));
-	docMenu.append(export_stations_item);
-	docMenu.append(import_stations_item);
-	stationMenu.append(new nw.MenuItem(
-		{
-			type: "separator"
-		}
-	));
-	docMenu.append(new nw.MenuItem(
-		{
-			type: "separator"
-		}
-	));
-	stationMenu.append(show_notifycation);
-	docMenu.append(show_notifycation);
-	docMenu.append(new nw.MenuItem({type:'separator'}));
-	docMenu.append(projectsoft_link);
-	
-	// Tray
-	function appShow(){
-		win.isFullscreen && win.leaveFullscreen();
-		win.isKioskMode && win.leaveKioskMode();
-		_isShow = !_isShow;
-		(_isShow) ? (
-			win.show(true),
-			$("body").removeClass('kiosk'),
-			win.focus(),
-			((audio.isPlaying() && audio.isProgress()) ? win.setProgressBar(2) : win.setProgressBar(0)),
-			(selectId > -1 && $("main.main").scrollTo('li#' + selectId)),
-			restoreMenuItem.label = "  Свернуть"
-			) : ($("body").removeClass('kiosk'),
-			win.hide(),
-			restoreMenuItem.label = "  Востановить"
-			);
-	}
-	
-	var tray = new GUI.Tray({
-			title: 'Ваше радио',
-			icon: 'favicon.png'
-		}),
-		restoreMenuItem = new nw.MenuItem({
-			label: '  Свернуть',
-			icon: 'favicon.png',
-			click: appShow
-		});
-	trayMenu.append(play_menuitem);
-	//buildPlayStop('play');
-	trayMenu.append(new nw.MenuItem({
-			type: 'separator'
-		})
-	);
-	trayMenu.append(restoreMenuItem);
-	trayMenu.append(show_notifycation);
-	trayMenu.append(new nw.MenuItem({
-			label: '  Закрыть',
-			icon: 'assets/images/close.png',
-			click: function(){
-				//win.close();
+	// oscilloscope
+	function renderSpec(){
+		var cwidth = ctx.canvas.width,
+			cheight = ctx.canvas.height,
+			x = 0,
+			sliceWidth = cwidth * 1.0 / bufferLength;;
+		analyser.getByteTimeDomainData(dataArray);
+		ctx.fillStyle = '#000';
+		ctx.fillRect(0, 0, cwidth, cheight);
+		ctx.lineWidth = 1;
+		//ctx.strokeStyle = '#0f0';
+		ctx.beginPath();
+		ctx.moveTo(0, cheight/2);
+		for(var i = 0; i < bufferLength; i++) {
+			var v = dataArray[i] / 128.0,
+				y = v * cheight/2;
+			if(strokeColor) {
+				let hue = (dataArray[i] * 259) / 100;
+				let sat = '100%';//Math.round((rat * 120) + 280 % 360);
+				let lit = '50%';
 
-				var screenW =window.screen.availWidth,
-					screenH =window.screen.availHeight,
-					$this = nw.Window.get();
-				$this.setAlwaysOnTop(false);
-				$this.isFullscreen && $this.leaveFullscreen();
-				$this.isKioskMode && $this.leaveKioskMode();
-				$this.show(true);
-				$this.width = 400;
-				$this.height = 500;
-				setTimeout(function(){
-					$this.x = parseInt((screenW - $this.width) / 2);
-					$this.y = parseInt((screenH - $this.height) / 2);
-					app.saveOptions().then(function(data){
-						nw.App.clearCache();
-						nw.App.quit();
-					});
-				}, 50);
+				ctx.strokeStyle = `hsl(${hue}, ${sat}, ${lit})`;
+			} else {
+				ctx.strokeStyle = strokeStyleColor;
 			}
-		})
-	);
-	trayMenu.append(new nw.MenuItem({
-			type: 'separator'
-		})
-	);
-	trayMenu.append(projectsoft_link);
-	tray.menu = trayMenu;
-	tray.on('click', function(ev){
-		trayMenu.popup(ev.x, ev.y);
+			if(i === 0) {
+				//ctx.moveTo(x, y);
+				ctx.moveTo(0, cheight/2);
+			} else {
+					//ctx.moveTo(x, cheight/2);
+				ctx.lineTo(x, y);
+			}
+			if(typeAnalizer == typesAnalizer[2]){
+				ctx.moveTo(x, cheight/2);
+			}
+			x += sliceWidth;
+		}
+		ctx.lineTo(cwidth, cheight/2);
+		ctx.stroke();
+		//ctx.translate(-1, -1);
+	}
+	// Читаем опции
+	function radioAppInit(){
+		setAppTitle(getMessage("extTitle"));
+		return new Promise(function(resolve, reject){
+			$("body").addClass('preload');
+			$applist.empty();
+			appRadio.readOptions().then(function(options){
+				strokeStyleColor = appRadio.options.color || strokeStyleColor;
+				range.value = audioPlayer.volume = Math.min(1, Math.max(0, options.volume));
+				setVolumeText((range.value * 100));
+				idStation = appRadio.options.station;
+				isNotify = appRadio.options.notify;
+				stations = appRadio.options.stations;
+				strokeColor = appRadio.options.strokeColor || false;
+				scep_stroke_color.checked = strokeColor;
+				typeAnalizer = typesAnalizer.indexOf(appRadio.options.analizer) > -1 ? appRadio.options.analizer : typesAnalizer[0];
+				switch(typeAnalizer){
+					// spec
+					case typesAnalizer[1]:
+					case typesAnalizer[2]:
+						if(typesAnalizer[1]){
+							bar_analizer.checked = false;
+							spec_analizer.checked = true;
+							spec_full_analizer.checked = false;
+							scep_stroke_color.enabled = true;
+							analyser.fftSize = 2048;
+						}else{
+							bar_analizer.checked = false;
+							spec_analizer.checked = false;
+							spec_full_analizer.checked = true;
+							scep_stroke_color.enabled = true;
+							analyser.fftSize = 1024;
+						}
+						analyser.maxDecibels = 20;
+						analyser.smoothingTimeConstant = 0.1;
+						dataArray = new Uint8Array(analyser.frequencyBinCount);
+						ctx.strokeStyle = appRadio.options.color || strokeStyleColor;
+						bufferLength = analyser.frequencyBinCount;
+						break;
+					// bar
+					default:
+						bar_analizer.checked = true;
+						spec_analizer.checked = false;
+						spec_analizer.checked = false;
+						scep_stroke_color.enabled = false;
+						analyser.fftSize = 128;
+						analyser.maxDecibels = 40;
+						analyser.smoothingTimeConstant = 0.6;
+						dataArray = new Uint8Array(analyser.frequencyBinCount);
+						bufferLength = analyser.frequencyBinCount;
+						break;
+				}
+				checkStrokeColor(strokeStyleColor);
+				stations.forEach((obj) => {
+					addStationOption(obj);
+				});
+				$applist.scrollTo("li#id"+idStation);
+				!startRender && renderFrames();
+				startRender = true;
+				setTimeout(function(){
+					$("body").removeClass('preload');
+					$(".app button.fullscreen").show();
+					resolve();
+				}, 2000);
+			}).catch(function(error){
+				alert("Не установлен пакет!");
+				reject();
+			});
+		});
+	};
+	radioAppInit();
+	$(".app-control").on('contextmenu', function(e){
+		e.preventDefault();
 		return !1;
-	});
-	win.on('minimize', function(e){
-		_isShow = false;
-		win.hide();
-		restoreMenuItem.label = "  Востановить";
-	});
-	GUI.Screen.Init();
-	win.show(true);
-	win.restore();
-	$("canvas").on("dblclick", toggleKioskMode);
-	audio.stop();
-	//win.showDevTools();
-	/*var itms = new StationItem();
-	$("#testStations").append(itms);*/
-};
+	})
+}(jQuery));
 
-initializeApp();

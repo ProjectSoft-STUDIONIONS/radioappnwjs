@@ -1,0 +1,35 @@
+{
+	"folders":
+	[
+		{
+			"name": "Новый проект YourRadio",
+			"path": ".",
+			"folder_exclude_patterns": [
+				".git",
+				"cache",
+				".cache",
+				"docs",
+				"pack",
+				"font",
+				"build",
+				"prejscss",
+				"resource",
+				"bower_components",
+				"node_modules",
+				"installer",
+				"temp"
+			],
+			"file_exclude_patterns": [
+				"*.sublime-project",
+				"*.sublime-workspace",
+				"*.iss",
+				"*.dll",
+				"*.exe",
+				"*-lock.*",
+				"*.rc",
+				"*.res",
+				"*.radiopack"
+			]
+		}
+	]
+}

@@ -45,7 +45,7 @@ var __helper = {
 
 
 if (typeof exports == 'undefined') {
-    window.helper = __helper;
+	window.helper = __helper;
 } else {
-    module.exports = __helper;
+	module.exports = __helper;
 }

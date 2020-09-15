@@ -1,0 +1,164 @@
+{
+	"extTitle": {
+		"message": "Ваше радио"
+	},
+	"addStation": {
+		"message": "Добавить станцию"
+	},
+	"editStation": {
+		"message": "Редактировать станцию"
+	},
+	"deleteStation": {
+		"message": "Удалить станцию"
+	},
+	"menu_add": {
+		"message": "Добавить станцию"
+	},
+	"menu_edit": {
+		"message": "Редактировать:"
+	},
+	"menu_delete": {
+		"message": "Удалить:"
+	},
+	"menu_import": {
+		"message": "Загрузить список радиостанций"
+	},
+	"menu_export": {
+		"message": "Сохранить список радиостанций"
+	},
+	"menu_analizer": {
+		"message": "Анализатор"
+	},
+	"now_playing": {
+		"message": "Сейчас играет:"
+	},
+	"dialog_is_title": {
+		"message": "Импорт"
+	},
+	"dialog_is_title_error": {
+		"message": "Ошибка импорта"
+	},
+	"dialog_is_succes": {
+		"message": "Импорт проведён успешно!"
+	},
+	"dialog_is_error": {
+		"message": "Импорт проведён с ошибкой!"
+	},
+	"dialog_is_break_user": {
+		"message": "Импорт прерван пользователем!"
+	},
+	"dialog_is_restored": {
+		"message": "Восстановлен список по-умолчанию!"
+	},
+	"dialog_is_confirm": {
+		"message": "Вы собираетесь произвести импорт настроек.<br>При импорте будут стёрты все радиостанции в вашем списке и заменены на новые.<br><br>Продолжить?"
+	},
+	"dialog_del_title": {
+		"message": "Удаление радиостанции"
+	},
+	"dialog_del_confirm": {
+		"message": "Подтвердите удаление радиостанции"
+	},
+	"btn_cancel": {
+		"message": "ОТМЕНА"
+	},
+	"btn_ok": {
+		"message": "ДА"
+	},
+	"modal__add__statio_nname": {
+		"message": "Название станции:"
+	},
+	"modal__add__statio_stream": {
+		"message": "Стрим:"
+	},
+	"modal__add__statio_logo": {
+		"message": "Логотип:"
+	},
+	"dialog_exp_title": {
+		"message": "Результат Экспорта"
+	},
+	"dialog_exp_confirm": {
+		"message": "Экспорт проведён Успешно!"
+	},
+	"dialog_exp_btn": {
+		"message": "Посмотреть"
+	},
+	"dialog_exp_title_error_01": {
+		"message": "Ошибка Экспорта"
+	},
+	"dialog_exp_confirm_error_01": {
+		"message": "Экспорт проведён с ошибкой!"
+	},
+	"dialog_exp_title_error_02": {
+		"message": "Экспорт"
+	},
+	"dialog_exp_confirm_error_02": {
+		"message": "Экспорт прерван пользователем!"
+	},
+	"menu_bar_analizer": {
+		"message": "Бар"
+	},
+	"menu_spec_analizer": {
+		"message": "Осциллограф линия"
+	},
+	"menu_spec_full_analizer": {
+		"message": "Осциллограф заливка"
+	},
+	"menu_scep_stroke_color": {
+		"message": "Цветной осциллограф"
+	},
+	"reject_unpack_error": {
+		"message": "Ошибка распаковки дефолта"
+	},
+	"reject_error_01": {
+		"message": "Ошибка Импорта! Распаковка"
+	},
+	"reject_error_02": {
+		"message": "Ошибка Импорта! Создание директории"
+	},
+	"reject_error_03": {
+		"message": "Ошибка Импорта! Данный формат не поддерживается"
+	},
+	"color": {
+		"message": "Цвет"
+	},
+	"color_00": {
+		"message": "Белый"
+	},
+	"color_01": {
+		"message": "Красный"
+	},
+	"color_02": {
+		"message": "Ораньжевый"
+	},
+	"color_03": {
+		"message": "Жёлтый"
+	},
+	"color_04": {
+		"message": "Зелёный"
+	},
+	"color_05": {
+		"message": "Голубой"
+	},
+	"color_06": {
+		"message": "Синий"
+	},
+	"color_07": {
+		"message": "Фиолетовый"
+	},
+	"minimize": {
+		"message": "Свернуть"
+	},
+	"restore": {
+		"message": "Востановить"
+	},
+	"maximize": {
+		"message": "Развернуть"
+	},
+	"close": {
+		"message": "Закрыть"
+	},
+	"fullscreen": {
+		"message": "На весь экран"
+	}
+}

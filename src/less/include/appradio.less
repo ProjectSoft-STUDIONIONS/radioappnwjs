@@ -1,0 +1,195 @@
+.template {
+	display: none !important;
+}
+.appradio {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	height: 100vh;
+	overflow: hidden;
+	background-repeat: no-repeat;
+	background-position: center bottom;
+	background-size: cover;
+	background-image: data-uri('@{datauri}lazy_bg.svg');
+	&::before {
+		transition: opacity .5s ease, z-index .3s ease .5s;
+		content: "";
+		display: block;
+		opacity: 0;
+		z-index: -1000;
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100vw;
+		height: 100vh;
+		background-repeat: no-repeat;
+		background-position: center center;
+		background-size: auto;
+		background-image: data-uri('@{datauri}favicon.png');
+	}
+	&__wrapper {
+		display: flex;
+		flex-direction: column;
+		min-width: 400px;
+		max-width: 400px;
+		overflow: hidden;
+		height: ~'calc(100vh - 32px)';
+		opacity: 1;
+		transition: opacity .5s ease;
+		.header {
+			flex: 0 0 auto;
+			overflow: hidden;
+			position: relative;
+			&__canvas {
+				width: 100%;
+				height: 120px;
+				background-color: #000;
+			}
+			input[type=range] {
+				display: block;
+				position: relative;
+				width: 100%;
+			}
+			.divider {
+				position: absolute;
+				top: 100%;
+				left: 0;
+				background-color: transparent;
+				width: 100%;
+				transition: top .3s ease;
+				display:flex;
+				flex-direction: column;
+				align-items: stretch;
+				justify-content: flex-end;
+				height: 25px;
+				&::before {
+					position: absolute;
+					display: flex;
+					right: 0;
+					height: 25px;
+					justify-content: flex-end;
+					align-items: flex-end;
+					right: 0;
+					top: -25px;
+					opacity: 1;
+					color: #fff;
+					transition: opacity .2s ease .4s;
+					font-family: "Radio App" !important;
+					speak: none;
+					font-style: normal;
+					font-weight: normal;
+					font-variant: normal;
+					text-transform: none;
+					line-height: 1;
+					text-rendering: auto;
+					-webkit-font-smoothing: antialiased;
+					content: @radioapp-level;
+					padding-right: 5px;
+				}
+				&:hover,
+				&:focus {
+					top: ~'calc(100% - 25px)';
+					transition: top .2s ease .2s;
+					&::before {
+						opacity: 0;
+						transition: opacity .2s ease;
+					}
+				}
+			}
+			#volchange {
+				position: absolute;
+				top: 0;
+				left: 0;
+				display: block;
+				color: #fff;
+				opacity: 0;
+				transition: opacity .3s ease;
+				z-index: 0;
+				font-family: 'JetBrains Mono Light';
+				padding: 5px 5px;
+				font-size: 12px;
+				&.view {
+					opacity: 1;
+					z-index: 20;
+					user-select: none;
+					pointer-events: none;
+				}
+			}
+		}
+		.main {
+			flex: 1 0 auto;
+			display: flex;
+			flex-direction: column;
+			height: ~'calc(100vh - 120px - 20px - 32px)';
+		}
+		.footer {
+			flex: 0 0 auto;
+			height: 20px;
+			background-color: #000;
+			color: #fff;
+			text-align: center;
+			font-size: 12px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			a {
+				&,
+				&:hover {
+					color: #fff;
+				}
+				&:focus {
+					color: #0f0;
+				}
+			}
+		}
+	}
+	&__list {
+		flex: 1 0 auto;
+		overflow-x: hidden;
+		overflow-y: auto;
+		height: 100%;
+		max-height: 100%;
+		max-width: 400px;
+		background-color: #fff;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+}
+#canvas {
+	display: block;
+	width: 100%;
+	height: 100%;
+}
+.kiosk__mode {
+	.appradio {
+		&__wrapper {
+			.header {
+				position: fixed;
+				z-index: 99999999999999;
+				top: 0;
+				left: 0;
+				width: 100vw;
+				&__canvas {
+					height: 100vh;
+					#canvas {
+						height: 100vh;
+					}
+				}
+			}
+		}
+	}
+}
+.preload {
+	overflow: none;
+	.appradio {
+		&__wrapper {
+			opacity: 0;
+			pointer-events: none;
+		}
+		&::before {
+			opacity: 1;
+			z-index: 999;
+		}
+	}
+}

@@ -1,0 +1,11 @@
+@datauri: '../datauri/';
+.datauri(@img) {
+	background-image: data-uri("@{datauri}@{img}");
+}
+.clearfix(){
+	&::before,
+	&::after {
+		display: table;
+		clear: both;
+	}
+}
