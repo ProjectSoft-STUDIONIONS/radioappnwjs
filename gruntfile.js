@@ -18,6 +18,13 @@ module.exports = function(grunt){
 				'copy:ffmpeg',
 				'reshack'
 			],
+			update: [
+				'clean',
+				'ffmpeg_down',
+				'nwjs',
+				'copy:ffmpeg',
+				'reshack'
+			],
 			build: [
 				'clean',
 				'ffmpeg_down',
@@ -84,7 +91,7 @@ module.exports = function(grunt){
 		},
 		gc = {
 			sdk: 'sdk', // sdk, normal
-			version: '0.48.1'
+			version: '0.48.2'
 		};
 	require('load-grunt-tasks')(grunt);
 	require('time-grunt')(grunt);
@@ -414,4 +421,5 @@ module.exports = function(grunt){
 	grunt.registerTask('js', tasks.js);
 	grunt.registerTask('css', tasks.css);
 	grunt.registerTask('html', tasks.html);
+	grunt.registerTask('update', tasks.update);
 }
