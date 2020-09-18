@@ -7,8 +7,8 @@
 [Setup]
 AppId={{E71B86C4-BF18-420C-89E2-68F1546C59B7}
 AppName=Your Radio
-AppVersion=2.0
-AppVerName=Your Radio v2.0
+AppVersion=2.0.2
+AppVerName=Your Radio v2.0.2
 AppCopyright=Copyright © 2010 all right reserved ProjectSoft && STUDIONIONS
 AppMutex=Your Radio
 AppPublisher=ProjectSoft && STUDIONIONS
@@ -18,14 +18,14 @@ AppContact=projectsoft2009@yandex.ru
 AppComments=Your Radio
 ; AppUpdatesURL={#GitReleace}
 
-VersionInfoVersion=2.0
+VersionInfoVersion=2.0.2
 VersionInfoCompany=ProjectSoft && STUDIONIONS
 VersionInfoDescription=Your Radio. Copyright © 2010 all right reserved ProjectSoft && STUDIONIONS
-VersionInfoTextVersion=Your Radio v2.0
+VersionInfoTextVersion=Your Radio v2.0.2
 VersionInfoCopyright=Copyright © 2010 all right reserved ProjectSoft && STUDIONIONS
 VersionInfoProductName=Your Radio
-VersionInfoProductVersion=2.0
-VersionInfoProductTextVersion=Your Radio v2.0
+VersionInfoProductVersion=2.0.2
+VersionInfoProductTextVersion=Your Radio v2.0.2
 
 DefaultDirName={commonpf}\YourRadio
 ; DefaultGroupName=\
