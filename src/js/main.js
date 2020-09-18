@@ -1,27 +1,35 @@
 /* App Controls */
 (function($){
+	// svg paths button icons
 	const   closePath = 'M 0,0 0,0.7 4.3,5 0,9.3 0,10 0.7,10 5,5.7 9.3,10 10,10 10,9.3 5.7,5 10,0.7 10,0 9.3,0 5,4.3 0.7,0 Z',
 			restorePath = 'm 2,1e-5 0,2 -2,0 0,8 8,0 0,-2 2,0 0,-8 z m 1,1 6,0 0,6 -1,0 0,-5 -5,0 z m -2,2 6,0 0,6 -6,0 z',
 			maximizePath = 'M 0,0 0,10 10,10 10,0 Z M 1,1 9,1 9,9 1,9 Z',
 			minimizePath = 'M 0,5 10,5 10,6 0,6 Z',
+	// get gui window
 			gui = require('nw.gui'),
 			win = nw.Window.get(),
+	// get buttons app controls
 			closeBtn = $(".app button.close"),
 			miniBtn  = $(".app button.minimize"),
 			maxiBtn  = $(".app button.maximize"),
 			fullBtn  = $(".app button.fullscreen"),
 			maxRes   = $("svg path", maxiBtn),
+	// set language
 			getMessage = function(msg) {
 				return chrome.i18n.getMessage(msg);
 			};
+	// state. minimized/maximized
 	var state = false;
+	// set lang messages
 	closeBtn.attr({title: getMessage('close')});
 	miniBtn.attr({title: getMessage('minimize')});
 	maxiBtn.attr({title: getMessage('maximize')});
 	fullBtn.attr({title: getMessage('fullscreen')});
+	// set svg paths
 	$("svg path", closeBtn).attr({d: closePath});
 	$("svg path", miniBtn).attr({d: minimizePath});
 	maxRes.attr({d: maximizePath});
+	// set events window state
 	win.on('close', function () {
 		nw.App.quit()
 	});
@@ -38,6 +46,7 @@
 		maxiBtn.attr({title: getMessage('maximize')});
 		state = false;
 	});
+	// set buttons events change window state
 	closeBtn.on("click", function(e){
 		e.preventDefault();
 		win.close();
@@ -63,6 +72,7 @@
 		$(this).blur();
 		return !1;
 	});
+	// set event keyboard Esc or F11 exit fullscreen
 	$(window).on('keydown', function(e){
 		if(e.code == "Escape" || e.code == "F11"){
 			e.preventDefault();
@@ -71,7 +81,8 @@
 			win.focus();
 			return !1;
 		}
-	})
+	});
+	// window restore, set focus app
 	win.restore();
 	win.focus();
 }(jQuery));
@@ -80,9 +91,11 @@
 *** Application
 **/
 (function($){
+	// develop run DevTool
 	if(nw.App.argv.findIndex(x => x=='--dev') > -1 && nw.process.versions["nw-flavor"] == "sdk"){
 		nw.Window.get().showDevTools();
 	}
+	// Open url in default browser
 	$(document).on("click", "a[target='_blank']", function(e){
 		e.preventDefault();
 		nw.Shell.openExternal(this.href);
@@ -150,6 +163,7 @@
 			$(".modal__add__statio_stream", $template_add_dialog).text(getMessage("modal__add__statio_stream"));
 			$(".div--file.radioapp-picture", $template_add_dialog).attr({"data-text": getMessage("modal__add__statio_logo")});
 		},
+		// Сохранение настроек приложения
 		saveAppOptions = function(){
 			var value = parseFloat($volume.val()),
 				min = parseFloat($volume[0].min),
@@ -175,11 +189,13 @@
 			appRadio.options.strokeColor = strokeColor;
 			appRadio.saveOptions();
 		},
+		// Сохранение уровня громкости
 		saveVolume = function(){
 			// Скрываем тайтл громкости и сохраняем опции приложения.
 			$volchange.hasClass('view') && $volchange.removeClass('view');
 			appRadio.saveOptions();
 		},
+		// Вывод процентов уровня громкости
 		setVolumeText = function(value){
 			// Установка значения громкости в тайтл
 			clearTimeout(tVolAudio);
@@ -201,6 +217,7 @@
 			!$volchange.hasClass('view') && $volchange.addClass('view');
 			tVolAudio = setTimeout(saveVolume, 1500);
 		},
+		// Blob to Buffer
 		blobToBuffer = function(blob) {
 			return new Promise(function(resolve, reject){
 				if (typeof Blob === 'undefined' || !(blob instanceof Blob)) {
@@ -216,9 +233,11 @@
 				reader.readAsArrayBuffer(blob);
 			});
 		},
+		// Установка заголовка окна приложения
 		setAppTitle = function(_title) {
 			$("#appTitle").text(_title).attr({title: _title});
 		},
+		// Собственный диалог сообщений
 		dialogAlert = function(title, content, className){
 			$.psmodal.open(
 				'confirm',
@@ -236,6 +255,7 @@
 				}
 			).addClass(className);
 		},
+		// Диалог редактирования или добавления станции
 		showPopupDialog = function(data, type = 'add'){
 			var $dlg = $template_add_dialog.clone(),
 				name = "",
@@ -342,6 +362,7 @@
 				}
 			).addClass('dialog--edit-save');
 		},
+		// Вывод оповещения браузера
 		spawnNotification = function(body, icon, title) {
 			var options = {
 				body: body,
@@ -361,6 +382,7 @@
 				}
 			}, 5000);
 		},
+		// Удаление станции
 		deleteStation = function(data){
 			var $li = $("li#id" + data.id),
 				stn_data = $li.data();
@@ -372,6 +394,7 @@
 			}
 			saveAppOptions();
 		},
+		// Добавление станции
 		addStationOption = function (obj, newstation = false){
 			let stTemp = $($template_station.clone()),
 				icon = appRadio.iconsDir + "/" + obj.id + ".png";
@@ -390,6 +413,7 @@
 				$applist.scrollTo("li#id"+obj.id);
 			}
 		},
+		// Импорт списка радиостанций и всех настроек приложения
 		importStationsHandle = function(){
 			$.psmodal.open(
 				'confirm',
@@ -432,6 +456,7 @@
 				}
 			).addClass('dialog--import');
 		},
+		// Экспорт списка радиостанций и всех настроек приложения
 		exportStationsHandle = function(){
 			appRadio.export().then(function(result){
 				$.psmodal.open(
@@ -464,7 +489,8 @@
 					dialogAlert(getMessage("dialog_exp_title_error_02"), getMessage("dialog_exp_confirm_error_02"), 'dialog--export');
 				}
 			});
-		},// Get Metadata
+		},
+		// Получение метаданных проигрываемого трека
 		getMetadata = function(){
 			clearTimeout(metaInterval);
 			let stationTmp = appRadio.getStation(idStation);
@@ -499,6 +525,7 @@
 				setAppTitle(appRadio.title);
 			}
 		},
+		// Обработка результатов получения метаданных
 		requestStream = function(stream) {},
 		requestMetadata = function(metadata) {
 			if(audioPlayer.isPlaying()) {
@@ -560,9 +587,11 @@
 				playingTitle = "";
 			}
 		},
+		// Вывод данных о треке
 		showNotify = function(data){
 			spawnNotification(getMessage("now_playing") + "\n"+data.title, data.icon, getMessage("extTitle") + " - " + data.name)
 		},
+		// Меню
 		documentMenu = new Menu(),
 		stationMenu = new Menu(),
 		canvasMenu = new Menu(),

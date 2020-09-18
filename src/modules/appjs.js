@@ -164,7 +164,6 @@ AppRadio.prototype = {
 								}
 								_start = false;
 								self.readOptions().then(function(opt){
-									resolve(_options);
 									if(!_start){
 										chrome.runtime.sendMessage(chrome.runtime.id, {
 											sender: 'settings',
@@ -173,6 +172,7 @@ AppRadio.prototype = {
 										});
 										_start = true;
 									}
+									resolve(_options);
 								}).catch(function(errz){
 									reject(errz);
 								});
