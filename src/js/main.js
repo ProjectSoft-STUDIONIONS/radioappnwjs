@@ -18,8 +18,39 @@
 			getMessage = function(msg) {
 				return chrome.i18n.getMessage(msg);
 			};
+
+	
 	// state. minimized/maximized
-	var state = false;
+	var state = false,
+		win_state = false,
+		winMinMax = false,
+		tray_close = new nw.MenuItem({
+			label: "  " + getMessage("close"),
+			icon: "images/tray_close.png",
+			click: function() {
+				win.close();
+			}
+		}),
+		tray_mini_restore = new nw.MenuItem({
+			label: "  " + getMessage("minimize"),
+			icon: "images/tray_minimize.png",
+			click: function() {
+				win_state ? (
+					(winMinMax ? win.maximize() : win.restore()),
+					tray_mini_restore.label = "  " + getMessage("minimize")
+				) : (
+					win.minimize(),
+					tray_mini_restore.label = "  " + getMessage("restore")
+				);
+				//win_state = !win_state;
+			}
+		}),
+		tray = new nw.Tray({ title: 'Tray', icon: 'favicon.png' }),
+		trayMenu = new nw.Menu();
+
+	tray.menu = trayMenu;
+	trayMenu.append(tray_mini_restore);
+	trayMenu.append(tray_close);
 	// set lang messages
 	closeBtn.attr({title: getMessage('close')});
 	miniBtn.attr({title: getMessage('minimize')});
@@ -31,20 +62,37 @@
 	maxRes.attr({d: maximizePath});
 	// set events window state
 	win.on('close', function () {
-		nw.App.quit()
+		if(nw.process.versions["nw-flavor"] == "sdk"){
+			win.closeDevTools();
+		}
+		nw.App.quit();
 	});
 	win.on('minimize', function() {
 		//console.log('Window is minimized');
+		win_state = !0;
+		tray_mini_restore.label = "  " + getMessage("restore");
+		tray_mini_restore.icon = "images/tray_" + (winMinMax ? "maximize.png" : "normal.png");
+		win.setShowInTaskbar(false);
 	});
 	win.on('maximize', function() {
 		maxRes.attr({d: restorePath});
 		maxiBtn.attr({title: getMessage('restore')});
-		state = true;
+		state = !0;
+		winMinMax = !0;
+		win_state = !1;
+		tray_mini_restore.label = "  " + getMessage("minimize");
+		tray_mini_restore.icon = "images/tray_minimize.png";
+		win.setShowInTaskbar(true);
 	});
 	win.on('restore', function() {
 		maxRes.attr({d: maximizePath});
 		maxiBtn.attr({title: getMessage('maximize')});
-		state = false;
+		state = !1;
+		win_state = !1;
+		winMinMax = !1;
+		tray_mini_restore.label = "  " + getMessage("minimize");
+		tray_mini_restore.icon = "images/tray_minimize.png";
+		win.setShowInTaskbar(true);
 	});
 	// set buttons events change window state
 	closeBtn.on("click", function(e){
@@ -563,6 +611,7 @@
 				playingTitle = "";
 			}
 		},
+		// Ошибка получения метаданных
 		requestErrorMetadata = function(error) {
 			//stationTitle = "";
 			playingTitle = "";
@@ -575,6 +624,7 @@
 				playingTitle = "";
 			}
 		},
+		// Получение пустых метаданных
 		requestEmptyMetadata = function() {
 			//stationTitle = "";
 			playingTitle = "";
@@ -868,7 +918,6 @@
 			appRadio.options.strokeColor = strokeColor;
 		};
 	setLocales();
-	
 	documentMenu.append(add_item);
 	documentMenu.append(new nw.MenuItem(
 		{

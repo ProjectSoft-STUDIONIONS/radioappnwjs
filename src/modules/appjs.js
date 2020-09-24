@@ -14,6 +14,7 @@ var path = require('path'),
 	_options = null,
 	_defaultOptions = {
 		volume: 0.5,
+		tray: true,
 		notify: true,
 		color: 'lime',
 		station: -1,
