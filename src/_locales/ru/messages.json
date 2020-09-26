@@ -160,5 +160,8 @@
 	},
 	"fullscreen": {
 		"message": "На весь экран"
+	},
+	"title_settings": {
+		"message": "Настройки"
 	}
 }

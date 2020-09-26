@@ -411,6 +411,20 @@ module.exports = function(grunt){
 					open: "build/sdk/" + pkg.appName + "/win32/nw.dll"
 				}
 			}
+		},
+		watch: {
+			css: {
+				files: 'src/less/**/*.less',
+				tasks: tasks.css,
+			},
+			js: {
+				files: ['src/js/**/*.js', 'src/modules/**/*.js'],
+				tasks: tasks.js,
+			},
+			html: {
+				files: 'src/pug/**/*.pug',
+				tasks: tasks.html,
+			}
 		}
 	});
 	grunt.registerTask('res', ['reshack']);

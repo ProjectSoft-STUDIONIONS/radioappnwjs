@@ -36,7 +36,7 @@
 			icon: "images/tray_minimize.png",
 			click: function() {
 				win_state ? (
-					(winMinMax ? win.maximize() : win.restore()),
+					win.show(),
 					tray_mini_restore.label = "  " + getMessage("minimize")
 				) : (
 					win.minimize(),
@@ -45,9 +45,18 @@
 				//win_state = !win_state;
 			}
 		}),
-		tray = new nw.Tray({ title: 'Tray', icon: 'favicon.png' }),
+		tray = new nw.Tray({
+			title: getMessage("extTitle"),
+			tooltip: getMessage("extTitle"),
+			icon: 'favicon.png',
+			/*click: function(e){
+				console.log(e)
+			}*/
+		}),
 		trayMenu = new nw.Menu();
-
+	tray.on("click", function(e){
+		win.show();
+	});
 	tray.menu = trayMenu;
 	trayMenu.append(tray_mini_restore);
 	trayMenu.append(tray_close);
@@ -83,6 +92,7 @@
 		tray_mini_restore.label = "  " + getMessage("minimize");
 		tray_mini_restore.icon = "images/tray_minimize.png";
 		win.setShowInTaskbar(true);
+		$([closeBtn, miniBtn, maxiBtn]).blur();
 	});
 	win.on('restore', function() {
 		maxRes.attr({d: maximizePath});
@@ -93,31 +103,32 @@
 		tray_mini_restore.label = "  " + getMessage("minimize");
 		tray_mini_restore.icon = "images/tray_minimize.png";
 		win.setShowInTaskbar(true);
+		$([closeBtn, miniBtn, maxiBtn]).blur();
 	});
 	// set buttons events change window state
 	closeBtn.on("click", function(e){
 		e.preventDefault();
-		win.close();
 		$(this).blur();
+		win.close();
 		return !1;
 	});
 	miniBtn.on('click', function(e){
 		e.preventDefault();
-		win.minimize();
 		$(this).blur();
+		win.minimize();
 		return !1;
 	});
 	maxiBtn.on('click', function(e){
 		e.preventDefault();
-		state ? win.restore() : win.maximize();
 		$(this).blur();
+		state ? win.restore() : win.maximize();
 		return !1;
 	});
 	fullBtn.on('click', function(e){
 		e.preventDefault();
+		$(this).blur();
 		win.enterFullscreen();
 		$(document.body).addClass('kiosk__mode');
-		$(this).blur();
 		return !1;
 	});
 	// set event keyboard Esc or F11 exit fullscreen
@@ -204,6 +215,7 @@
 	window.ctx = ctx;
 	var setLocales = function(){
 			$("title").text(getMessage("extTitle"));
+			$("#title-settings").text(getMessage("title_settings"));
 			$(".modal__add__statio_nname").text(getMessage("modal__add__statio_nname"));
 			$(".modal__add__statio_stream").text(getMessage("modal__add__statio_stream"));
 			$(".div--file.radioapp-picture").attr({"data-text": getMessage("modal__add__statio_logo")});
@@ -422,13 +434,14 @@
 				notifyApp = null;
 			}
 			notifyApp = new Notification(title, options);
-			notifyInterval = setTimeout(function(){
-				clearTimeout(notifyInterval);
-				if(notifyApp) {
-					notifyApp.close();
-					notifyApp = null;
-				}
-			}, 5000);
+			notifyInterval = setTimeout(spawnNotificationClose, 5000);
+		},
+		spawnNotificationClose = function() {
+			clearTimeout(notifyInterval);
+			if(notifyApp) {
+				notifyApp.close();
+				notifyApp = null;
+			}
 		},
 		// Удаление станции
 		deleteStation = function(data){
@@ -596,6 +609,7 @@
 								playingTitle = streamTitle.length > 7 ? streamTitle : "";
 								setAppTitle(appRadio.title + " — " + stationTitle + (playingTitle.length ? " - " + playingTitle : ""));
 								if(playingTitle.length && isNotify) {
+									spawnNotificationClose();
 									spawnNotification(getMessage("now_playing") + "\n" + playingTitle, appRadio.getIcon(idStation), stationTitle);
 								}
 							} else {
@@ -639,6 +653,7 @@
 		},
 		// Вывод данных о треке
 		showNotify = function(data){
+			spawnNotificationClose();
 			spawnNotification(getMessage("now_playing") + "\n"+data.title, data.icon, getMessage("extTitle") + " - " + data.name)
 		},
 		// Меню
@@ -1025,6 +1040,7 @@
 			stationTmp = appRadio.getStation(st.data('id'));
 		$('li.station').removeClass('play select progress');
 		st.addClass('select');
+		spawnNotificationClose();
 		if(stationTmp){
 			idStation = stationTmp.id;
 			if(!is_play) {
@@ -1282,6 +1298,16 @@
 				setTimeout(function(){
 					$("body").removeClass('preload');
 					$(".app button.fullscreen").show();
+					$(".footer .radioapp-settings").on("click", function(e){
+						e.preventDefault();
+						$(".appradio-panel").toggleClass("open");
+						return !1;
+					})
+					$("#close-settings").on("click", function(e){
+						e.preventDefault();
+						$(".appradio-panel").removeClass("open");
+						return !1;
+					})
 					resolve();
 				}, 2000);
 			}).catch(function(error){

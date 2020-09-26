@@ -38,6 +38,7 @@
 		"grunt-ttf2woff2": "^1.0.1",
 		"grunt-webfont": "^1.7.2",
 		"load-grunt-tasks": "^5.1.0",
+		"temp": "git+https://github.com/bruce/node-temp.git",
 		"time-grunt": "^2.0.0",
 		"ttf2woff2": "^3.0.0"
 	}

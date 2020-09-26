@@ -11,6 +11,7 @@
 	background-position: center bottom;
 	background-size: cover;
 	background-image: data-uri('@{datauri}lazy_bg.svg');
+	position: relative;
 	&::before {
 		transition: opacity .5s ease, z-index .3s ease .5s;
 		content: "";
@@ -98,6 +99,7 @@
 			}
 			#volchange {
 				position: absolute;
+				user-select: none;
 				top: 0;
 				left: 0;
 				display: block;
@@ -131,7 +133,8 @@
 			font-size: 12px;
 			display: flex;
 			align-items: center;
-			justify-content: center;
+			justify-content: space-between;
+			user-select: none;
 			a {
 				&,
 				&:hover {
@@ -139,6 +142,11 @@
 				}
 				&:focus {
 					color: #0f0;
+				}
+			}
+			span {
+				.radioapp-settings {
+					cursor: pointer;
 				}
 			}
 		}
@@ -154,6 +162,61 @@
 		margin: 0;
 		padding: 0;
 		list-style: none;
+	}
+	&-panel {
+		position: absolute;
+		top: 0px;
+		bottom: 0px;
+		height: 100%;
+		background-color: white;
+		width: 100%;
+		overflow: hidden;
+		left: 100%;
+		opacity: 0;
+		z-index: 9999999999;
+		transition: opacity .3s ease .2s,  left .5s ease;
+		&.open {
+			opacity: 1;
+			left: 0px;
+			transition: opacity .3s ease .2s,  left .5s ease .2s;
+		}
+		&-settings {
+			overflow: hidden;
+			box-shadow: 0 0 10px 0px #d5d5d5;
+			z-index: 20;
+			position: relative;
+			&--header {
+				display: flex;
+				flex-direction: row;
+				user-select: none;
+				align-items: center;
+				justify-content: space-between;
+				&-title {
+					overflow: hidden;
+					white-space: nowrap;
+					padding: 5px 10px;
+					width: ~'calc(100% - 46px)';
+					span {
+						display: block;
+						max-width: 100%;
+						text-overflow: ellipsis;
+						overflow: hidden;
+						color: black;
+						font-family: "JetBrains Mono Light";
+						font-size: 1.35em;
+						user-select: none;
+					}
+				}
+				&-close {
+					text-align: center;
+					width: 46px;
+					#close-settings {
+						cursor: pointer;
+						user-select: none;
+					}
+				}
+			}
+		}
 	}
 }
 #canvas {
