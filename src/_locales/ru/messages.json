@@ -163,5 +163,8 @@
 	},
 	"title_settings": {
 		"message": "Настройки"
+	},
+	"copy_url_stream": {
+		"message": "Копировать URL потока"
 	}
 }

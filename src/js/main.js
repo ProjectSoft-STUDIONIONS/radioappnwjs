@@ -249,12 +249,26 @@
 			appRadio.options.strokeColor = strokeColor;
 			appRadio.saveOptions();
 		},
+		clearPopupText = function(){
+			$volchange.hasClass('view') && $volchange.removeClass('view');
+			tVolAudio = setTimeout(function(){
+				$volchange.empty();
+			}, 300);
+		},
 		// Сохранение уровня громкости
 		saveVolume = function(){
 			// Скрываем тайтл громкости и сохраняем опции приложения.
-			$volchange.hasClass('view') && $volchange.removeClass('view');
+			clearPopupText();
 			appRadio.saveOptions();
 		},
+		//
+		setPoupText = function(value, time = 1500){
+			clearTimeout(tVolAudio);
+			value = value.replace(/([^>])\n/g, '$1<br>');
+			$volchange.html(value);
+			!$volchange.hasClass('view') && $volchange.addClass('view');
+			tVolAudio = setTimeout(clearPopupText, time);
+		}
 		// Вывод процентов уровня громкости
 		setVolumeText = function(value){
 			// Установка значения громкости в тайтл
@@ -608,9 +622,13 @@
 								}catch(e){}
 								playingTitle = streamTitle.length > 7 ? streamTitle : "";
 								setAppTitle(appRadio.title + " — " + stationTitle + (playingTitle.length ? " - " + playingTitle : ""));
-								if(playingTitle.length && isNotify) {
-									spawnNotificationClose();
-									spawnNotification(getMessage("now_playing") + "\n" + playingTitle, appRadio.getIcon(idStation), stationTitle);
+								if(playingTitle.length) {
+									if(isNotify){
+										spawnNotificationClose();
+										spawnNotification(getMessage("now_playing") + "\n" + playingTitle, appRadio.getIcon(idStation), stationTitle);
+									}else{
+										setPoupText(stationTitle + "\n" + playingTitle, 5000);
+									}
 								}
 							} else {
 								setAppTitle(appRadio.title + " — " + stationTitle + (playingTitle.length ? " - " + playingTitle : ""));
@@ -672,6 +690,21 @@
 			},
 			key: "n",
 			modifiers: "ctrl+alt"
+		}),
+		copy_item = new MenuItem({
+			label: '  ' + getMessage("copy_url_stream"),
+			icon: 'images/copy.png',
+			click: function(){
+				if(!dataStation)
+					return;
+				let text = dataStation.stream;
+				navigator.clipboard.writeText(text).then(() => {
+					setPoupText("Скопировано:\n" + text);
+				}).catch(err => {
+					console.log('Something went wrong', err);
+				});
+				dataStation = null;
+			}
 		}),
 		edit_item = new MenuItem({
 			label: '  ' + getMessage("menu_edit"),
@@ -955,15 +988,9 @@
 			type: "separator"
 		}
 	));
+	stationMenu.append(copy_item);
 	stationMenu.append(edit_item);
 	stationMenu.append(delete_item);
-	stationMenu.append(new nw.MenuItem(
-		{
-			type: "separator"
-		}
-	));
-	stationMenu.append(types_analizer);
-	stationMenu.append(stroke_colors);
 	stationMenu.append(new nw.MenuItem(
 		{
 			type: "separator"
@@ -972,21 +999,8 @@
 	stationMenu.append(export_pack);
 	stationMenu.append(import_pack);
 	// Canvas Menu
-	canvasMenu.append(add_item);
-	canvasMenu.append(new nw.MenuItem(
-		{
-			type: "separator"
-		}
-	));
 	canvasMenu.append(types_analizer);
 	canvasMenu.append(stroke_colors);
-	canvasMenu.append(new nw.MenuItem(
-		{
-			type: "separator"
-		}
-	));
-	canvasMenu.append(export_pack);
-	canvasMenu.append(import_pack);
 	// Analizer
 	colorMenu.append(scep_stroke_color);
 	colorMenu.append(new MenuItem({
@@ -1083,6 +1097,7 @@
 				dataStation = $.extend({}, $curTarget.data());
 				edit_item.label = "  " + getMessage("menu_edit") + " " + dataStation.name;
 				delete_item.label = "  " + getMessage("menu_delete") + " " + dataStation.name;
+				copy_item.label = "  " + getMessage("copy_url_stream") + ": " + dataStation.name;
 				stationMenu.popup(e.pageX, e.pageY);
 				return !1;
 			} else if($curTarget.hasClass('canvas')) {
@@ -1247,7 +1262,7 @@
 				range.value = audioPlayer.volume = Math.min(1, Math.max(0, options.volume));
 				setVolumeText((range.value * 100));
 				idStation = appRadio.options.station;
-				isNotify = appRadio.options.notify;
+				isNotify = !appRadio.options.notify;
 				stations = appRadio.options.stations;
 				strokeColor = appRadio.options.strokeColor || false;
 				scep_stroke_color.checked = strokeColor;
