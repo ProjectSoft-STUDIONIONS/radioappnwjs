@@ -209,7 +209,8 @@
 		getMessage = function(msg) {
 			return chrome.i18n.getMessage(msg);
 		},
-		strokeStyleColor = 'lime';
+		strokeStyleColor = 'lime',
+		baseFav = "data:image/png;base64," + fs.readFileSync("images/favicon.png").toString('base64');
 	audioSrc.connect(analyser);
 	analyser.connect(audioContext.destination);
 	window.ctx = ctx;
@@ -565,6 +566,17 @@
 				}
 			});
 		},
+		updateSessionMetaData = function(radio, title) {
+			let src = baseFav;
+			if(audioPlayer.isPlaying())
+				src = "data:image/png;base64," + fs.readFileSync(appRadio.getIcon(idStation)).toString('base64');
+			navigator.mediaSession.metadata = new MediaMetadata({
+				title: getMessage("extTitle"),
+				artist: (title.length ? title : radio),
+				album: title,
+				artwork: [{src: src, type: "image/png", sizes: '128x128'}]
+			});
+		},
 		// Получение метаданных проигрываемого трека
 		getMetadata = function(){
 			clearTimeout(metaInterval);
@@ -598,6 +610,7 @@
 				stationTitle = "";
 				playingTitle = "";
 				setAppTitle(appRadio.title);
+				updateSessionMetaData("", "");
 			}
 		},
 		// Обработка результатов получения метаданных
@@ -623,6 +636,7 @@
 								playingTitle = streamTitle.length > 7 ? streamTitle : "";
 								setAppTitle(appRadio.title + " — " + stationTitle + (playingTitle.length ? " - " + playingTitle : ""));
 								if(playingTitle.length) {
+									updateSessionMetaData(stationTitle, playingTitle);
 									if(isNotify){
 										spawnNotificationClose();
 										spawnNotification(getMessage("now_playing") + "\n" + playingTitle, appRadio.getIcon(idStation), stationTitle);
@@ -631,6 +645,7 @@
 									}
 								}
 							} else {
+								updateSessionMetaData(stationTitle, playingTitle.length ? playingTitle : "");
 								setAppTitle(appRadio.title + " — " + stationTitle + (playingTitle.length ? " - " + playingTitle : ""));
 							}
 						}
@@ -639,6 +654,7 @@
 				metaInterval = setTimeout(getMetadata, 5000);
 			} else {
 				setAppTitle(appRadio.title);
+				updateSessionMetaData("", "");
 				stationTitle = "";
 				playingTitle = "";
 			}
@@ -650,10 +666,12 @@
 			if(audioPlayer.isPlaying()) {
 				setAppTitle(appRadio.title + " — " + stationTitle);
 				metaInterval = setTimeout(getMetadata, 5000);
+				updateSessionMetaData(stationTitle, "");
 			} else {
 				setAppTitle(appRadio.title);
 				stationTitle = "";
 				playingTitle = "";
+				updateSessionMetaData("", "");
 			}
 		},
 		// Получение пустых метаданных
@@ -663,16 +681,50 @@
 			if(audioPlayer.isPlaying()) {
 				setAppTitle(appRadio.title + " — " + stationTitle);
 				metaInterval = setTimeout(getMetadata, 5000);
+				updateSessionMetaData(stationTitle, "");
 			} else {
 				setAppTitle(appRadio.title);
 				stationTitle = "";
 				playingTitle = "";
+				updateSessionMetaData("", "");
 			}
 		},
 		// Вывод данных о треке
 		showNotify = function(data){
 			spawnNotificationClose();
 			spawnNotification(getMessage("now_playing") + "\n"+data.title, data.icon, getMessage("extTitle") + " - " + data.name)
+		},
+		next = function() {
+			if(!idStation)
+				return;
+			let stID = appRadio.getStationIndex(idStation);
+			stID = stID == appRadio.options.stations.length - 1 ? 0 : stID + 1;
+			let obj = "#id" + appRadio.options.stations[stID].id;
+			$('li' + obj + ' .st__btn').click();
+			$applist.scrollTo('li' + obj);
+		},
+		prev = function() {
+			if(!idStation)
+				return;
+			let stID = appRadio.getStationIndex(idStation);
+			stID = stID == 0 ? appRadio.options.stations.length - 1 : stID - 1;
+			let obj = "#id" + appRadio.options.stations[stID].id;
+			$('li' + obj + ' .st__btn').click();
+			$applist.scrollTo('li' + obj);
+		},
+		playStop = function(){
+			if(!idStation)
+				return;
+			if(!audioPlayer.isPlaying()){
+				$('li#id' + idStation + ' .st__btn').click();
+			}
+		},
+		stopPlay = function(){
+			if(!idStation)
+				return;
+			if(audioPlayer.isPlaying()){
+				$('li#id' + idStation + ' .st__btn').click();
+			}
 		},
 		// Меню
 		documentMenu = new Menu(),
@@ -1064,6 +1116,7 @@
 				audioPlayer.play();
 				stationTitle = stationTmp.name;
 				setAppTitle(titleApp + " — " + stationTmp.name);
+				updateSessionMetaData(stationTitle, "");
 			} else {
 				// Stop
 				if(audioPlayer.isPlaying()) {
@@ -1072,6 +1125,7 @@
 				stationTitle = "";
 				playingTitle = "";
 				setAppTitle(titleApp);
+				updateSessionMetaData("", "");
 			};
 			if(!is_select) {
 				idStation = appRadio.options.station = stationTmp.id;
@@ -1081,11 +1135,13 @@
 				audioPlayer.play();
 				stationTitle = stationTmp.name;
 				setAppTitle(titleApp + " — " + stationTmp.name);
+				updateSessionMetaData(stationTitle, "");
 			}
 		}else{
 			stationTitle = "";
 			playingTitle = "";
 			setAppTitle(titleApp);
+			updateSessionMetaData("", "");
 		}
 		return !1;
 	}).on('contextmenu', 'body, ul.appradio__list li, canvas', function(e){
@@ -1310,6 +1366,10 @@
 				$applist.scrollTo("li#id"+idStation);
 				!startRender && renderFrames();
 				startRender = true;
+				navigator.mediaSession.setActionHandler('play', playStop);
+				navigator.mediaSession.setActionHandler('pause', stopPlay);
+				navigator.mediaSession.setActionHandler('previoustrack', prev);
+				navigator.mediaSession.setActionHandler('nexttrack', next);
 				setTimeout(function(){
 					$("body").removeClass('preload');
 					$(".app button.fullscreen").show();
@@ -1317,12 +1377,13 @@
 						e.preventDefault();
 						$(".appradio-panel").toggleClass("open");
 						return !1;
-					})
+					});
 					$("#close-settings").on("click", function(e){
 						e.preventDefault();
 						$(".appradio-panel").removeClass("open");
 						return !1;
-					})
+					});
+					updateSessionMetaData("", "");
 					resolve();
 				}, 2000);
 			}).catch(function(error){
