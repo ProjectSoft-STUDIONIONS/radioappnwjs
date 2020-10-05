@@ -1107,6 +1107,7 @@
 		$('li.station').removeClass('play select progress');
 		st.addClass('select');
 		spawnNotificationClose();
+		stationTitle = "";
 		if(stationTmp){
 			idStation = stationTmp.id;
 			if(!is_play) {
@@ -1116,7 +1117,6 @@
 				audioPlayer.play();
 				stationTitle = stationTmp.name;
 				setAppTitle(titleApp + " — " + stationTmp.name);
-				updateSessionMetaData(stationTitle, "");
 			} else {
 				// Stop
 				if(audioPlayer.isPlaying()) {
@@ -1125,7 +1125,6 @@
 				stationTitle = "";
 				playingTitle = "";
 				setAppTitle(titleApp);
-				updateSessionMetaData("", "");
 			};
 			if(!is_select) {
 				idStation = appRadio.options.station = stationTmp.id;
@@ -1135,14 +1134,13 @@
 				audioPlayer.play();
 				stationTitle = stationTmp.name;
 				setAppTitle(titleApp + " — " + stationTmp.name);
-				updateSessionMetaData(stationTitle, "");
 			}
 		}else{
 			stationTitle = "";
 			playingTitle = "";
 			setAppTitle(titleApp);
-			updateSessionMetaData("", "");
 		}
+		updateSessionMetaData(stationTitle, "");
 		return !1;
 	}).on('contextmenu', 'body, ul.appradio__list li, canvas', function(e){
 		let $curTarget = $(e.currentTarget);
