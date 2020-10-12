@@ -91,7 +91,7 @@ module.exports = function(grunt){
 		},
 		gc = {
 			sdk: 'sdk', // sdk, normal
-			version: '0.48.2'
+			version: '0.49.0'
 		};
 	require('load-grunt-tasks')(grunt);
 	require('time-grunt')(grunt);
