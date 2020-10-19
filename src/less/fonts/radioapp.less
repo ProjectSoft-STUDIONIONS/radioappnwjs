@@ -1,26 +1,28 @@
 @radioapp-circle-check: "\e900";
 @radioapp-close: "\e901";
 @radioapp-copy: "\e902";
-@radioapp-external-link: "\e903";
-@radioapp-facebook: "\e904";
-@radioapp-favorites: "\e905";
-@radioapp-fullscreen-off: "\e906";
-@radioapp-fullscreen-on: "\e907";
-@radioapp-fullscreen: "\e908";
-@radioapp-go: "\e909";
-@radioapp-level: "\e90a";
-@radioapp-ok: "\e90b";
-@radioapp-pause: "\e90c";
-@radioapp-picture: "\e90d";
-@radioapp-play: "\e90e";
-@radioapp-radio: "\e90f";
-@radioapp-refresh: "\e910";
-@radioapp-search: "\e911";
-@radioapp-settings: "\e912";
-@radioapp-twitter: "\e913";
-@radioapp-vk: "\e914";
-@radioapp-volume: "\e915";
-@radioapp-web-search: "\e916";
+@radioapp-export: "\e903";
+@radioapp-external-link: "\e904";
+@radioapp-facebook: "\e905";
+@radioapp-favorites: "\e906";
+@radioapp-fullscreen-off: "\e907";
+@radioapp-fullscreen-on: "\e908";
+@radioapp-fullscreen: "\e909";
+@radioapp-go: "\e90a";
+@radioapp-import: "\e90b";
+@radioapp-level: "\e90c";
+@radioapp-ok: "\e90d";
+@radioapp-pause: "\e90e";
+@radioapp-picture: "\e90f";
+@radioapp-play: "\e910";
+@radioapp-radio: "\e911";
+@radioapp-refresh: "\e912";
+@radioapp-search: "\e913";
+@radioapp-settings: "\e914";
+@radioapp-twitter: "\e915";
+@radioapp-vk: "\e916";
+@radioapp-volume: "\e917";
+@radioapp-web-search: "\e918";
 
 @font-face {
 	font-family:"Radio App";
@@ -60,6 +62,11 @@
 		content: @radioapp-copy;
 	}
 }
+.radioapp-export {
+	&:before {
+		content: @radioapp-export;
+	}
+}
 .radioapp-external-link {
 	&:before {
 		content: @radioapp-external-link;
@@ -93,6 +100,11 @@
 .radioapp-go {
 	&:before {
 		content: @radioapp-go;
+	}
+}
+.radioapp-import {
+	&:before {
+		content: @radioapp-import;
 	}
 }
 .radioapp-level {

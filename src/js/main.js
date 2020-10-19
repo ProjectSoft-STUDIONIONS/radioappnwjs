@@ -188,6 +188,9 @@
 		$volume = $("input#volume"),
 		$volchange = $("#volchange"),
 		$applist = $(".appradio__list"),
+
+		$notify_checbox = $("input[name=notify]"),
+
 		$template_add_dialog = $($("#addstation").html()),
 		$template_station = $($("#stationitem").html()),
 		ctx = canvas.getContext('2d'),
@@ -1141,6 +1144,7 @@
 			setAppTitle(titleApp);
 		}
 		updateSessionMetaData(stationTitle, "");
+		saveAppOptions();
 		return !1;
 	}).on('contextmenu', 'body, ul.appradio__list li, canvas', function(e){
 		let $curTarget = $(e.currentTarget);
@@ -1171,6 +1175,17 @@
 	$(canvas).on('dblclick', function(e){
 		win.toggleFullscreen();
 		$(document.body).toggleClass('kiosk__mode');
+	});
+	$notify_checbox.on("input", function(e){
+		isNotify = appRadio.options.notify = $(this).is(':checked');
+		appRadio.saveOptions().then(function(out){
+			if(audioPlayer.isPlaying()){
+				spawnNotificationClose();
+				isNotify && (
+					spawnNotification(getMessage("now_playing") + "\n" + playingTitle, appRadio.getIcon(idStation), stationTitle)
+				);
+			}
+		});
 	});
 	$applist.sortable({
 		axis: 'y',
@@ -1316,11 +1331,12 @@
 				range.value = audioPlayer.volume = Math.min(1, Math.max(0, options.volume));
 				setVolumeText((range.value * 100));
 				idStation = appRadio.options.station;
-				isNotify = !appRadio.options.notify;
+				isNotify = appRadio.options.notify;
 				stations = appRadio.options.stations;
 				strokeColor = appRadio.options.strokeColor || false;
 				scep_stroke_color.checked = strokeColor;
 				typeAnalizer = typesAnalizer.indexOf(appRadio.options.analizer) > -1 ? appRadio.options.analizer : typesAnalizer[0];
+				$notify_checbox.prop('checked', isNotify);
 				switch(typeAnalizer){
 					// spec
 					case typesAnalizer[1]:
@@ -1390,6 +1406,14 @@
 			});
 		});
 	};
+	function renderSettings()
+	{
+		strokeStyleColor = appRadio.options.color || strokeStyleColor;
+		isNotify = appRadio.options.notify;
+		strokeColor = appRadio.options.strokeColor || false;
+		typeAnalizer = typesAnalizer.indexOf(appRadio.options.analizer) > -1 ? appRadio.options.analizer : typesAnalizer[0];
+
+	}
 	radioAppInit();
 	$(".app-control").on('contextmenu', function(e){
 		e.preventDefault();

@@ -1,0 +1,33 @@
+.appradio-panel
+	.appradio-panel-settings
+		.appradio-panel-settings--header
+			.appradio-panel-settings--header-title
+				span#title-settings
+			.appradio-panel-settings--header-close
+				i#close-settings.radioapp-close
+		.appradio-panel-settings--main
+			.appradio-panel-settings--main-wrapper
+				.center-block-settings
+					.block--input.block--notyfy
+						p.block-settings--title.no-select
+							|Уведомления
+						label.no-select
+							span.check
+								input(type="checkbox" name="notify")
+							span.title
+								|Выводить уведомления
+					.block--input.block--buttons
+						p.block-settings--title.no-select
+							|Список радиостанций
+						.block--buttons--wrapper.no-select
+							.block--buttons-btn
+								button.btn-settings.btn--export
+									i.radioapp-export
+									span
+										|Экспорт
+							.block--buttons-btn
+								button.btn-settings.btn--import
+									i.radioapp-import
+									span
+										|Импорт
+					
