@@ -1,3 +1,18 @@
+const trunc = (v) => v - v % 1;
+const ceil  = (v) => trunc(v % 1 > 0 ? v + 1 : v);
+const floor = (v) => trunc(v % 1 < 0 ? v - 1 : v);
+const round = (v) => trunc(v < 0 ? v - 0.5 : v + 0.5);
+var capYPositionArray = [];
+(function(proxied) {
+	window.alert = function() {
+		var arg = Array.from(arguments).join("\n");
+		return new Promise(function(resolve, reject){
+			proxied.apply(this, [arg]);
+			resolve(arg);
+			//setTimeout(function(){resolve(arg)}, 20);
+		});
+	};
+})(window.alert);
 /* App Controls */
 (function($){
 	// svg paths button icons
@@ -14,6 +29,7 @@
 			maxiBtn  = $(".app button.maximize"),
 			fullBtn  = $(".app button.fullscreen"),
 			maxRes   = $("svg path", maxiBtn),
+			canvas   = $("#canvas")[0],
 	// set language
 			getMessage = function(msg) {
 				return chrome.i18n.getMessage(msg);
@@ -127,16 +143,21 @@
 	fullBtn.on('click', function(e){
 		e.preventDefault();
 		$(this).blur();
-		win.enterFullscreen();
-		$(document.body).addClass('kiosk__mode');
+		canvas.width = screen.width;
+		canvas.height = screen.height;
+		$(".header")[0].requestFullscreen();
 		return !1;
 	});
 	// set event keyboard Esc or F11 exit fullscreen
 	$(window).on('keydown', function(e){
 		if(e.code == "Escape" || e.code == "F11"){
 			e.preventDefault();
-			win.leaveFullscreen();
-			$(document.body).removeClass('kiosk__mode');
+			if (document.exitFullscreen) {
+				document.exitFullscreen();
+				canvas.width = 400;
+				canvas.height = 120;
+				capYPositionArray.length = 0;
+			}
 			win.focus();
 			return !1;
 		}
@@ -160,6 +181,7 @@
 		nw.Shell.openExternal(this.href);
 		return !1;
 	});
+	
 	const gui = require('nw.gui')
 		win = nw.Window.get(),
 		fs =  require('fs'),
@@ -196,7 +218,6 @@
 		ctx = canvas.getContext('2d'),
 		bufferLength,
 		dataArray,
-		capYPositionArray = [],
 		strokeColor = false,
 		parser,
 		metaInterval,
@@ -851,7 +872,7 @@
 			checked: false,
 			type: 'checkbox',
 			click: function(){
-				analyser.fftSize = 2048;
+				analyser.fftSize = 4096;
 				analyser.maxDecibels = 20;
 				analyser.smoothingTimeConstant = 0.1;
 				dataArray = new Uint8Array(analyser.frequencyBinCount);
@@ -872,7 +893,7 @@
 			checked: false,
 			type: 'checkbox',
 			click: function(){
-				analyser.fftSize = 2048;
+				analyser.fftSize = 4096;
 				analyser.maxDecibels = 20;
 				analyser.smoothingTimeConstant = 0.1;
 				dataArray = new Uint8Array(analyser.frequencyBinCount);
@@ -1147,7 +1168,9 @@
 		saveAppOptions();
 		return !1;
 	}).on('contextmenu', 'body, ul.appradio__list li, canvas', function(e){
-		let $curTarget = $(e.currentTarget);
+		let $curTarget = $(e.currentTarget),
+			pageX = Number(e.pageX.toFixed()),
+			pageY = Number(e.pageY.toFixed());
 		if(!$("body").hasClass('open--modal')){
 			if($curTarget.hasClass('station')){
 				e.preventDefault();
@@ -1156,25 +1179,42 @@
 				edit_item.label = "  " + getMessage("menu_edit") + " " + dataStation.name;
 				delete_item.label = "  " + getMessage("menu_delete") + " " + dataStation.name;
 				copy_item.label = "  " + getMessage("copy_url_stream") + ": " + dataStation.name;
-				stationMenu.popup(e.pageX, e.pageY);
+				stationMenu.popup(pageX, pageY);
+				console.log('canvas', `x = ${pageX}`, `y = ${pageY}`);
 				return !1;
 			} else if($curTarget.hasClass('canvas')) {
 				// Show Popup Menu Canvas
 				e.preventDefault();
-				canvasMenu.popup(e.pageX, e.pageY);
+				canvasMenu.popup(pageX, pageY);
+				console.log('canvas', `x = ${pageX}`, `y = ${pageY}`);
 				return !1;
 			}else{
+				e.preventDefault();
 				if(!$("body").hasClass('preload')){
-					e.preventDefault();
-					documentMenu.popup(e.pageX, e.pageY);
-					return !1;
+					documentMenu.popup(pageX, pageY);
 				}
+				console.log('canvas', `x = ${pageX}`, `y = ${pageY}`);
+				return !1;
 			}
 		}
 	});
 	$(canvas).on('dblclick', function(e){
-		win.toggleFullscreen();
-		$(document.body).toggleClass('kiosk__mode');
+		//win.toggleFullscreen();
+		//canvas.width = win.isFullscreen ? screen.width : 400;
+		//canvas.height = win.isFullscreen ? screen.height : 120;
+		//$(document.body).toggleClass('kiosk__mode');
+		if (!document.fullscreenElement) {
+			canvas.width = screen.width;
+			canvas.height = screen.height;
+			$(".header")[0].requestFullscreen();
+		} else {
+			if (document.exitFullscreen) {
+				document.exitFullscreen();
+				canvas.width = 400;
+				canvas.height = 120;
+			}
+		}
+		capYPositionArray.length = 0;
 	});
 	$notify_checbox.on("input", function(e){
 		isNotify = appRadio.options.notify = $(this).is(':checked');
@@ -1247,9 +1287,9 @@
 	function renderBar() {
 		var cwidth = ctx.canvas.width,
 			cheight = ctx.canvas.height,
-			s = parseInt(128 / 2) - 30,
-			ww = 2,
-			bsw = parseInt(cwidth / s),
+			s = 36,//parseInt(128 / 2) - 30,
+			ww = document.fullscreenElement ? 5 : 2,
+			bsw = cwidth / s,//parseInt(cwidth / s),
 			bw = bsw - ww,
 			val = 0,
 			vh = 0,
@@ -1261,7 +1301,7 @@
 		ctx.fillRect(0, 0, cwidth, cheight);
 		analyser.getByteFrequencyData(dataArray);
 		for (var i = 0; i < dataArray.length; i++) {
-			val = dataArray[i];
+			val = dataArray[i] * (cheight/120);
 			ctx.fillStyle = gradient;
 			vh = cheight - val;
 			ctx.fillRect(i * bsw, vh, bw, cheight + val);
@@ -1270,11 +1310,12 @@
 				capYPositionArray.push(val);
 			};
 			ctx.fillStyle = '#fff';
+			var cp = document.fullscreenElement ? 6 : 2;
 			if (val < capYPositionArray[i]) {
-				capYPositionArray[i] = capYPositionArray[i] - .5;
-				ctx.fillRect(i * bsw, cheight - capYPositionArray[i], bw, 2);
+				capYPositionArray[i] = capYPositionArray[i] - (!document.fullscreenElement ? .5 : 2);
+				ctx.fillRect(i * bsw, cheight - capYPositionArray[i], bw, cp);
 			} else {
-				ctx.fillRect(i * bsw, cheight - val - 4, bw, 2);
+				ctx.fillRect(i * bsw, cheight - val - (cp * 2), bw, cp);
 				capYPositionArray[i] = val;
 			};
 		}
@@ -1352,7 +1393,7 @@
 							spec_analizer.checked = false;
 							spec_full_analizer.checked = true;
 							scep_stroke_color.enabled = true;
-							analyser.fftSize = 1024;
+							analyser.fftSize = 2048;
 						}
 						analyser.maxDecibels = 20;
 						analyser.smoothingTimeConstant = 0.1;
@@ -1367,7 +1408,7 @@
 						spec_analizer.checked = false;
 						scep_stroke_color.enabled = false;
 						analyser.fftSize = 128;
-						analyser.maxDecibels = 40;
+						analyser.maxDecibels = 80;
 						analyser.smoothingTimeConstant = 0.6;
 						dataArray = new Uint8Array(analyser.frequencyBinCount);
 						bufferLength = analyser.frequencyBinCount;
@@ -1398,6 +1439,9 @@
 						return !1;
 					});
 					updateSessionMetaData("", "");
+					/**alert("Good", "ProjectSoft").then(function(r){
+						console.log(r);
+					}).catch(function(e){});**/
 					resolve();
 				}, 2000);
 			}).catch(function(error){

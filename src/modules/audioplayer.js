@@ -86,7 +86,8 @@ function AudioPlayer(document){
 	audioEvents.forEach(function(a, b){
 		audio.addEventListener(a, audioHandler);
 	});
-	audio.controls = null;
+	audio.controls = true;
+	audio.style.display = "none";
 	document.body.appendChild(audio);
 	function updateOnlineStatus(e){
 		var net = _net;
