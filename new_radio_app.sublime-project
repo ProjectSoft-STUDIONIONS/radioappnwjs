@@ -19,7 +19,6 @@
 				"temp"
 			],
 			"file_exclude_patterns": [
-				"*.sublime-project",
 				"*.sublime-workspace",
 				"*.iss",
 				"*.dll",

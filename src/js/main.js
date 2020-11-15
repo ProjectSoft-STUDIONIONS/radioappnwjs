@@ -202,7 +202,7 @@ var capYPositionArray = [];
 		idStation = 0,
 		isNotify = false,
 		typeAnalizer = "bar",
-		typesAnalizer = ["bar", "spec", 'spec_full'],
+		typesAnalizer = ["bar", "spec", 'spec_full', "milkdrop"],
 		audioPlayer = new AudioPlayer(document),
 		appRadio = new AppRadio(document),
 		range = $('input#volume')[0],
@@ -234,11 +234,20 @@ var capYPositionArray = [];
 			return chrome.i18n.getMessage(msg);
 		},
 		strokeStyleColor = 'lime',
-		baseFav = "data:image/png;base64," + fs.readFileSync("images/favicon.png").toString('base64');
-	audioSrc.connect(analyser);
-	analyser.connect(audioContext.destination);
+		baseFav = "data:image/png;base64," + fs.readFileSync("images/favicon.png").toString('base64'),
+		animateFrame = 0;
 	window.ctx = ctx;
-	var setLocales = function(){
+	var disconnectAudio = function(){
+			cancelAnimationFrame(animateFrame);
+			analyser.disconnect();
+			audioSrc.disconnect();
+			
+			//types 
+			audioSrc.connect(analyser);
+			analyser.connect(audioContext.destination);
+			renderFrames();
+		},
+		setLocales = function(){
 			$("title").text(getMessage("extTitle"));
 			$("#title-settings").text(getMessage("title_settings"));
 			$(".modal__add__statio_nname").text(getMessage("modal__add__statio_nname"));
@@ -847,17 +856,31 @@ var capYPositionArray = [];
 			label: '  ' + getMessage("color"),
 			submenu: colorMenu
 		}),
+		milkdrop_analizer = new MenuItem({
+			label: "  " + getMessage("menu_bar_milkdrop"),
+			checked: false,
+			type: 'checkbox',
+			click: function(){
+				typeAnalizer = typesAnalizer[3];
+				milkdrop_analizer.checked = true;
+				bar_analizer.checked = false;
+				spec_analizer.checked = false;
+				spec_full_analizer.checked = false;
+				scep_stroke_color.enabled = false;
+				appRadio.options.analizer = typeAnalizer;
+				appRadio.saveOptions();
+			}
+		}),
 		bar_analizer = new MenuItem({
 			label: "  " + getMessage("menu_bar_analizer"),
 			checked: false,
 			type: 'checkbox',
 			click: function(){
-				analyser.fftSize = 128;
-				analyser.maxDecibels = 40;
-				analyser.smoothingTimeConstant = 0.6;
+				setBarAudio();
 				dataArray = new Uint8Array(analyser.frequencyBinCount);
 				bufferLength = analyser.frequencyBinCount;
 				typeAnalizer = typesAnalizer[0];
+				milkdrop_analizer.checked = false;
 				bar_analizer.checked = true;
 				spec_analizer.checked = false;
 				spec_full_analizer.checked = false;
@@ -872,9 +895,7 @@ var capYPositionArray = [];
 			checked: false,
 			type: 'checkbox',
 			click: function(){
-				analyser.fftSize = 4096;
-				analyser.maxDecibels = 20;
-				analyser.smoothingTimeConstant = 0.1;
+				setSpecAudio();
 				dataArray = new Uint8Array(analyser.frequencyBinCount);
 				bufferLength = analyser.frequencyBinCount;
 				typeAnalizer = typesAnalizer[1];
@@ -893,9 +914,7 @@ var capYPositionArray = [];
 			checked: false,
 			type: 'checkbox',
 			click: function(){
-				analyser.fftSize = 4096;
-				analyser.maxDecibels = 20;
-				analyser.smoothingTimeConstant = 0.1;
+				setSpecAudio();
 				dataArray = new Uint8Array(analyser.frequencyBinCount);
 				bufferLength = analyser.frequencyBinCount;
 				typeAnalizer = typesAnalizer[2];
@@ -1040,6 +1059,16 @@ var capYPositionArray = [];
 			appRadio.options.analizer = typeAnalizer;
 			appRadio.options.color = strokeStyleColor;
 			appRadio.options.strokeColor = strokeColor;
+		},
+		setBarAudio = function(){
+			analyser.fftSize = 128;
+			analyser.maxDecibels = 80;
+			analyser.smoothingTimeConstant = .6;
+		},
+		setSpecAudio = function(){
+			analyser.fftSize = 4096;
+			analyser.maxDecibels = 20;
+			analyser.smoothingTimeConstant = 0.1;
 		};
 	setLocales();
 	documentMenu.append(add_item);
@@ -1090,6 +1119,7 @@ var capYPositionArray = [];
 	colorMenu.append(stroke_color_05);
 	colorMenu.append(stroke_color_06);
 	colorMenu.append(stroke_color_07);
+	analizatorMenu.append(milkdrop_analizer);
 	analizatorMenu.append(bar_analizer);
 	analizatorMenu.append(spec_analizer);
 	analizatorMenu.append(spec_full_analizer);
@@ -1275,15 +1305,21 @@ var capYPositionArray = [];
 			case typesAnalizer[2]:
 				renderSpec();
 				break;
+			case typesAnalizer[3]:
+				renderBar();
+				break;
 			default:
 				renderBar();
 				break;
 		}
-		requestAnimationFrame(renderFrames);
+		animateFrame = requestAnimationFrame(renderFrames, canvas);
+	}
+
+	function renderMilk() {
+
 	}
 
 	// Bars
-
 	function renderBar() {
 		var cwidth = ctx.canvas.width,
 			cheight = ctx.canvas.height,
@@ -1376,6 +1412,7 @@ var capYPositionArray = [];
 				stations = appRadio.options.stations;
 				strokeColor = appRadio.options.strokeColor || false;
 				scep_stroke_color.checked = strokeColor;
+				console.log(typeAnalizer);
 				typeAnalizer = typesAnalizer.indexOf(appRadio.options.analizer) > -1 ? appRadio.options.analizer : typesAnalizer[0];
 				$notify_checbox.prop('checked', isNotify);
 				switch(typeAnalizer){
@@ -1383,33 +1420,39 @@ var capYPositionArray = [];
 					case typesAnalizer[1]:
 					case typesAnalizer[2]:
 						if(typesAnalizer[1]){
-							bar_analizer.checked = false;
 							spec_analizer.checked = true;
 							spec_full_analizer.checked = false;
-							scep_stroke_color.enabled = true;
-							analyser.fftSize = 2048;
 						}else{
-							bar_analizer.checked = false;
 							spec_analizer.checked = false;
 							spec_full_analizer.checked = true;
-							scep_stroke_color.enabled = true;
-							analyser.fftSize = 2048;
 						}
-						analyser.maxDecibels = 20;
-						analyser.smoothingTimeConstant = 0.1;
+						milkdrop_analizer.checked = false;
+						bar_analizer.checked = false;
+						scep_stroke_color.enabled = true;
+						setSpecAudio();
 						dataArray = new Uint8Array(analyser.frequencyBinCount);
 						ctx.strokeStyle = appRadio.options.color || strokeStyleColor;
 						bufferLength = analyser.frequencyBinCount;
 						break;
+					// MilkDrop
+					case typesAnalizer[3]:
+						milkdrop_analizer.checked = true;
+						bar_analizer.checked = false;
+						scep_stroke_color.enabled = false;
+						spec_analizer.checked = false;
+						spec_full_analizer.checked = false;
+						setBarAudio();
+						dataArray = new Uint8Array(analyser.frequencyBinCount);
+						bufferLength = analyser.frequencyBinCount;
+						break;
 					// bar
 					default:
+						milkdrop_analizer.checked = false;
 						bar_analizer.checked = true;
 						spec_analizer.checked = false;
 						spec_analizer.checked = false;
 						scep_stroke_color.enabled = false;
-						analyser.fftSize = 128;
-						analyser.maxDecibels = 80;
-						analyser.smoothingTimeConstant = 0.6;
+						setBarAudio();
 						dataArray = new Uint8Array(analyser.frequencyBinCount);
 						bufferLength = analyser.frequencyBinCount;
 						break;
@@ -1419,8 +1462,10 @@ var capYPositionArray = [];
 					addStationOption(obj);
 				});
 				$applist.scrollTo("li#id"+idStation);
-				!startRender && renderFrames();
-				startRender = true;
+
+				disconnectAudio();
+				//!startRender && renderFrames();
+				//startRender = true;
 				navigator.mediaSession.setActionHandler('play', playStop);
 				navigator.mediaSession.setActionHandler('pause', stopPlay);
 				navigator.mediaSession.setActionHandler('previoustrack', prev);

@@ -95,6 +95,9 @@
 	"dialog_exp_confirm_error_02": {
 		"message": "Export interrupted by user!"
 	},
+	"menu_bar_milkdrop": {
+		"message": "MilkDrop"
+	},
 	"menu_bar_analizer": {
 		"message": "Bars"
 	},
