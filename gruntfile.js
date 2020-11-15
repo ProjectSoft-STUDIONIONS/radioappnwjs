@@ -250,7 +250,7 @@ module.exports = function(grunt){
 						'src/js/jquery.psmodal.js',
 						//'src/js/require.js',
 						//'src/js/stationitem.js',
-						'src/js/main.js'
+						'src/js/main.viz.js'
 					]
 				}
 			},
