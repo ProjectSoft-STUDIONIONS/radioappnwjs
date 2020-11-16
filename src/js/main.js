@@ -104,7 +104,6 @@ var capYPositionArray = [];
 		maxiBtn.attr({title: getMessage('restore')});
 		state = !0;
 		winMinMax = !0;
-		win_state = !1;
 		tray_mini_restore.label = "  " + getMessage("minimize");
 		tray_mini_restore.icon = "images/tray_minimize.png";
 		win.setShowInTaskbar(true);
@@ -114,7 +113,6 @@ var capYPositionArray = [];
 		maxRes.attr({d: maximizePath});
 		maxiBtn.attr({title: getMessage('maximize')});
 		state = !1;
-		win_state = !1;
 		winMinMax = !1;
 		tray_mini_restore.label = "  " + getMessage("minimize");
 		tray_mini_restore.icon = "images/tray_minimize.png";
@@ -137,7 +135,7 @@ var capYPositionArray = [];
 	maxiBtn.on('click', function(e){
 		e.preventDefault();
 		$(this).blur();
-		state ? win.restore() : win.maximize();
+		winMinMax ? win.restore() : win.maximize();
 		return !1;
 	});
 	fullBtn.on('click', function(e){
