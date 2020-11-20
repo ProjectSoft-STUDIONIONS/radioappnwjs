@@ -139,7 +139,7 @@ AudioPlayer.prototype = {
 		return _volume;
 	},
 	set audioElement(value){
-		throw new Error('not audio');
+		throw new Error('not set audio');
 	},
 	get audioElement(){
 		return audio;
@@ -154,6 +154,12 @@ AudioPlayer.prototype = {
 		audio.pause();
 		audio.src = "data:audio/mpeg;base64,/+MQwAAAAANIAYAAAExBTUUzLjkzVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/jEMAnAAADSAHAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/4xDATgAAA0gAAAAAVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV";
 		audio.currentTime = 0;
+	},
+	get playing(){
+		return _isPlaying;
+	},
+	set playing(value){
+		throw new Error('not set playing');
 	}
 }
 Object.assign(AudioPlayer.prototype, EventDispatcher.prototype);
