@@ -10,7 +10,6 @@ Array.prototype.delete = function (i) {
 		return new Promise(function(resolve, reject){
 			proxied.apply(this, [arg]);
 			resolve(arg);
-			//setTimeout(function(){resolve(arg)}, 20);
 		});
 	};
 })(window.alert);
@@ -116,7 +115,6 @@ Array.prototype.delete = function (i) {
 						win.minimize(),
 						tray_mini_restore.label = "  " + getMsg("restore")
 					);
-					//win_state = !win_state;
 				}
 			}),
 			tray = new nw.Tray({
@@ -172,7 +170,7 @@ Array.prototype.delete = function (i) {
 		},
 		// Установка заголовка окна приложения
 		setAppTitle = function(_title) {
-			$("#appTitle").text(_title).attr({title: _title});
+			$("#appTitle").text(_title);
 		},
 		nextPreset = function(){
 			if(clonePresetsKeys.length == 0){
@@ -181,7 +179,6 @@ Array.prototype.delete = function (i) {
 			presetsIndex = Math.floor(Math.random() * clonePresetsKeys.length);
 			if(visualizer)
 			{
-				//$volchange.text(clonePresetsKeys[presetsIndex] + "\n" + "length: " + clonePresetsKeys.length);
 				visualizer.setRendererSize(canvas.width, canvas.height);
 				visualizer.loadPreset(presets[clonePresetsKeys[presetsIndex]], 2.7);
 			}
@@ -259,6 +256,9 @@ Array.prototype.delete = function (i) {
 					no: false
 				}
 			).addClass(className);
+		},
+		setPoupText = function(value){
+			$("#volchange").text(value);
 		},
 		// Диалог редактирования или добавления станции
 		showPopupDialog = function(data, type = 'add'){
@@ -545,6 +545,7 @@ Array.prototype.delete = function (i) {
 			} else {
 				stationTitle = "";
 				playingTitle = "";
+				$("#volchange").text("");
 				setAppTitle(appRadio.title);
 				updateSessionMetaData("", "");
 			}
@@ -576,31 +577,37 @@ Array.prototype.delete = function (i) {
 								setAppTitle(appRadio.title + " — " + stationTitle + (playingTitle.length ? " - " + playingTitle : ""));
 								if(playingTitle.length) {
 									updateSessionMetaData(stationTitle, playingTitle);
+									if(visualizer){
+										visualizer.launchSongTitleAnim(playingTitle);
+									}
 									if(isNotify){
 										spawnNotificationClose();
 										spawnNotification(getMsg("now_playing") + "\n" + playingTitle, appRadio.getIcon(idStation), stationTitle);
 									}else{
-										setPoupText(stationTitle + "\n" + playingTitle, 5000);
+										//setPoupText(stationTitle + "\n" + playingTitle, 5000);
 									}
+									setPoupText(playingTitle);
 								}
 							} else {
+								setPoupText(playingTitle.length ? playingTitle : "");
 								updateSessionMetaData(stationTitle, playingTitle.length ? playingTitle : "");
 								setAppTitle(appRadio.title + " — " + stationTitle + (playingTitle.length ? " - " + playingTitle : ""));
+								
 							}
 						}
 					}
 				}
 				timerMetaInterval = setTimeout(getMetadata, 5000);
 			} else {
-				//setAppTitle(appRadio.title);
 				updateSessionMetaData("", "");
 				stationTitle = "";
 				playingTitle = "";
+				setPoupText(playingTitle.length ? playingTitle : "");
+				setAppTitle(appRadio.title);
 			}
 		},
 		// Ошибка получения метаданных
 		requestErrorMetadata = function(error) {
-			//console.log('requestErrorMetadata', error);
 			//stationTitle = "";
 			playingTitle = "";
 			if(play_state) {
@@ -611,12 +618,12 @@ Array.prototype.delete = function (i) {
 				setAppTitle(appRadio.title);
 				stationTitle = "";
 				playingTitle = "";
+				setPoupText(playingTitle.length ? playingTitle : "");
 				updateSessionMetaData("", "");
 			}
 		},
 		// Получение пустых метаданных
 		requestEmptyMetadata = function() {
-			//console.log('requestEmptyMetadata');
 			//stationTitle = "";
 			playingTitle = "";
 			if(play_state) {
@@ -629,6 +636,7 @@ Array.prototype.delete = function (i) {
 				playingTitle = "";
 				updateSessionMetaData("", "");
 			}
+			setPoupText(playingTitle.length ? playingTitle : "");
 		},
 		// Вывод данных о треке
 		showNotify = function(data){
@@ -716,7 +724,7 @@ Array.prototype.delete = function (i) {
 		},
 		resizedWindow = function(){
 			if(document.fullscreenElement){
-				canvas.width = screnn.width;
+				canvas.width = screen.width;
 				canvas.height = screen.height;
 				if(visualizer)
 				{
@@ -775,22 +783,23 @@ Array.prototype.delete = function (i) {
 		},
 		// Читаем опции
 		radioAppInit = function(){
-			//setAppTitle(getMessage("extTitle"));
+			setAppTitle(getMsg("extTitle"));
 			return new Promise(function(resolve, reject){
 				$("body").addClass('preload');
 				$applist.empty();
+				setDefaultPosition();
 				appRadio.readOptions().then(function(options){
+					window.appRadioApp = appRadio;
 					range.value = audioPlayer.volume = Math.min(1, Math.max(0, options.volume));
 					idStation = appRadio.options.station || [];
 					isNotify = appRadio.options.notify || false;
 					canvas_state = appRadio.options.canvas_state || false;
+					setAppTitle(appRadio.title);
 					//$notify_checbox.prop('checked', isNotify);
 					appRadio.options.stations.forEach((obj) => {
 						addStationOption(obj);
 					});
-					//console.log(options);
-					$applist.scrollTo("li#id"+idStation)
-
+					$applist.scrollTo("li#id"+idStation);
 					navigator.mediaSession.setActionHandler('play', playStop);
 					navigator.mediaSession.setActionHandler('pause', stopPlay);
 					navigator.mediaSession.setActionHandler('previoustrack', prev);
@@ -881,7 +890,8 @@ Array.prototype.delete = function (i) {
 	$("svg path", miniBtn).attr({d: minimizePath});
 	maxRes.attr({d: maximizePath});
 	win.on('close', function () {
-		//win.restore();
+		win.restore();
+		setDefaultPosition();
 		saveAppOptions()
 			.then(() => {
 				if(nw.process.versions["nw-flavor"] == "sdk"){
@@ -893,12 +903,10 @@ Array.prototype.delete = function (i) {
 				if(nw.process.versions["nw-flavor"] == "sdk"){
 					win.closeDevTools();
 				}
-				nw.App.quit()
+				nw.App.quit();
 			});
-		//nw.App.quit();
 	});
 	win.on('minimize', function() {
-		//console.log('Window is minimized');
 		win_state = true;
 		tray_mini_restore.label = "  " + getMsg("restore");
 		tray_mini_restore.icon = "images/tray_" + (winMinMax ? "maximize.png" : "normal.png");
@@ -968,13 +976,11 @@ Array.prototype.delete = function (i) {
 			play_state = false;
 			$id.removeClass("play progress");
 			clearTimeout(timerMetaInterval);
-			//win.setProgressBar(0);
 		}else{
 			e.bufering ? (!$id.hasClass('progress') && $id.addClass('progress')) : ($id.removeClass('progress'));
 			!$id.hasClass('play') && $id.addClass('play');
 			play_state = true;
 			getMetadata();
-			//timerMetaInterval = setTimeout(getMetadata, 5000);
 		}
 		play_state = $id.hasClass('play');
 		renderFrames();
@@ -989,6 +995,7 @@ Array.prototype.delete = function (i) {
 		// Клик на кнопке станции.
 		// Пуск/Стоп проигрывания
 		e.preventDefault();
+		setPoupText("");
 		initVisualizer();
 		clearTimeout(timerPresetPlaying);
 		let st = $(e.target).closest('li.station'),
