@@ -137,6 +137,8 @@ Array.prototype.delete = function (i) {
 		$volume = $("input#volume"),
 		$volchange = $("#volchange"),
 		$applist = $(".appradio__list"),
+		$expBtn = $(".btn--export"),
+		$impBtn = $(".btn--import"),
 		$template_add_dialog = $($("#addstation").html()),
 		$template_station = $($("#stationitem").html()),
 		audioElement = audioPlayer.audioElement,
@@ -759,6 +761,9 @@ Array.prototype.delete = function (i) {
 			if(visualizer)
 			{
 				visualizer.setRendererSize(canvas.width, canvas.height);
+				setTimeout(function(){
+					clearCanvas();
+				}, 10);
 			}
 		},
 		clearCanvas = function(){
@@ -770,10 +775,10 @@ Array.prototype.delete = function (i) {
 			}
 		},
 		renderFrames = function(){
-			if (visualizer)
-				visualizer.render();
 			if (play_state) {
 				if(!win_state){
+					if (visualizer)
+						visualizer.render();
 					timerRenderFrame = window.requestAnimationFrame(renderFrames);
 				}
 			}else{
@@ -809,7 +814,7 @@ Array.prototype.delete = function (i) {
 						$(".app button.fullscreen").show();
 						$(".footer .radioapp-settings").on("click", function(e){
 							e.preventDefault();
-							$(".appradio-panel").toggleClass("open");
+							$(".appradio-panel").addClass("open");
 							return !1;
 						});
 						$("#close-settings").on("click", function(e){
@@ -843,6 +848,11 @@ Array.prototype.delete = function (i) {
 								return !1;
 							}
 						}).on("resize", resizedWindow);
+						$(canvas).on("dblclick", function(e){
+							e.preventDefault();
+							toggleFullscreenChange();
+							return !1;
+						});
 						audioPlayer.stop();
 						resolve();
 					}, 2000);
@@ -1070,6 +1080,10 @@ Array.prototype.delete = function (i) {
 		}
 		win.setAlwaysOnTop(false);
 		win.focus();
-		radioAppInit().then(()=>{console.log('App Init')}).catch((e)=>{console.log(e)});
+		radioAppInit().then(()=>{
+			console.log('App Init');
+			$expBtn.on('click', exportStationsHandle);
+			$impBtn.on('click', importStationsHandle);
+		}).catch((e)=>{console.log(e)});
 	}, 200);
 }(jQuery));

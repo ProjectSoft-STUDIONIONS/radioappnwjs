@@ -1,8 +1,8 @@
 @spreed: -9px;
 @thumb_tarck_size: 20px;
 .loop(@counter) when (@counter > 0) {
-	.loop((@counter - 1));
 	box-shadow+: (-1px * @counter) 0 0 @spreed #ff7000, (1px * @counter) 0 0 @spreed #fdc9a0;
+	.loop((@counter - 1));
 }
 
 #volume {
